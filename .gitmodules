@@ -1,0 +1,9 @@
+[submodule "libxxxml"]
+	path = libxxxml
+	url = https://github.com/gsauthof/libxxxml.git
+[submodule "Catch"]
+	path = Catch
+	url = https://github.com/philsquared/Catch.git
+[submodule "cmake/modules"]
+	path = cmake/modules
+	url = https://github.com/gsauthof/cmake-modules.git

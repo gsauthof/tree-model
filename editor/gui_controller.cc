@@ -1,0 +1,125 @@
+// Copyright 2016, Georg Sauthoff <mail@georg.so>
+
+/* {{{ LGPLv3
+
+    This file is part of tree-model.
+
+    tree-model is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    tree-model is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
+
+}}} */
+#include "gui_controller.hh"
+
+#include <QWidget>
+
+#include <editor/command/remove.hh>
+#include <editor/gui_command/open.hh>
+#include <editor/gui_command/select_open.hh>
+#include <editor/gui_command/save.hh>
+#include <editor/gui_command/display_tree_context.hh>
+#include <editor/gui_command/edit.hh>
+#include <editor/gui_command/add.hh>
+#include <tree_model/base.hh>
+
+namespace editor {
+
+  Gui_Controller::Gui_Controller(QWidget *parent)
+    :
+      Controller(static_cast<QObject*>(parent)),
+      parent_widget_(parent),
+      open_(new gui_command::Open(parent_widget_)),
+      select_open_(new gui_command::Select_Open(parent_widget_)),
+      save_(new gui_command::Save(parent_widget_)),
+      display_tree_context_(
+          new gui_command::Display_Tree_Context(parent_widget_)),
+      edit_(new gui_command::Edit(parent_widget_)),
+      add_(new gui_command::Add(parent_widget_))
+  {
+    connect(open_, &gui_command::Open::item_tree_model_created,
+            this, &Gui_Controller::item_tree_model_created);
+    connect(open_, &gui_command::Open::tree_model_created,
+            this, &Gui_Controller::tree_model_created);
+    connect(open_, &gui_command::Open::file_opened,
+            this, &Gui_Controller::file_opened);
+    connect(open_, &gui_command::Open::msg_produced,
+            this, &Gui_Controller::msg_produced);
+
+    connect(select_open_,
+        &gui_command::Select_Open::item_tree_model_created,
+            this, &Gui_Controller::item_tree_model_created);
+    connect(select_open_,
+        &gui_command::Select_Open::tree_model_created,
+            this, &Gui_Controller::tree_model_created);
+    connect(select_open_, &gui_command::Select_Open::file_opened,
+            this, &Gui_Controller::file_opened);
+    connect(select_open_, &gui_command::Select_Open::msg_produced,
+            this, &Gui_Controller::msg_produced);
+
+    connect(save_, &gui_command::Save::msg_produced,
+            this, &Gui_Controller::msg_produced);
+    connect(save_, &gui_command::Save::saved,
+        this, &Controller::saved);
+
+    connect(this, &Controller::tree_model_created,
+            save_, &gui_command::Save::set_tree_model);
+    connect(this, &Controller::file_opened,
+        save_, &gui_command::Save::set_filename);
+
+    connect(display_tree_context_,
+        &gui_command::Display_Tree_Context::remove_triggered,
+        this , &Gui_Controller::remove);
+    connect(this, &Controller::item_tree_model_created,
+            display_tree_context_,
+            &gui_command::Display_Tree_Context::set_item_tree_model);
+
+    connect(this, &Controller::item_tree_model_created,
+        edit_, &gui_command::Edit::set_model);
+    connect(display_tree_context_,
+        &gui_command::Display_Tree_Context::edit_triggered,
+        edit_, &gui_command::Edit::edit);
+
+    connect(this, &Controller::item_tree_model_created,
+        add_, &gui_command::Add::set_model);
+    connect(display_tree_context_,
+        &gui_command::Display_Tree_Context::add_triggered,
+        add_, &gui_command::Add::add);
+  }
+  void Gui_Controller::open(const QString &filename)
+  {
+    open_->open(filename);
+  }
+
+  void Gui_Controller::select_open()
+  {
+    select_open_->open();
+  }
+  void Gui_Controller::save()
+  {
+    save_->save();
+  }
+  void Gui_Controller::select_save()
+  {
+    save_->select_save();
+  }
+  void Gui_Controller::select_save_copy()
+  {
+    save_->select_save_copy();
+  }
+  void Gui_Controller::display_tree_context(const QPoint &global_pos,
+        const QModelIndex &context_index,
+        const QModelIndexList &selected_indexes)
+  {
+    display_tree_context_->display(global_pos, context_index, selected_indexes);
+  }
+
+}
