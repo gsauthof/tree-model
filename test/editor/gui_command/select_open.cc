@@ -137,6 +137,39 @@ namespace test {
         QCOMPARE(spy_opened.count(), 0);
       }
 
+      void Select_Open::test_fail_no_popup()
+      {
+        std::string input(test::path::in() + "/small_doesnotexist.xml");
+        QMainWindow w;
+        ::editor::gui_command::Open so(&w);
+
+        QSignalSpy spy_finished(&so, SIGNAL(finished()));
+        qRegisterMetaType<QAbstractItemModel*>();
+        QSignalSpy spy_model(&so,
+            SIGNAL(item_tree_model_created(QAbstractItemModel*)));
+        QSignalSpy spy_opened(&so, SIGNAL(file_opened(QString)));
+        QString title;
+        QTimer::singleShot(1000, [&w, &title]{
+            QWindow *x = QGuiApplication::focusWindow();
+            if (x)
+              title = x->title();
+            });
+        int window_count = 0;
+        QTimer::singleShot(2000, [&w, &window_count]{
+            window_count = QGuiApplication::topLevelWindows().size();
+            QTest::keyClick(w.focusWidget(), Qt::Key_Return, Qt::NoModifier, 500);
+            });
+        so.open(input.c_str());
+        QEventLoop e;
+        QTimer::singleShot(3000, &e, &QEventLoop::quit);
+        e.exec();
+        QCOMPARE(title, QString("Could not open file"));
+        QCOMPARE(spy_finished.count(), 1);
+        QCOMPARE(spy_model.count(), 0);
+        QCOMPARE(spy_opened.count(), 0);
+        QCOMPARE(window_count, 2);
+      }
+
 
     }
   }

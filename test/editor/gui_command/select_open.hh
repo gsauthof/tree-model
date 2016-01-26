@@ -38,6 +38,7 @@ namespace test {
 
           void test_abort();
           void test_fail();
+          void test_fail_no_popup();
       };
 
     }

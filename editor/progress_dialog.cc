@@ -78,7 +78,13 @@ namespace editor {
   void Progress_Dialog::display_error(const QString &msg)
   {
     reject();
-    QMessageBox::critical(parentWidget(), tr("Could not open file"), msg);
+    auto pw = parentWidget();
+    // The lambda is used such that the progress dialog is directly closed.
+    // Otherwise, it would pop up after the minimumDuration is over ...
+    // We don't capture by reference to avoid accessing the already
+    // freed message ...
+    QTimer::singleShot(0, pw, [pw, msg](){
+        QMessageBox::critical(pw, tr("Could not open file"), msg); });
   }
 
   void Progress_Dialog::keyPressEvent(QKeyEvent *event)
