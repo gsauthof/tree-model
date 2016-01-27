@@ -21,6 +21,7 @@
 #include "gui_controller.hh"
 
 #include <QWidget>
+#include <QItemSelectionModel>
 
 #include <editor/command/remove.hh>
 #include <editor/gui_command/open.hh>
@@ -29,6 +30,7 @@
 #include <editor/gui_command/display_tree_context.hh>
 #include <editor/gui_command/edit.hh>
 #include <editor/gui_command/add.hh>
+#include <editor/gui_command/clipboard_copy.hh>
 #include <tree_model/base.hh>
 
 namespace editor {
@@ -37,13 +39,14 @@ namespace editor {
     :
       Controller(static_cast<QObject*>(parent)),
       parent_widget_(parent),
-      open_(new gui_command::Open(parent_widget_)),
-      select_open_(new gui_command::Select_Open(parent_widget_)),
-      save_(new gui_command::Save(parent_widget_)),
+      open_          (new gui_command::Open(parent_widget_)),
+      select_open_   (new gui_command::Select_Open(parent_widget_)),
+      save_          (new gui_command::Save(parent_widget_)),
       display_tree_context_(
-          new gui_command::Display_Tree_Context(parent_widget_)),
-      edit_(new gui_command::Edit(parent_widget_)),
-      add_(new gui_command::Add(parent_widget_))
+                      new gui_command::Display_Tree_Context(parent_widget_)),
+      edit_          (new gui_command::Edit(parent_widget_)),
+      add_           (new gui_command::Add(parent_widget_)),
+      clipboard_copy_(new gui_command::Clipboard_Copy(this))
   {
     connect(open_, &gui_command::Open::item_tree_model_created,
             this, &Gui_Controller::item_tree_model_created);
@@ -93,6 +96,11 @@ namespace editor {
     connect(display_tree_context_,
         &gui_command::Display_Tree_Context::add_triggered,
         add_, &gui_command::Add::add);
+
+    connect(this, &Controller::item_tree_model_created,
+        clipboard_copy_, &gui_command::Clipboard_Copy::set_model);
+    connect(this, &Gui_Controller::selection_model_changed,
+        clipboard_copy_, &gui_command::Clipboard_Copy::set_selection_model);
   }
   void Gui_Controller::open(const QString &filename)
   {
@@ -120,6 +128,10 @@ namespace editor {
         const QModelIndexList &selected_indexes)
   {
     display_tree_context_->display(global_pos, context_index, selected_indexes);
+  }
+  void Gui_Controller::clipboard_copy()
+  {
+    clipboard_copy_->copy();
   }
 
 }

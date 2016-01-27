@@ -57,6 +57,9 @@ namespace editor {
     connect(ui->tree_view, &editor::Tree_View::remove_triggered,
         controller, &Controller::remove);
 
+    connect(ui->tree_view, &editor::Tree_View::selection_model_changed,
+        controller, &Gui_Controller::selection_model_changed);
+
   }
 
 }

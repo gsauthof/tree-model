@@ -21,6 +21,7 @@
 #include "tree_view.hh"
 
 #include <QContextMenuEvent>
+#include <QDebug>
 
 namespace editor {
 
@@ -54,6 +55,15 @@ namespace editor {
     setModel(model);
     auto font_metrics = fontMetrics();
     setColumnWidth(0, font_metrics.averageCharWidth()*32);
+
+    emit selection_model_changed(selectionModel());
+  }
+
+  void Tree_View::selectionChanged(const QItemSelection &selected,
+      const QItemSelection & deselected)
+  {
+    QTreeView::selectionChanged(selected, deselected);
+    emit selection_changed(selected, deselected);
   }
 
 } // namespace editor

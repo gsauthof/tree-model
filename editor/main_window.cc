@@ -62,10 +62,13 @@ namespace editor {
     // updates the window title iff it contains the [*] placeholder
     connect(controller_, &Controller::model_changed,
         this, &QMainWindow::setWindowModified);
+
     connect(ui->action_Undo, &QAction::triggered,
         controller_, &Controller::undo);
     connect(ui->action_Redo, &QAction::triggered,
         controller_, &Controller::redo);
+    connect(ui->action_copy, &QAction::triggered,
+        controller_, &Gui_Controller::clipboard_copy);
 
     connect(controller_, &Gui_Controller::msg_produced,
         this, &Main_Window::display_status);
@@ -97,6 +100,7 @@ namespace editor {
     ui->action_Quit->setShortcut(QKeySequence::Quit);
     ui->action_Undo->setShortcut(QKeySequence::Undo);
     ui->action_Redo->setShortcut(QKeySequence::Redo);
+    ui->action_copy->setShortcut(QKeySequence::Copy);
   }
 
   Main_Window::~Main_Window()

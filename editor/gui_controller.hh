@@ -24,6 +24,8 @@
 #include <QAbstractItemModel>
 #include <QString>
 
+class QItemSelectionModel;
+
 #include "controller.hh"
 
 
@@ -36,6 +38,7 @@ namespace editor {
     class Display_Tree_Context;
     class Edit;
     class Add;
+    class Clipboard_Copy;
   }
 
   class Gui_Controller : public Controller {
@@ -53,6 +56,7 @@ namespace editor {
       void display_tree_context(const QPoint &global_pos,
             const QModelIndex &context_index,
             const QModelIndexList &selected_indexes);
+      void clipboard_copy();
 
     private:
       QWidget                           *parent_widget_        {nullptr};
@@ -63,6 +67,10 @@ namespace editor {
       gui_command::Display_Tree_Context *display_tree_context_ {nullptr};
       gui_command::Edit                 *edit_                 {nullptr};
       gui_command::Add                  *add_                  {nullptr};
+      gui_command::Clipboard_Copy       *clipboard_copy_       {nullptr};
+
+    signals:
+      void selection_model_changed(const QItemSelectionModel *smodel);
 
 
   };

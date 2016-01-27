@@ -40,8 +40,16 @@ class Tree_View : public QTreeView
         const QModelIndexList &selected_indexes);
     void remove_triggered(const QModelIndexList &selected_indexes);
 
+    void selection_model_changed(const QItemSelectionModel *smodel);
+    void selection_changed(const QItemSelection &selected,
+        const QItemSelection &deselected);
+
   public slots:
     void set_model(QAbstractItemModel *model);
+
+  protected slots:
+    void selectionChanged(const QItemSelection &selected,
+        const QItemSelection &deselected) override;
 
 };
 

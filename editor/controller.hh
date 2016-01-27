@@ -54,13 +54,13 @@ namespace editor {
       void set_tree_model(tree_model::Base *model);
 
     private:
-      command::Async_Open *open_ {nullptr};
-      command::Async_Save *save_ {nullptr};
-      command::Remove *remove_   {nullptr};
+      command::Async_Open *open_   {nullptr};
+      command::Async_Save *save_   {nullptr};
+      command::Remove     *remove_ {nullptr};
 
-      QAbstractItemModel *item_tree_model_ {nullptr};
-      tree_model::Base *tree_model_        {nullptr};
-      tree_model::Recorder *recorder_      {nullptr};
+      QAbstractItemModel   *item_tree_model_ {nullptr};
+      tree_model::Base     *tree_model_      {nullptr};
+      tree_model::Recorder *recorder_        {nullptr};
 
     signals:
       void file_opened(const QString &filename);

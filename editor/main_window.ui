@@ -46,6 +46,8 @@
     </property>
     <addaction name="action_Undo"/>
     <addaction name="action_Redo"/>
+    <addaction name="separator"/>
+    <addaction name="action_copy"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -96,6 +98,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_copy">
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="action_Undo">
