@@ -69,6 +69,9 @@ namespace editor {
         controller_, &Controller::redo);
     connect(ui->action_copy, &QAction::triggered,
         controller_, &Gui_Controller::clipboard_copy);
+    ui->action_copy->setEnabled(false);
+    connect(ui->widget, &Tree_Widget::something_selected,
+        ui->action_copy, &QAction::setEnabled);
 
     connect(controller_, &Gui_Controller::msg_produced,
         this, &Main_Window::display_status);

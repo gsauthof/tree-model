@@ -43,6 +43,7 @@ class Tree_View : public QTreeView
     void selection_model_changed(const QItemSelectionModel *smodel);
     void selection_changed(const QItemSelection &selected,
         const QItemSelection &deselected);
+    void something_selected(bool b);
 
   public slots:
     void set_model(QAbstractItemModel *model);

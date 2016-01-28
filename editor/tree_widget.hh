@@ -43,6 +43,9 @@ namespace editor {
     private:
       Ui::Tree_Widget *ui {nullptr};
       Gui_Controller *controller_ {nullptr};
+
+    signals:
+      void something_selected(bool b);
   };
 
 }

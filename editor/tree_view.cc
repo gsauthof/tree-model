@@ -64,6 +64,7 @@ namespace editor {
   {
     QTreeView::selectionChanged(selected, deselected);
     emit selection_changed(selected, deselected);
+    emit something_selected(!selected.empty());
   }
 
 } // namespace editor

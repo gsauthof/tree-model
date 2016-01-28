@@ -32,6 +32,8 @@ namespace editor {
     ui(new Ui::Tree_Widget)
   {
     ui->setupUi(this);
+    connect(ui->tree_view, &Tree_View::something_selected,
+        this, &Tree_Widget::something_selected);
   }
 
   Tree_Widget::~Tree_Widget()
