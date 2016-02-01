@@ -25,7 +25,8 @@
 
 
 namespace editor {
-  class Gui_Controller;
+  class Recent_Menu;
+  class Tree_Widget;
 
   namespace Ui {
     class Main_Window;
@@ -38,15 +39,23 @@ namespace editor {
     public:
       explicit Main_Window(QWidget *parent = nullptr);
       ~Main_Window();
+      Recent_Menu &recent_menu();
+      Tree_Widget &tree_widget();
+      QAction &open_action();
+      QAction &save_action();
+      QAction &save_as_action();
+      QAction &save_a_copy_action();
+      QAction &undo_action();
+      QAction &redo_action();
+      QAction &copy_action();
 
     public slots:
-      void open(const QString &filename);
-    private slots:
       void display_status(const QString &msg);
       void update_window_title(const QString &filename);
+    private slots:
     private:
-      Ui::Main_Window *ui;
-      Gui_Controller *controller_ {nullptr};
+      Ui::Main_Window *ui {nullptr};
+      Recent_Menu *recent_menu_ {nullptr};
 
       void setup_shortcuts();
   };

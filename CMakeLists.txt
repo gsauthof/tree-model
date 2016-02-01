@@ -81,6 +81,7 @@ set(EDITOR_CC
   editor/child_dialog.cc
   editor/controller.cc
   editor/gui_controller.cc
+  editor/vc_matchmaker.cc
   editor/recent_menu.cc
   editor/command/open.cc
   editor/command/async_open.cc

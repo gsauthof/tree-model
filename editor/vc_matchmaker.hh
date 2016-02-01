@@ -18,35 +18,19 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#ifndef TREE_WIDGET_HH
-#define TREE_WIDGET_HH
-
-#include <QAbstractItemModel>
-#include <QWidget>
+#ifndef VC_MATCHMAKER_HH
+#define VC_MATCHMAKER_HH
 
 namespace editor {
 
-  namespace Ui {
-    class Tree_Widget;
-  }
-  class Tree_View;
+  class Main_Window;
+  class Gui_Controller;
 
-  class Tree_Widget : public QWidget
-  {
-    Q_OBJECT
+  void connect_view_controller(
+      Main_Window &w, Gui_Controller &c);
 
-    public:
-      explicit Tree_Widget(QWidget *parent = nullptr);
-      ~Tree_Widget();
-      Tree_View &tree_view();
-
-    private:
-      Ui::Tree_Widget *ui {nullptr};
-
-    signals:
-      void something_selected(bool b);
-  };
 
 }
 
-#endif // TREE_WIDGET_HH
+
+#endif // VC_MATCHMAKER_HH

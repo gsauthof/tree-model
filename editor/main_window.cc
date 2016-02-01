@@ -20,7 +20,6 @@
 }}} */
 #include "main_window.hh"
 #include "ui_main_window.h"
-#include <editor/gui_controller.hh>
 #include <editor/recent_menu.hh>
 
 #include <QMessageBox>
@@ -30,24 +29,13 @@ namespace editor {
 
   Main_Window::Main_Window(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::Main_Window),
-    controller_(new Gui_Controller(this))
+    ui(new Ui::Main_Window)
   {
     ui->setupUi(this);
-    ui->widget->set_controller(controller_);
-    auto recent_menu = new Recent_Menu(ui->menu_File);
-    ui->menu_File->insertMenu(ui->action_Save, recent_menu);
+    recent_menu_ = new Recent_Menu(ui->menu_File);
+    ui->menu_File->insertMenu(ui->action_Save, recent_menu_);
     setup_shortcuts();
     setWindowTitle(tr("unnamed[*]"));
-
-    connect(ui->action_Open, &QAction::triggered,
-        controller_, &Gui_Controller::select_open);
-    connect(ui->action_Save, &QAction::triggered,
-        controller_, &Gui_Controller::save);
-    connect(ui->action_Save_As, &QAction::triggered,
-        controller_, &Gui_Controller::select_save);
-    connect(ui->action_Save_A_Copy, &QAction::triggered,
-        controller_, &Gui_Controller::select_save_copy);
 
     connect(ui->action_About, &QAction::triggered,
         [this](){
@@ -55,35 +43,49 @@ namespace editor {
               tr("Hierarchical tree model editor example."));
         });
 
-    connect(controller_, &Controller::rewind_enabled,
-        ui->action_Undo, &QAction::setEnabled);
-    connect(controller_, &Controller::forward_enabled,
-        ui->action_Redo, &QAction::setEnabled);
     // updates the window title iff it contains the [*] placeholder
-    connect(controller_, &Controller::model_changed,
-        this, &QMainWindow::setWindowModified);
 
-    connect(ui->action_Undo, &QAction::triggered,
-        controller_, &Controller::undo);
-    connect(ui->action_Redo, &QAction::triggered,
-        controller_, &Controller::redo);
-    connect(ui->action_copy, &QAction::triggered,
-        controller_, &Gui_Controller::clipboard_copy);
     ui->action_copy->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->action_copy, &QAction::setEnabled);
 
-    connect(controller_, &Gui_Controller::msg_produced,
-        this, &Main_Window::display_status);
-    connect(controller_, &Controller::file_opened,
-        this, &Main_Window::update_window_title);
-    connect(controller_, &Controller::saved,
-        this, &Main_Window::update_window_title);
+  }
 
-    connect(controller_, &Controller::file_opened,
-        recent_menu, &Recent_Menu::register_file_open);
-    connect(recent_menu, &Recent_Menu::chosen,
-        controller_, &Gui_Controller::open);
+  Recent_Menu &Main_Window::recent_menu()
+  {
+    return *recent_menu_;
+  }
+  Tree_Widget &Main_Window::tree_widget()
+  {
+    return *ui->widget;
+  }
+  QAction &Main_Window::open_action()
+  {
+    return *ui->action_Open;
+  }
+  QAction &Main_Window::save_action()
+  {
+    return *ui->action_Save;
+  }
+  QAction &Main_Window::save_as_action()
+  {
+    return *ui->action_Save_As;
+  }
+  QAction &Main_Window::save_a_copy_action()
+  {
+    return *ui->action_Save_A_Copy;
+  }
+  QAction &Main_Window::undo_action()
+  {
+    return *ui->action_Undo;
+  }
+  QAction &Main_Window::redo_action()
+  {
+    return *ui->action_Redo;
+  }
+  QAction &Main_Window::copy_action()
+  {
+    return *ui->action_copy;
   }
 
   void Main_Window::update_window_title(const QString &filename)
@@ -111,10 +113,6 @@ namespace editor {
     delete ui;
   }
 
-  void Main_Window::open(const QString &filename)
-  {
-    controller_->open(filename);
-  }
   void Main_Window::display_status(const QString &msg)
   {
     statusBar()->showMessage(msg, 30000);

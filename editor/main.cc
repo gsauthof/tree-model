@@ -20,6 +20,8 @@
 }}} */
 #include "arguments.hh"
 #include "main_window.hh"
+#include "gui_controller.hh"
+#include "vc_matchmaker.hh"
 
 #include <QApplication>
 #include <QTimer>
@@ -42,9 +44,11 @@ int main(int argc, char **argv)
   editor::Arguments args(argc, argv);
 
   editor::Main_Window w;
+  editor::Gui_Controller c;
+  editor::connect_view_controller(w, c);
 
   args.connect(&args, &editor::Arguments::open_triggered,
-                &w, &editor::Main_Window::open);
+                &c, &editor::Gui_Controller::open);
   QTimer::singleShot(0, &args, SLOT(parse()));
 
   w.show();
