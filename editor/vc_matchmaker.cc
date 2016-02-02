@@ -73,10 +73,13 @@ namespace editor {
     connect_enable_signals(w, c);
     connect_recent_menu(w.recent_menu(), c);
 
+    // updates the window title iff it contains the [*] placeholder
     c.connect(&c, &Controller::model_changed,
         &w, &QMainWindow::setWindowModified);
+
     c.connect(&c, &Gui_Controller::msg_produced,
         &w, &Main_Window::display_status);
+
     c.connect(&c, &Controller::file_opened,
         &w, &Main_Window::update_window_title);
     c.connect(&c, &Controller::saved,

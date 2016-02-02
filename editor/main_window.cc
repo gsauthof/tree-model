@@ -23,6 +23,7 @@
 #include <editor/recent_menu.hh>
 
 #include <QMessageBox>
+#include <QClipboard>
 #include <QDebug>
 
 namespace editor {
@@ -42,13 +43,15 @@ namespace editor {
           QMessageBox::about(this, tr("About..."),
               tr("Hierarchical tree model editor example."));
         });
-
-    // updates the window title iff it contains the [*] placeholder
+    connect(ui->clear_action, &QAction::triggered,
+        [this](){
+          QApplication::clipboard()->clear();
+          QApplication::clipboard()->clear(QClipboard::Selection);
+        });
 
     ui->copy_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->copy_action, &QAction::setEnabled);
-
   }
 
   Recent_Menu &Main_Window::recent_menu()
