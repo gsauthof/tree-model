@@ -33,34 +33,34 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_Open"/>
-    <addaction name="action_Save"/>
-    <addaction name="action_Save_As"/>
-    <addaction name="action_Save_A_Copy"/>
+    <addaction name="open_action"/>
+    <addaction name="save_action"/>
+    <addaction name="save_as_action"/>
+    <addaction name="save_a_copy_action"/>
     <addaction name="separator"/>
-    <addaction name="action_Quit"/>
+    <addaction name="quit_action"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="action_Undo"/>
-    <addaction name="action_Redo"/>
+    <addaction name="undo_action"/>
+    <addaction name="redo_action"/>
     <addaction name="separator"/>
-    <addaction name="action_copy"/>
+    <addaction name="copy_action"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="action_About"/>
+    <addaction name="about_action"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_Open">
+  <action name="open_action">
    <property name="text">
     <string>&amp;Open</string>
    </property>
@@ -68,7 +68,7 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="action_Save">
+  <action name="save_action">
    <property name="text">
     <string>&amp;Save</string>
    </property>
@@ -76,7 +76,7 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="action_Save_As">
+  <action name="save_as_action">
    <property name="text">
     <string>&amp;Save as...</string>
    </property>
@@ -84,7 +84,7 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
-  <action name="action_Save_A_Copy">
+  <action name="save_a_copy_action">
    <property name="text">
     <string>&amp;Save a Copy...</string>
    </property>
@@ -92,7 +92,7 @@
     <string>Ctrl+Alt+Shift+S</string>
    </property>
   </action>
-  <action name="action_Quit">
+  <action name="quit_action">
    <property name="text">
     <string>&amp;Quit</string>
    </property>
@@ -100,7 +100,7 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_copy">
+  <action name="copy_action">
    <property name="text">
     <string>&amp;Copy</string>
    </property>
@@ -108,7 +108,7 @@
     <string>Ctrl+C</string>
    </property>
   </action>
-  <action name="action_Undo">
+  <action name="undo_action">
    <property name="text">
     <string>&amp;Undo</string>
    </property>
@@ -116,7 +116,7 @@
     <string>Ctrl+Z</string>
    </property>
   </action>
-  <action name="action_Redo">
+  <action name="redo_action">
    <property name="text">
     <string>&amp;Redo</string>
    </property>
@@ -124,7 +124,7 @@
     <string>Ctrl+Shift+Z</string>
    </property>
   </action>
-  <action name="action_About">
+  <action name="about_action">
    <property name="text">
     <string>&amp;About...</string>
    </property>
@@ -141,7 +141,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>action_Quit</sender>
+   <sender>quit_action</sender>
    <signal>triggered()</signal>
    <receiver>Main_Window</receiver>
    <slot>close()</slot>
