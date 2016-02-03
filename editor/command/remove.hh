@@ -29,6 +29,8 @@ class QAbstractItemModel;
 namespace editor {
   namespace command {
 
+    void remove(QAbstractItemModel *model, const QModelIndexList &list);
+
     class Remove : public QObject
     {
       Q_OBJECT

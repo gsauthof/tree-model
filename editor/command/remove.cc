@@ -37,7 +37,7 @@ namespace editor {
     {
     }
 
-    void Remove::remove(const QModelIndexList &list)
+    void remove(QAbstractItemModel *model_, const QModelIndexList &list)
     {
       if (!model_ || list.empty())
         return;
@@ -57,8 +57,14 @@ namespace editor {
         for (auto &x : v)
           w.emplace_back(x);
         for (auto &x : w)
-          model_->removeRow(x.row(), x.parent());
+          if (x.isValid())
+            model_->removeRow(x.row(), x.parent());
       }
+    }
+
+    void Remove::remove(const QModelIndexList &list)
+    {
+      editor::command::remove(model_, list);
     }
 
     void Remove::set_model(QAbstractItemModel *model)
