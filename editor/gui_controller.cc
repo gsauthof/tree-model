@@ -31,6 +31,7 @@
 #include <editor/gui_command/edit.hh>
 #include <editor/gui_command/add.hh>
 #include <editor/gui_command/clipboard_copy.hh>
+#include <editor/gui_command/clipboard_cut.hh>
 #include <tree_model/base.hh>
 
 namespace editor {
@@ -46,7 +47,8 @@ namespace editor {
                       new gui_command::Display_Tree_Context(parent_widget_)),
       edit_          (new gui_command::Edit(parent_widget_)),
       add_           (new gui_command::Add(parent_widget_)),
-      clipboard_copy_(new gui_command::Clipboard_Copy(this))
+      clipboard_copy_(new gui_command::Clipboard_Copy(this)),
+      clipboard_cut_ (new gui_command::Clipboard_Cut(this))
   {
     connect(open_, &gui_command::Open::item_tree_model_created,
             this, &Gui_Controller::item_tree_model_created);
@@ -101,6 +103,10 @@ namespace editor {
         clipboard_copy_, &gui_command::Clipboard_Copy::set_model);
     connect(this, &Gui_Controller::selection_model_changed,
         clipboard_copy_, &gui_command::Clipboard_Copy::set_selection_model);
+    connect(this, &Controller::item_tree_model_created,
+        clipboard_cut_, &gui_command::Clipboard_Cut::set_model);
+    connect(this, &Gui_Controller::selection_model_changed,
+        clipboard_cut_, &gui_command::Clipboard_Cut::set_selection_model);
   }
   void Gui_Controller::open(const QString &filename)
   {
@@ -128,6 +134,10 @@ namespace editor {
         const QModelIndexList &selected_indexes)
   {
     display_tree_context_->display(global_pos, context_index, selected_indexes);
+  }
+  void Gui_Controller::clipboard_cut()
+  {
+    clipboard_cut_->cut();
   }
   void Gui_Controller::clipboard_copy()
   {

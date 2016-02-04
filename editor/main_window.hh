@@ -47,6 +47,7 @@ namespace editor {
       QAction &save_a_copy_action();
       QAction &undo_action();
       QAction &redo_action();
+      QAction &cut_action();
       QAction &copy_action();
 
     public slots:

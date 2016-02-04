@@ -79,6 +79,10 @@ namespace editor {
     connect(recorder_, &tree_model::Recorder::model_changed,
         this, &Controller::model_changed);
   }
+  QAbstractItemModel *Controller::item_tree_model()
+  {
+    return item_tree_model_;
+  }
   void Controller::open(const QString &filename)
   {
     open_->open(filename);

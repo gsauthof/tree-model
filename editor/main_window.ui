@@ -47,6 +47,7 @@
     <addaction name="undo_action"/>
     <addaction name="redo_action"/>
     <addaction name="separator"/>
+    <addaction name="cut_action"/>
     <addaction name="copy_action"/>
     <addaction name="clear_action"/>
    </widget>
@@ -109,9 +110,17 @@
     <string>Ctrl+C</string>
    </property>
   </action>
+  <action name="cut_action">
+   <property name="text">
+    <string>Cu&amp;t</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
   <action name="clear_action">
    <property name="text">
-    <string>C&amp;lear</string>
+    <string>C&amp;lear clipboard</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>

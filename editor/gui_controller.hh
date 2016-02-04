@@ -39,6 +39,7 @@ namespace editor {
     class Edit;
     class Add;
     class Clipboard_Copy;
+    class Clipboard_Cut;
   }
 
   class Gui_Controller : public Controller {
@@ -56,6 +57,7 @@ namespace editor {
       void display_tree_context(const QPoint &global_pos,
             const QModelIndex &context_index,
             const QModelIndexList &selected_indexes);
+      void clipboard_cut();
       void clipboard_copy();
 
     private:
@@ -68,6 +70,7 @@ namespace editor {
       gui_command::Edit                 *edit_                 {nullptr};
       gui_command::Add                  *add_                  {nullptr};
       gui_command::Clipboard_Copy       *clipboard_copy_       {nullptr};
+      gui_command::Clipboard_Cut        *clipboard_cut_        {nullptr};
 
     signals:
       void selection_model_changed(const QItemSelectionModel *smodel);

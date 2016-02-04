@@ -45,6 +45,8 @@ namespace editor {
         &c, &Controller::redo);
     w.connect(&w.copy_action(), &QAction::triggered,
         &c, &Gui_Controller::clipboard_copy);
+    w.connect(&w.cut_action(), &QAction::triggered,
+        &c, &Gui_Controller::clipboard_cut);
 
   }
 

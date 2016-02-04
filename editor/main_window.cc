@@ -52,6 +52,9 @@ namespace editor {
     ui->copy_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->copy_action, &QAction::setEnabled);
+    ui->cut_action->setEnabled(false);
+    connect(ui->widget, &Tree_Widget::something_selected,
+        ui->cut_action, &QAction::setEnabled);
   }
 
   Recent_Menu &Main_Window::recent_menu()
@@ -86,6 +89,10 @@ namespace editor {
   {
     return *ui->redo_action;
   }
+  QAction &Main_Window::cut_action()
+  {
+    return *ui->cut_action;
+  }
   QAction &Main_Window::copy_action()
   {
     return *ui->copy_action;
@@ -109,6 +116,7 @@ namespace editor {
     ui->undo_action->setShortcut(QKeySequence::Undo);
     ui->redo_action->setShortcut(QKeySequence::Redo);
     ui->copy_action->setShortcut(QKeySequence::Copy);
+    ui->cut_action->setShortcut(QKeySequence::Cut);
   }
 
   Main_Window::~Main_Window()

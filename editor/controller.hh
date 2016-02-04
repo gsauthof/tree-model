@@ -43,6 +43,8 @@ namespace editor {
     public:
       explicit Controller(QObject *parent = nullptr);
 
+      QAbstractItemModel *item_tree_model();
+
     public slots:
       void open(const QString &filename);
       void save();
