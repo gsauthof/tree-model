@@ -26,7 +26,8 @@
 
 class QAbstractItemModel;
 class QItemSelectionModel;
-class QModelIndex;
+
+#include <QModelIndex>
 
 namespace editor {
   namespace gui_command {
@@ -42,9 +43,11 @@ namespace editor {
 
         void copy();
 
-      private:
-        const QAbstractItemModel *model_ {nullptr};
+      protected:
+        const QAbstractItemModel  *model_  {nullptr};
         const QItemSelectionModel *smodel_ {nullptr};
+
+        QModelIndexList selected_indexes();
     };
 
   } // namespace gui_command

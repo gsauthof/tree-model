@@ -45,27 +45,39 @@ namespace editor {
       smodel_ = smodel;
     }
 
-    void Clipboard_Copy::copy()
+    QModelIndexList Clipboard_Copy::selected_indexes()
     {
       if (!model_ || !smodel_)
-        return;
+        throw underflow_error("no model assigned");
       auto is = smodel_->selectedIndexes();
       if (is.empty())
-        return;
+        throw underflow_error("nothing selected");
+      return is;
+    }
 
-      QClipboard *cb = QApplication::clipboard();
+    void Clipboard_Copy::copy()
+    {
+      try {
+        auto is = selected_indexes();
 
-      auto d = model_->mimeData(is);
-      // QMimeData can hold multiple variants,
-      // for different mime types.
-      // They also show up in the clipboard, a pasting application
-      // can choose which to pick.
-      d->setData("text/plain", d->data("text/xml"));
+        QClipboard *cb = QApplication::clipboard();
 
-      cb->setMimeData(d);
-      // Only relevant on X11:
-      // also set the primary selection
-      cb->setMimeData(d, QClipboard::Selection);
+        auto d = model_->mimeData(is);
+        auto e = model_->mimeData(is);
+        // QMimeData can hold multiple variants,
+        // for different mime types.
+        // They also show up in the clipboard, a pasting application
+        // can choose which to pick.
+        d->setData("text/plain", d->data("text/xml"));
+        e->setData("text/plain", e->data("text/xml"));
+
+        cb->setMimeData(d);
+        // Only relevant on X11:
+        // also set the primary selection
+        cb->setMimeData(e, QClipboard::Selection);
+      } catch (const underflow_error &e) {
+        // do nothing
+      }
     }
 
 
