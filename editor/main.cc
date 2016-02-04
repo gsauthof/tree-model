@@ -44,7 +44,7 @@ int main(int argc, char **argv)
   editor::Arguments args(argc, argv);
 
   editor::Main_Window w;
-  editor::Gui_Controller c;
+  editor::Gui_Controller c(&w);
   editor::connect_view_controller(w, c);
 
   args.connect(&args, &editor::Arguments::open_triggered,
