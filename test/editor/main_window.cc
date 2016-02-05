@@ -128,3 +128,41 @@ TEST_CASE("cut action", "[editor][qt][gui][mainwindow][clipboard]")
 
   QApplication::clipboard()->clear();
 }
+
+TEST_CASE("delte shortcut", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  QTimer::singleShot(0, [&c, &in]() { c.open(in.c_str()); });
+
+  int old_rowcount = 0;
+  QAbstractItemModel *a = nullptr;
+
+  QTimer::singleShot(300, [&w, &old_rowcount, &a, &c]{
+      a = c.item_tree_model();
+      REQUIRE(a != nullptr);
+      old_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(1, 0));
+
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Delete, Qt::NoModifier, 10);
+      });
+
+  w.show();
+
+  QEventLoop e;
+  QTimer::singleShot(1000, [&e]{ e.quit(); });
+  e.exec();
+
+  auto new_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(1, 0));
+  CHECK(old_rowcount == new_rowcount + 1);
+
+}
