@@ -63,13 +63,13 @@ namespace editor {
         QClipboard *cb = QApplication::clipboard();
 
         auto d = model_->mimeData(is);
-        auto e = model_->mimeData(is);
         // QMimeData can hold multiple variants,
         // for different mime types.
         // They also show up in the clipboard, a pasting application
         // can choose which to pick.
         d->setData("text/plain", d->data("text/xml"));
-        e->setData("text/plain", e->data("text/xml"));
+        auto e = new QMimeData();
+        e->setData("text/plain", d->data("text/xml"));
 
         cb->setMimeData(d);
         // Only relevant on X11:
