@@ -31,6 +31,7 @@ class QItemSelectionModel;
 
 namespace editor {
 
+  class Subtree_Window;
   namespace gui_command {
     class Open;
     class Select_Open;
@@ -41,6 +42,7 @@ namespace editor {
     class Clipboard_Copy;
     class Clipboard_Cut;
     class Clipboard_Paste;
+    class Display_Subtree;
   }
 
   class Gui_Controller : public Controller {
@@ -62,6 +64,7 @@ namespace editor {
       void clipboard_copy();
       void clipboard_paste();
       void clipboard_paste_as_child();
+      void display_subtree();
 
     private:
       QWidget                           *parent_widget_        {nullptr};
@@ -75,9 +78,11 @@ namespace editor {
       gui_command::Clipboard_Copy       *clipboard_copy_       {nullptr};
       gui_command::Clipboard_Cut        *clipboard_cut_        {nullptr};
       gui_command::Clipboard_Paste      *clipboard_paste_      {nullptr};
+      gui_command::Display_Subtree      *display_subtree_      {nullptr};
 
     signals:
       void selection_model_changed(const QItemSelectionModel *smodel);
+      void subtree_window_created(editor::Subtree_Window *w);;
 
 
   };

@@ -55,6 +55,12 @@ namespace editor {
     ui->cut_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->cut_action, &QAction::setEnabled);
+    ui->paste_as_child_action->setEnabled(false);
+    connect(ui->widget, &Tree_Widget::something_selected,
+        ui->paste_as_child_action, &QAction::setEnabled);
+    ui->display_subtree_action->setEnabled(false);
+    connect(ui->widget, &Tree_Widget::something_selected,
+        ui->display_subtree_action, &QAction::setEnabled);
   }
 
   Recent_Menu &Main_Window::recent_menu()
@@ -104,6 +110,10 @@ namespace editor {
   QAction &Main_Window::paste_as_child_action()
   {
     return *ui->paste_as_child_action;
+  }
+  QAction &Main_Window::display_subtree_action()
+  {
+    return *ui->display_subtree_action;
   }
 
   void Main_Window::update_window_title(const QString &filename)

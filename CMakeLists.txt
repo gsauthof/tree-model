@@ -35,12 +35,14 @@ add_subdirectory(libxxxml)
 
 qt5_wrap_ui(EDITOR_UI
   editor/main_window.ui
+  editor/subtree_window.ui
   editor/tree_widget.ui
   editor/child_dialog.ui
   )
 
 qt5_wrap_cpp(EDITOR_MOC
   editor/main_window.hh
+  editor/subtree_window.hh
   editor/tree_widget.hh
   editor/child_dialog.hh
   editor/command/open.hh
@@ -57,6 +59,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/gui_command/clipboard_copy.hh
   editor/gui_command/clipboard_cut.hh
   editor/gui_command/clipboard_paste.hh
+  editor/gui_command/display_subtree.hh
   editor/controller.hh
   editor/gui_controller.hh
   editor/arguments.hh
@@ -79,6 +82,7 @@ qt5_wrap_cpp(UT_SELECT_OPEN_MOC
 
 set(EDITOR_CC
   editor/main_window.cc
+  editor/subtree_window.cc
   editor/tree_widget.cc
   editor/child_dialog.cc
   editor/controller.cc
@@ -99,6 +103,7 @@ set(EDITOR_CC
   editor/gui_command/clipboard_copy.cc
   editor/gui_command/clipboard_cut.cc
   editor/gui_command/clipboard_paste.cc
+  editor/gui_command/display_subtree.cc
   editor/arguments.cc
   editor/preview_file_dialog.cc
   editor/preview.cc
@@ -117,6 +122,7 @@ set(TREE_MODEL_CC
   tree_model/operation/set_data.cc
   tree_model/operation/insert_rows.cc
   tree_model/operation/remove_rows.cc
+  tree_model/util.cc
   )
 
 add_executable(main
@@ -153,6 +159,7 @@ add_executable(ut
   test/tree_model/item_adaptor.cc
   test/tree_model/deep_model_index.cc
   test/tree_model/recorder.cc
+  test/tree_model/util.cc
   test/qt_model.cc
 
   test/editor/command/remove.cc
@@ -224,6 +231,7 @@ add_executable(ut_gui
   test/editor/gui_command/clipboard_copy.cc
   test/editor/gui_command/clipboard_cut.cc
   test/editor/gui_command/clipboard_paste.cc
+  test/editor/gui_command/display_subtree.cc
   test/editor/recent_menu.cc
   test/editor/main_window.cc
 

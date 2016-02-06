@@ -25,6 +25,7 @@
 #include "recent_menu.hh"
 #include "tree_widget.hh"
 #include "tree_view.hh"
+#include "subtree_window.hh"
 
 namespace editor {
 
@@ -51,6 +52,8 @@ namespace editor {
         &c, &Gui_Controller::clipboard_paste);
     w.connect(&w.paste_as_child_action(), &QAction::triggered,
         &c, &Gui_Controller::clipboard_paste_as_child);
+    w.connect(&w.display_subtree_action(), &QAction::triggered,
+        &c, &Gui_Controller::display_subtree);
   }
 
   static void connect_enable_signals(
@@ -107,11 +110,21 @@ namespace editor {
         &c, &Gui_Controller::selection_model_changed);
   }
 
+  static void connect_sub_tree_widgets(Gui_Controller &c)
+  {
+    c.connect(&c, &Gui_Controller::subtree_window_created,
+        [&c](auto w){
+        c.connect(&c, &Controller::item_tree_model_created,
+            &w->tree_widget().tree_view(), &Tree_View::set_model);
+        });
+  }
+
   void connect_view_controller(
       Main_Window &w, Gui_Controller &c)
   {
     connect_main_window(w, c);
     connect_tree_widget(w.tree_widget(), c);
+    connect_sub_tree_widgets(c);
   }
 
 }

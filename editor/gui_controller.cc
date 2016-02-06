@@ -33,6 +33,8 @@
 #include <editor/gui_command/clipboard_copy.hh>
 #include <editor/gui_command/clipboard_cut.hh>
 #include <editor/gui_command/clipboard_paste.hh>
+#include <editor/gui_command/display_subtree.hh>
+#include <editor/subtree_window.hh>
 #include <tree_model/base.hh>
 
 namespace editor {
@@ -50,7 +52,8 @@ namespace editor {
       add_            (new gui_command::Add(parent_widget_)),
       clipboard_copy_ (new gui_command::Clipboard_Copy(this)),
       clipboard_cut_  (new gui_command::Clipboard_Cut(this)),
-      clipboard_paste_(new gui_command::Clipboard_Paste(this))
+      clipboard_paste_(new gui_command::Clipboard_Paste(this)),
+      display_subtree_(new gui_command::Display_Subtree(parent_widget_))
   {
     connect(open_, &gui_command::Open::item_tree_model_created,
             this, &Gui_Controller::item_tree_model_created);
@@ -113,6 +116,14 @@ namespace editor {
         clipboard_paste_, &gui_command::Clipboard_Paste::set_model);
     connect(this, &Gui_Controller::selection_model_changed,
         clipboard_paste_, &gui_command::Clipboard_Paste::set_selection_model);
+
+    connect(this, &Controller::item_tree_model_created,
+        display_subtree_, &gui_command::Display_Subtree::set_model);
+    connect(this, &Gui_Controller::selection_model_changed,
+        display_subtree_, &gui_command::Display_Subtree::set_selection_model);
+    connect(display_subtree_,
+        &gui_command::Display_Subtree::subtree_window_created,
+        this, &Gui_Controller::subtree_window_created);
   }
   void Gui_Controller::open(const QString &filename)
   {
@@ -156,6 +167,10 @@ namespace editor {
   void Gui_Controller::clipboard_paste_as_child()
   {
     clipboard_paste_->paste_as_child();
+  }
+  void Gui_Controller::display_subtree()
+  {
+    display_subtree_->display();
   }
 
 }

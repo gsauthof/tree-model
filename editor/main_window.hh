@@ -51,6 +51,7 @@ namespace editor {
       QAction &copy_action();
       QAction &paste_action();
       QAction &paste_as_child_action();
+      QAction &display_subtree_action();
 
     public slots:
       void display_status(const QString &msg);

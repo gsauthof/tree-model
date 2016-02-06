@@ -26,10 +26,14 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QEventLoop>
+#include <QDialog>
 
 #include <editor/gui_controller.hh>
 #include <editor/main_window.hh>
 #include <editor/vc_matchmaker.hh>
+#include <editor/subtree_window.hh>
+#include <editor/tree_widget.hh>
+#include <editor/tree_view.hh>
 
 TEST_CASE("copy action", "[editor][qt][gui][mainwindow][clipboard]")
 {
@@ -257,3 +261,93 @@ TEST_CASE("paste child shortcut", "[editor][qt][gui][mainwindow]")
   cb->clear();
 }
 
+TEST_CASE("mw display subtree", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  QTimer::singleShot(0, [&c, &in]() { c.open(in.c_str()); });
+
+  QAbstractItemModel *a = nullptr;
+
+  QTimer::singleShot(300, [&w, &a, &c]{
+      a = c.item_tree_model();
+      REQUIRE(a != nullptr);
+
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_F5,    Qt::NoModifier, 10);
+      });
+
+  QTimer::singleShot(900, [&w, &a, &c]{
+    auto v = w.findChild<QDialog*>();
+    REQUIRE(v);
+    CHECK(v->windowTitle().toStdString() == "GprsCall #3");
+    });
+
+  w.show();
+
+  QEventLoop e;
+  QTimer::singleShot(2000, [&e]{ e.quit(); });
+  e.exec();
+
+}
+
+
+TEST_CASE("mw display subtree model change", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  QTimer::singleShot(0, [&c, &in]() { c.open(in.c_str()); });
+  std::string in2(test::path::in() + "/small.xml");
+
+  QAbstractItemModel *a = nullptr;
+
+  QTimer::singleShot(300, [&w, &a, &c]{
+      a = c.item_tree_model();
+      REQUIRE(a != nullptr);
+
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_F5,    Qt::NoModifier, 10);
+      });
+
+  QTimer::singleShot(900, [&w, &a, &c, &in2]{
+    auto v = w.findChild<QDialog*>();
+    REQUIRE(v);
+    CHECK(v->windowTitle().toStdString() == "GprsCall #3");
+      c.open(in2.c_str());
+    });
+
+  QTimer::singleShot(1900, [&w, &a, &c]{
+    auto v = w.findChild<editor::Subtree_Window*>();
+    REQUIRE(v);
+    CHECK(v->tree_widget().tree_view().rootIndex().isValid() == false);
+    });
+
+  w.show();
+
+  QEventLoop e;
+  QTimer::singleShot(3000, [&e]{ e.quit(); });
+  e.exec();
+
+}
