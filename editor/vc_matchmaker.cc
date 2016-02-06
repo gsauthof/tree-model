@@ -47,7 +47,10 @@ namespace editor {
         &c, &Gui_Controller::clipboard_copy);
     w.connect(&w.cut_action(), &QAction::triggered,
         &c, &Gui_Controller::clipboard_cut);
-
+    w.connect(&w.paste_action(), &QAction::triggered,
+        &c, &Gui_Controller::clipboard_paste);
+    w.connect(&w.paste_as_child_action(), &QAction::triggered,
+        &c, &Gui_Controller::clipboard_paste_as_child);
   }
 
   static void connect_enable_signals(

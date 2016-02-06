@@ -541,12 +541,12 @@ namespace tree_model {
       int row, int column, const QModelIndex &parent)
   {
     if (row == -1 && column == -1) {
-      insert_row_ = 0;
-      return model_->drop_mime_data(data, action, create_index(parent), 1);
+      insert_row_ = rowCount(parent);
+      return model_->drop_mime_data(data, action, create_index(parent), -1);
     } else {
-      insert_row_ = row + 1;
+      insert_row_ = row;
       return model_->drop_mime_data(data, action,
-          create_index(index(row, column, parent)), 2);
+          create_index(index(row, column, parent)), -2);
     }
   }
 

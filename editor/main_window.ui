@@ -49,6 +49,8 @@
     <addaction name="separator"/>
     <addaction name="cut_action"/>
     <addaction name="copy_action"/>
+    <addaction name="paste_action"/>
+    <addaction name="paste_as_child_action"/>
     <addaction name="clear_action"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -116,6 +118,22 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="paste_action">
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="paste_as_child_action">
+   <property name="text">
+    <string>P&amp;aste as child</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+V</string>
    </property>
   </action>
   <action name="clear_action">

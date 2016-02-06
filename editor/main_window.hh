@@ -49,6 +49,8 @@ namespace editor {
       QAction &redo_action();
       QAction &cut_action();
       QAction &copy_action();
+      QAction &paste_action();
+      QAction &paste_as_child_action();
 
     public slots:
       void display_status(const QString &msg);

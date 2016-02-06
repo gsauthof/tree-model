@@ -97,6 +97,14 @@ namespace editor {
   {
     return *ui->copy_action;
   }
+  QAction &Main_Window::paste_action()
+  {
+    return *ui->paste_action;
+  }
+  QAction &Main_Window::paste_as_child_action()
+  {
+    return *ui->paste_as_child_action;
+  }
 
   void Main_Window::update_window_title(const QString &filename)
   {
@@ -117,6 +125,7 @@ namespace editor {
     ui->redo_action->setShortcut(QKeySequence::Redo);
     ui->copy_action->setShortcut(QKeySequence::Copy);
     ui->cut_action->setShortcut(QKeySequence::Cut);
+    ui->paste_action->setShortcut(QKeySequence::Paste);
   }
 
   Main_Window::~Main_Window()

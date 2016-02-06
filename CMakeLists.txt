@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -Wall")
 include (${CMAKE_SOURCE_DIR}/cmake/modules/coverage.cmake)
 include (${CMAKE_SOURCE_DIR}/cmake/modules/sanitize.cmake)
 
-# can't use because we cmake currently has a
+# can't use because cmake currently has a
 # bug the same filename in different directories
 # yields collisions:
 # http://public.kitware.com/Bug/view.php?id=12873
@@ -56,6 +56,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/gui_command/add.hh
   editor/gui_command/clipboard_copy.hh
   editor/gui_command/clipboard_cut.hh
+  editor/gui_command/clipboard_paste.hh
   editor/controller.hh
   editor/gui_controller.hh
   editor/arguments.hh
@@ -97,6 +98,7 @@ set(EDITOR_CC
   editor/gui_command/add.cc
   editor/gui_command/clipboard_copy.cc
   editor/gui_command/clipboard_cut.cc
+  editor/gui_command/clipboard_paste.cc
   editor/arguments.cc
   editor/preview_file_dialog.cc
   editor/preview.cc
@@ -221,6 +223,7 @@ add_executable(ut_gui
   test/editor/gui_command/add.cc
   test/editor/gui_command/clipboard_copy.cc
   test/editor/gui_command/clipboard_cut.cc
+  test/editor/gui_command/clipboard_paste.cc
   test/editor/recent_menu.cc
   test/editor/main_window.cc
 

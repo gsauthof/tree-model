@@ -18,40 +18,40 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#ifndef TREE_MODEL_OPERATION_REMOVE_ROWS_HH
-#define TREE_MODEL_OPERATION_REMOVE_ROWS_HH
+#ifndef EDITOR_GUI_COMMAND_CLIPBOARD_PASTE_HH
+#define EDITOR_GUI_COMMAND_CLIPBOARD_PASTE_HH
 
-#include <tree_model/operation/base.hh>
-#include <tree_model/deep_model_index.hh>
+#include <QObject>
 
-#include <memory>
-#include <deque>
 
 class QAbstractItemModel;
-class QModelIndex;
-class QMimeData;
+class QItemSelectionModel;
 
-namespace tree_model {
-  namespace operation {
+#include <QModelIndex>
 
-    class Remove_Rows : public Base {
-      private:
-        Deep_Model_Index parent_;
-        int first_ {0};
-        int last_  {0};
-        std::deque<std::unique_ptr<QMimeData> > data_;
-        int row_count_ {0};
+namespace editor {
+  namespace gui_command {
+
+    class Clipboard_Paste : public QObject {
+      Q_OBJECT
       public:
-        Remove_Rows(const QModelIndex &parent, int first, int last,
-            QAbstractItemModel &model
-            );
-        ~Remove_Rows();
+        using QObject::QObject;
 
-        void forward(QAbstractItemModel &model) override;
-        void rewind(QAbstractItemModel &model) override;
+      public slots:
+        void set_model(QAbstractItemModel *model);
+        void set_selection_model(const QItemSelectionModel *smodel);
+
+        void paste();
+        void paste_as_child();
+
+      protected:
+              QAbstractItemModel  *model_  {nullptr};
+        const QItemSelectionModel *smodel_ {nullptr};
+      private:
+        void paste(bool insert_before);
     };
 
-  }
-}
+  } // namespace gui_command
+} // namespace editor
 
 #endif

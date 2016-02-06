@@ -377,3 +377,12 @@ TEST_CASE("xml header", "[xml][tree-model]" )
   CHECK(m.header_data(0, Qt::Horizontal).toString().toUtf8().data() == string("Key"));
   CHECK(m.header_data(1, Qt::Horizontal).toString().toUtf8().data() == string("Value"));
 }
+
+TEST_CASE("xml children in empty doc", "[xml][tree-model]")
+{
+  tree_model::XML m(xxxml::new_doc());
+  auto i = m.last_child(tree_model::Index());
+  CHECK(i.is_valid() == false);
+  auto j = m.first_child(tree_model::Index());
+  CHECK(j.is_valid() == false);
+}

@@ -129,7 +129,7 @@ TEST_CASE("cut action", "[editor][qt][gui][mainwindow][clipboard]")
   QApplication::clipboard()->clear();
 }
 
-TEST_CASE("delte shortcut", "[editor][qt][gui][mainwindow]")
+TEST_CASE("delete shortcut", "[editor][qt][gui][mainwindow]")
 {
   editor::Main_Window w;
   editor::Gui_Controller c(&w);
@@ -166,3 +166,94 @@ TEST_CASE("delte shortcut", "[editor][qt][gui][mainwindow]")
   CHECK(old_rowcount == new_rowcount + 1);
 
 }
+
+TEST_CASE("paste shortcut", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  QClipboard *cb = QApplication::clipboard();
+  cb->clear();
+  auto d = new QMimeData();
+  d->setData("text/xml", QByteArray("<OperatorSpecInfoList>"
+        "<OperatorSpecInformation>Foo</OperatorSpecInformation>"
+        "</OperatorSpecInfoList>"));
+  cb->setMimeData(d);
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  QTimer::singleShot(0, [&c, &in]() { c.open(in.c_str()); });
+
+  int old_rowcount = 0;
+  QAbstractItemModel *a = nullptr;
+
+  QTimer::singleShot(300, [&w, &old_rowcount, &a, &c]{
+      a = c.item_tree_model();
+      REQUIRE(a != nullptr);
+      old_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(1, 0));
+
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_V, Qt::ControlModifier | Qt::ShiftModifier, 10);
+      });
+
+  w.show();
+
+  QEventLoop e;
+  QTimer::singleShot(1000, [&e]{ e.quit(); });
+  e.exec();
+
+  auto new_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(1, 0));
+  CHECK(old_rowcount + 1 == new_rowcount);
+
+  cb->clear();
+}
+
+TEST_CASE("paste child shortcut", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  QClipboard *cb = QApplication::clipboard();
+  cb->clear();
+  auto d = new QMimeData();
+  d->setData("text/xml", QByteArray("<Sender>GMS23</Sender>"));
+  cb->setMimeData(d);
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  QTimer::singleShot(0, [&c, &in]() { c.open(in.c_str()); });
+
+  int old_rowcount = 0;
+  QAbstractItemModel *a = nullptr;
+
+  QTimer::singleShot(300, [&w, &old_rowcount, &a, &c]{
+      a = c.item_tree_model();
+      REQUIRE(a != nullptr);
+      old_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(0, 0));
+
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_V,     Qt::ControlModifier, 10);
+      });
+
+  w.show();
+
+  QEventLoop e;
+  QTimer::singleShot(1000, [&e]{ e.quit(); });
+  e.exec();
+
+  auto new_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(0, 0));
+  CHECK(old_rowcount + 1 == new_rowcount);
+  CHECK(a->data(a->index(0,0).child(0, 0).child(0, 1))
+      .toString().toStdString() == "GMS23");
+  CHECK(a->data(a->index(0,0).child(0, 0).child(1, 1))
+      .toString().toStdString() == "WERFD");
+
+  cb->clear();
+}
+

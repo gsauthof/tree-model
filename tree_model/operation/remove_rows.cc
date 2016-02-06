@@ -37,7 +37,8 @@ namespace tree_model {
       :
         parent_(parent),
         first_(first),
-        last_(last)
+        last_(last),
+        row_count_(model.rowCount(parent_))
     {
       begin_finalize();
 
@@ -59,11 +60,12 @@ namespace tree_model {
     {
       begin_rewind();
       QModelIndex parent(parent_);
-      int row = first_ - 1;
-      for (auto &d : data_) {
-        int column = row == -1 ? -1 : 0;
-        model.dropMimeData(d.get(), Qt::CopyAction, row, column, parent);
-        ++row;
+      if (last_ + 1 == row_count_) {
+        for (auto &d : data_)
+          model.dropMimeData(d.get(), Qt::CopyAction, -1, -1, parent);
+      } else {
+        for (auto i = data_.rbegin(); i != data_.rend(); ++i)
+          model.dropMimeData((*i).get(), Qt::CopyAction, first_, 0, parent);
       }
     }
 

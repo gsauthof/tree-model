@@ -158,7 +158,10 @@ namespace tree_model {
       const xmlNode *child = xxxml::first_element_child(node);
       return create_index(0, child);
     } else {
-      return create_index(0, xxxml::doc::get_root_element(doc_));
+      if (has_children(index))
+        return create_index(0, xxxml::doc::get_root_element(doc_));
+      else
+        return Index();
     }
   }
 
@@ -171,7 +174,10 @@ namespace tree_model {
       const xmlNode *child = xxxml::last_element_child(node);
       return create_index(0, child);
     } else {
-      return create_index(0, xxxml::doc::get_root_element(doc_));
+      if (has_children(index))
+        return create_index(0, xxxml::doc::get_root_element(doc_));
+      else
+        return Index();
     }
   }
 
@@ -291,10 +297,16 @@ namespace tree_model {
     if (action == Qt::CopyAction) {
       xmlNode *node = static_cast<xmlNode*>(i.internal_pointer());
       QByteArray a(data->data("text/xml"));
-      begin_insert_index(i, position);
-      xmlNode *new_node = xxxml::util::insert(doc_, node,
-          a.data(), a.data() + a.size(), position);
-      end_insert_index(create_index(0, new_node));
+      try {
+        auto new_node = xxxml::util::create_node(doc_,
+            a.data(), a.data() + a.size());
+        begin_insert_index(i, position);
+        auto x = new_node.release();
+        xxxml::util::insert(doc_, node, x, position);
+        end_insert_index(create_index(0, x));
+      } catch (const xxxml::Parse_Error &e) {
+        return false;
+      }
       return true;
     } else {
       return false;

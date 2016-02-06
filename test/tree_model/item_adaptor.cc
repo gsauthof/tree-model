@@ -533,7 +533,7 @@ TEST_CASE("mime drop", "[adaptor][xml][tree-model]" )
   QMimeData md;
   md.setData("text/xml", b);
   CHECK(a.rowCount(a.index(0, 0)) == 1);
-  REQUIRE(a.dropMimeData(&md, Qt::CopyAction, 0, 0, a.index(0, 0)) == true);
+  REQUIRE(a.dropMimeData(&md, Qt::CopyAction, -1, -1, a.index(0, 0)) == true);
   CHECK(a.rowCount(a.index(0, 0)) == 2);
   CHECK(a.data(a.index(0, 0).child(1, 1)).toString().toUtf8().data() == string("World"));
 
@@ -563,7 +563,7 @@ TEST_CASE("mime drop before", "[adaptor][xml][tree-model]" )
   QMimeData md;
   md.setData("text/xml", b);
   CHECK(a.rowCount(a.index(0, 0)) == 1);
-  REQUIRE(a.dropMimeData(&md, Qt::CopyAction, -1, -1, a.index(0, 0)) == true);
+  REQUIRE(a.dropMimeData(&md, Qt::CopyAction, 0, 0, a.index(0, 0)) == true);
   CHECK(a.rowCount(a.index(0, 0)) == 2);
   CHECK(a.data(a.index(0, 0).child(1, 1)).toString().toUtf8().data() == string("Hello"));
 
