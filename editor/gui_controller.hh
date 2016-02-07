@@ -36,7 +36,6 @@ namespace editor {
     class Open;
     class Select_Open;
     class Save;
-    class Display_Tree_Context;
     class Edit;
     class Add;
     class Clipboard_Copy;
@@ -57,14 +56,13 @@ namespace editor {
       void save();
       void select_save();
       void select_save_copy();
-      void display_tree_context(const QPoint &global_pos,
-            const QModelIndex &context_index,
-            const QModelIndexList &selected_indexes);
       void clipboard_cut();
       void clipboard_copy();
       void clipboard_paste();
       void clipboard_paste_as_child();
       void display_subtree();
+      void add(const QModelIndex &i);
+      void edit(const QModelIndex &i);
 
     private:
       QWidget                           *parent_widget_        {nullptr};
@@ -72,7 +70,6 @@ namespace editor {
       gui_command::Open                 *open_                 {nullptr};
       gui_command::Select_Open          *select_open_          {nullptr};
       gui_command::Save                 *save_                 {nullptr};
-      gui_command::Display_Tree_Context *display_tree_context_ {nullptr};
       gui_command::Edit                 *edit_                 {nullptr};
       gui_command::Add                  *add_                  {nullptr};
       gui_command::Clipboard_Copy       *clipboard_copy_       {nullptr};

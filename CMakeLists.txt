@@ -53,7 +53,6 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/gui_command/select_open.hh
   editor/gui_command/open.hh
   editor/gui_command/save.hh
-  editor/gui_command/display_tree_context.hh
   editor/gui_command/edit.hh
   editor/gui_command/add.hh
   editor/gui_command/clipboard_copy.hh
@@ -97,7 +96,6 @@ set(EDITOR_CC
   editor/gui_command/open.cc
   editor/gui_command/select_open.cc
   editor/gui_command/save.cc
-  editor/gui_command/display_tree_context.cc
   editor/gui_command/edit.cc
   editor/gui_command/add.cc
   editor/gui_command/clipboard_copy.cc

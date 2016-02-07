@@ -94,18 +94,23 @@ namespace editor {
         &w, &Main_Window::update_window_title);
   }
 
-  static void connect_tree_widget(Tree_Widget &w, Gui_Controller &c)
+  static void connect_tree_view(Tree_View &tv, Gui_Controller &c)
   {
-    Tree_View &tv = w.tree_view();
-
     c.connect(&c, &Gui_Controller::item_tree_model_created,
         &tv, &Tree_View::set_model);
 
-    tv.connect(&tv, &editor::Tree_View::context_requested,
-        &c, &Gui_Controller::display_tree_context);
     tv.connect(&tv, &editor::Tree_View::remove_triggered,
         &c, &Controller::remove);
+    tv.connect(&tv, &editor::Tree_View::edit_triggered,
+        &c, &Gui_Controller::edit);
+    tv.connect(&tv, &editor::Tree_View::add_triggered,
+        &c, &Gui_Controller::add);
+  }
 
+  static void connect_tree_widget(Tree_Widget &w, Gui_Controller &c)
+  {
+    Tree_View &tv = w.tree_view();
+    connect_tree_view(tv, c);
     tv.connect(&tv, &editor::Tree_View::selection_model_changed,
         &c, &Gui_Controller::selection_model_changed);
   }
@@ -113,10 +118,7 @@ namespace editor {
   static void connect_sub_tree_widgets(Gui_Controller &c)
   {
     c.connect(&c, &Gui_Controller::subtree_window_created,
-        [&c](auto w){
-        c.connect(&c, &Controller::item_tree_model_created,
-            &w->tree_widget().tree_view(), &Tree_View::set_model);
-        });
+        [&c](auto w){ connect_tree_view(w->tree_widget().tree_view(), c); });
   }
 
   void connect_view_controller(

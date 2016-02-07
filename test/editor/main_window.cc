@@ -351,3 +351,46 @@ TEST_CASE("mw display subtree model change", "[editor][qt][gui][mainwindow]")
   e.exec();
 
 }
+
+TEST_CASE("mw tree view context menu", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  QTimer::singleShot(0, [&c, &in]() { c.open(in.c_str()); });
+
+  QAbstractItemModel *a = nullptr;
+  int old_rowcount = 0;
+  QTimer::singleShot(300, [&w, &c, &a, &old_rowcount]{
+      a = c.item_tree_model();
+      REQUIRE(a != nullptr);
+      old_rowcount = a->rowCount(a->index(0, 0));
+      auto v = w.focusWidget();
+      QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+      });
+  QTimer::singleShot(600, [&w]{
+      auto v = QApplication::focusWindow();
+      REQUIRE(v);
+      QTest::mouseClick(v, Qt::RightButton);
+      });
+  QTimer::singleShot(900, [&w]{
+      auto v = QApplication::focusWindow();
+      REQUIRE(v);
+      QTest::keyClick(v, Qt::Key_R, Qt::AltModifier, 10);
+      });
+  int new_rowcount = 0;
+  QTimer::singleShot(1200, [&w, &a, &old_rowcount, &new_rowcount]{
+      new_rowcount = a->rowCount(a->index(0, 0));
+      CHECK(old_rowcount == new_rowcount + 1);
+      });
+
+  w.show();
+
+  QEventLoop e;
+  QTimer::singleShot(3000, [&e]{ e.quit(); });
+  e.exec();
+}

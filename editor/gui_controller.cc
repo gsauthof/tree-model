@@ -27,7 +27,6 @@
 #include <editor/gui_command/open.hh>
 #include <editor/gui_command/select_open.hh>
 #include <editor/gui_command/save.hh>
-#include <editor/gui_command/display_tree_context.hh>
 #include <editor/gui_command/edit.hh>
 #include <editor/gui_command/add.hh>
 #include <editor/gui_command/clipboard_copy.hh>
@@ -46,8 +45,6 @@ namespace editor {
       open_           (new gui_command::Open(parent_widget_)),
       select_open_    (new gui_command::Select_Open(parent_widget_)),
       save_           (new gui_command::Save(parent_widget_)),
-      display_tree_context_(
-                       new gui_command::Display_Tree_Context(parent_widget_)),
       edit_           (new gui_command::Edit(parent_widget_)),
       add_            (new gui_command::Add(parent_widget_)),
       clipboard_copy_ (new gui_command::Clipboard_Copy(this)),
@@ -85,24 +82,11 @@ namespace editor {
     connect(this, &Controller::file_opened,
         save_, &gui_command::Save::set_filename);
 
-    connect(display_tree_context_,
-        &gui_command::Display_Tree_Context::remove_triggered,
-        this , &Gui_Controller::remove);
-    connect(this, &Controller::item_tree_model_created,
-            display_tree_context_,
-            &gui_command::Display_Tree_Context::set_item_tree_model);
-
     connect(this, &Controller::item_tree_model_created,
         edit_, &gui_command::Edit::set_model);
-    connect(display_tree_context_,
-        &gui_command::Display_Tree_Context::edit_triggered,
-        edit_, &gui_command::Edit::edit);
 
     connect(this, &Controller::item_tree_model_created,
         add_, &gui_command::Add::set_model);
-    connect(display_tree_context_,
-        &gui_command::Display_Tree_Context::add_triggered,
-        add_, &gui_command::Add::add);
 
     connect(this, &Controller::item_tree_model_created,
         clipboard_copy_, &gui_command::Clipboard_Copy::set_model);
@@ -146,12 +130,6 @@ namespace editor {
   {
     save_->select_save_copy();
   }
-  void Gui_Controller::display_tree_context(const QPoint &global_pos,
-        const QModelIndex &context_index,
-        const QModelIndexList &selected_indexes)
-  {
-    display_tree_context_->display(global_pos, context_index, selected_indexes);
-  }
   void Gui_Controller::clipboard_cut()
   {
     clipboard_cut_->cut();
@@ -171,6 +149,14 @@ namespace editor {
   void Gui_Controller::display_subtree()
   {
     display_subtree_->display();
+  }
+  void Gui_Controller::add(const QModelIndex &i)
+  {
+    add_->add(i);
+  }
+  void Gui_Controller::edit(const QModelIndex &i)
+  {
+    edit_->edit(i);
   }
 
 }

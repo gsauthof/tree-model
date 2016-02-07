@@ -33,6 +33,9 @@ namespace editor {
         parent_widget_(parent)
     {
     }
+
+    // XXX don't add child if parent has a value
+    // (i.e. a second column)
     void Add::add(const QModelIndex &index)
     {
       if (!model_)

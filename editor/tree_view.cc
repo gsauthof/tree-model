@@ -22,6 +22,8 @@
 
 #include <QContextMenuEvent>
 #include <QDebug>
+#include <QMenu>
+#include <QAction>
 
 namespace editor {
 
@@ -29,15 +31,30 @@ namespace editor {
     :
       QTreeView(parent)
   {
+    remove_action_ = new QAction(tr("&Remove"), this);
+    connect(remove_action_, &QAction::triggered,
+        [this](){ emit remove_triggered(selectedIndexes()); });
+    edit_action_ = new QAction(tr("&Edit..."), this);
+    connect(edit_action_, &QAction::triggered,
+        [this](){ emit edit_triggered(context_index_); });
+    add_action_ = new QAction(tr("&Add child..."), this);
+    connect(add_action_, &QAction::triggered,
+        [this](){ emit add_triggered(context_index_); });
   }
 
   void Tree_View::contextMenuEvent(QContextMenuEvent *event)
   {
-    auto context_index = indexAt(event->pos());
-    auto selected_indexes = selectedIndexes();
-    emit context_requested(event->globalPos(),
-        context_index,
-        selected_indexes);
+    context_index_ = indexAt(event->pos());
+    auto global_pos = event->globalPos();
+
+    QMenu menu(parentWidget());
+    menu.addAction(edit_action_);
+    menu.addAction(add_action_);
+    menu.addAction(remove_action_);
+
+    menu.exec(global_pos);
+
+    context_index_ = QModelIndex();
   }
 
   void Tree_View::keyPressEvent(QKeyEvent *event)

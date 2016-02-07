@@ -22,6 +22,7 @@
 #define EDITOR_TREE_VIEW_HH
 
 #include <QTreeView>
+class QAction;
 
 namespace editor {
 
@@ -35,10 +36,9 @@ class Tree_View : public QTreeView
     void keyPressEvent(QKeyEvent *event) override;
 
   signals:
-    void context_requested(const QPoint &global_pos,
-        const QModelIndex &context_index,
-        const QModelIndexList &selected_indexes);
     void remove_triggered(const QModelIndexList &selected_indexes);
+    void edit_triggered  (const QModelIndex &);
+    void add_triggered   (const QModelIndex &);
 
     void selection_model_changed(const QItemSelectionModel *smodel);
     void selection_changed(const QItemSelection &selected,
@@ -51,6 +51,12 @@ class Tree_View : public QTreeView
   protected slots:
     void selectionChanged(const QItemSelection &selected,
         const QItemSelection &deselected) override;
+
+  private:
+    QModelIndex context_index_;
+    QAction *add_action_    {nullptr};
+    QAction *edit_action_   {nullptr};
+    QAction *remove_action_ {nullptr};
 
 };
 
