@@ -33,6 +33,34 @@ namespace editor {
     ui->setupUi(this);
     connect(ui->tree_view, &Tree_View::something_selected,
         this, &Tree_Widget::something_selected);
+
+    connect(ui->tree_view, &Tree_View::current_changed,
+        [this](const QModelIndex &current,
+          const QModelIndex &previous) { init_slider_bar(current); });
+    connect(ui->slider_bar, &Slider_Bar::jump_requested,
+        this, &Tree_Widget::jump_to_rank);
+  }
+
+  void Tree_Widget::init_slider_bar(const QModelIndex &current)
+  {
+    auto m = ui->tree_view->model();
+    if (!m) return;
+    auto n = m->rowCount(current.parent());
+    auto pos = current.row()+1;
+    ui->slider_bar->init(pos, n);
+  }
+
+  void Tree_Widget::jump_to_rank(int value)
+  {
+    if (value < 1)
+      return;
+    auto i = ui->tree_view->currentIndex().sibling(value-1, 0);
+    // also selects:
+    ui->tree_view->setCurrentIndex(i);
+    // does not set the current index:
+    //ui->tree_view->selectionModel()->select(i,
+    //    QItemSelectionModel::ClearAndSelect);
+    ui->tree_view->scrollTo(i, QAbstractItemView::PositionAtCenter);
   }
 
   Tree_Widget::~Tree_Widget()

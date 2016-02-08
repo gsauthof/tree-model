@@ -43,6 +43,9 @@ namespace editor {
     private:
       Ui::Tree_Widget *ui {nullptr};
 
+      void init_slider_bar(const QModelIndex &current);
+      void jump_to_rank(int value);
+
     signals:
       void something_selected(bool b);
   };

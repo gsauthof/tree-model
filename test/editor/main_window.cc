@@ -27,6 +27,7 @@
 #include <QClipboard>
 #include <QEventLoop>
 #include <QDialog>
+#include <string>
 
 #include <editor/gui_controller.hh>
 #include <editor/main_window.hh>
@@ -34,6 +35,8 @@
 #include <editor/subtree_window.hh>
 #include <editor/tree_widget.hh>
 #include <editor/tree_view.hh>
+
+using namespace std;
 
 TEST_CASE("copy action", "[editor][qt][gui][mainwindow][clipboard]")
 {
@@ -393,4 +396,51 @@ TEST_CASE("mw tree view context menu", "[editor][qt][gui][mainwindow]")
   QEventLoop e;
   QTimer::singleShot(3000, [&e]{ e.quit(); });
   e.exec();
+}
+
+TEST_CASE("mw tree view slider goto", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  QClipboard *cb = QApplication::clipboard();
+  cb->clear();
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  QTimer::singleShot(0, [&c, &in]() { c.open(in.c_str()); });
+
+  QAbstractItemModel *a = nullptr;
+  int old_rowcount = 0;
+  QTimer::singleShot(300, [&w, &c, &a, &old_rowcount]{
+      a = c.item_tree_model();
+      REQUIRE(a != nullptr);
+      auto v = QApplication::focusWindow();
+      REQUIRE(v != nullptr);
+      QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_G,     Qt::ControlModifier, 10);
+      // -> in rank line edit
+      QTest::keyClick(v, Qt::Key_3,     Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Return,Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Tab,   Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Tab,   Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Tab,   Qt::NoModifier, 10);
+      // -> in tree_view
+      QTest::keyClick(v, Qt::Key_Up,    Qt::NoModifier, 10);
+      // -> make sure that current index is also correctly set
+      QTest::keyClick(v, Qt::Key_C,     Qt::ControlModifier, 10);
+      });
+
+  w.show();
+
+  QEventLoop e;
+  QTimer::singleShot(1000, [&e]{ e.quit(); });
+  e.exec();
+
+  CHECK(cb->mimeData()->data("text/xml").data()
+      == string("<Recipient>XLKJE</Recipient>"));
+  cb->clear();
 }

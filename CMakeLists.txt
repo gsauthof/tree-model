@@ -37,6 +37,8 @@ qt5_wrap_ui(EDITOR_UI
   editor/main_window.ui
   editor/subtree_window.ui
   editor/tree_widget.ui
+  editor/tree_widget.ui
+  editor/slider_bar.ui
   editor/child_dialog.ui
   )
 
@@ -44,6 +46,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/main_window.hh
   editor/subtree_window.hh
   editor/tree_widget.hh
+  editor/slider_bar.hh
   editor/child_dialog.hh
   editor/command/open.hh
   editor/command/async_open.hh
@@ -83,6 +86,7 @@ set(EDITOR_CC
   editor/main_window.cc
   editor/subtree_window.cc
   editor/tree_widget.cc
+  editor/slider_bar.cc
   editor/child_dialog.cc
   editor/controller.cc
   editor/gui_controller.cc
@@ -107,6 +111,7 @@ set(EDITOR_CC
   editor/preview.cc
   editor/progress_dialog.cc
   editor/tree_view.cc
+  editor/absolute_slider_style.cc
   )
 set(TREE_MODEL_CC
   tree_model/index.cc
@@ -232,6 +237,7 @@ add_executable(ut_gui
   test/editor/gui_command/display_subtree.cc
   test/editor/recent_menu.cc
   test/editor/main_window.cc
+  test/editor/slider_bar.cc
 
   ${TREE_MODEL_CC}
   ${EDITOR_CC}

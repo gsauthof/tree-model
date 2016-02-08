@@ -83,6 +83,12 @@ namespace editor {
     emit selection_changed(selected, deselected);
     emit something_selected(!selected.empty());
   }
+  void Tree_View::currentChanged(const QModelIndex &current,
+      const QModelIndex &previous)
+  {
+    QTreeView::currentChanged(current, previous);
+    emit current_changed(current, previous);
+  }
 
 } // namespace editor
 

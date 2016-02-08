@@ -21,6 +21,10 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="editor::Slider_Bar" name="slider_bar">
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -28,6 +32,11 @@
    <class>editor::Tree_View</class>
    <extends>QTreeView</extends>
    <header>editor/tree_view.hh</header>
+  </customwidget>
+  <customwidget>
+   <class>editor::Slider_Bar</class>
+   <extends>QWidget</extends>
+   <header>editor/slider_bar.hh</header>
   </customwidget>
  </customwidgets>
  <resources/>

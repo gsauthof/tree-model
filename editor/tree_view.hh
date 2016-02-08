@@ -45,12 +45,17 @@ class Tree_View : public QTreeView
         const QItemSelection &deselected);
     void something_selected(bool b);
 
+    void current_changed(const QModelIndex &current,
+        const QModelIndex &previous);
+
   public slots:
     void set_model(QAbstractItemModel *model);
 
   protected slots:
     void selectionChanged(const QItemSelection &selected,
         const QItemSelection &deselected) override;
+    void currentChanged(const QModelIndex &current,
+        const QModelIndex &previous) override;
 
   private:
     QModelIndex context_index_;
