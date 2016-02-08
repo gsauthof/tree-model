@@ -37,7 +37,6 @@ qt5_wrap_ui(EDITOR_UI
   editor/main_window.ui
   editor/subtree_window.ui
   editor/tree_widget.ui
-  editor/tree_widget.ui
   editor/slider_bar.ui
   editor/child_dialog.ui
   )
