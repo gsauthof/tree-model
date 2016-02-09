@@ -41,6 +41,7 @@ namespace editor {
       ~Main_Window();
       Recent_Menu &recent_menu();
       Tree_Widget &tree_widget();
+      QAction &new_action();
       QAction &open_action();
       QAction &save_action();
       QAction &save_as_action();
@@ -52,10 +53,13 @@ namespace editor {
       QAction &paste_action();
       QAction &paste_as_child_action();
       QAction &display_subtree_action();
+      QAction &quit_action();
 
     public slots:
       void display_status(const QString &msg);
       void update_window_title(const QString &filename);
+    protected:
+      void closeEvent(QCloseEvent *event) override;
     private slots:
     private:
       Ui::Main_Window *ui {nullptr};

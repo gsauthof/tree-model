@@ -18,41 +18,38 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#ifndef EDITOR_SLIDER_BAR_HH
-#define EDITOR_SLIDER_BAR_HH
+#include <catch.hpp>
+#include <test/test.hh>
 
-#include <QWidget>
+#include <QtTest/QtTest>
+#include <QDebug>
+#include <QApplication>
 
-namespace editor {
+#include <editor/instance.hh>
 
-  namespace Ui {
-    class Slider_Bar;
-  }
+TEST_CASE("instance basic", "[editor][qt][gui][instance]")
+{
+  editor::Instance i;
 
-  class Slider_Bar : public QWidget
-  {
-    Q_OBJECT
+  i.show();
 
-    public:
-      explicit Slider_Bar(QWidget *parent = nullptr);
-      ~Slider_Bar();
+  QTest::qWait(300);
 
-    public slots:
-      void init(int pos, int max);
+  auto w = QApplication::focusWindow();
+  REQUIRE(w);
+  CHECK(w->title().toStdString() == "unnamed");
 
-    signals:
-      void jump_requested(int pos);
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  i.open(in.c_str());
 
-    private:
-      Ui::Slider_Bar *ui;
+  QTest::qWait(300);
 
-      void setup_slider_machine();
+  CHECK(w->title().endsWith("tap_3_12_small.xml"));
 
-    private slots:
-      void jump_to_edit_line_rank();
+  i.close();
+  QTest::qWait(300);
 
-  };
+  w = QApplication::focusWindow();
+  CHECK(!w);
 
-
-} // namespace editor
-#endif // EDITOR_SLIDER_BAR_HH
+}

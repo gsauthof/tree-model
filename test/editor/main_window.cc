@@ -444,3 +444,45 @@ TEST_CASE("mw tree view slider goto", "[editor][qt][gui][mainwindow]")
       == string("<Recipient>XLKJE</Recipient>"));
   cb->clear();
 }
+
+TEST_CASE("mw tree close ask cancel", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  w.show();
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  c.open(in.c_str());
+
+  QTest::qWait(300);
+
+
+  auto v = QApplication::focusWindow();
+  QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Delete,Qt::NoModifier, 10);
+
+  QTest::qWait(100);
+
+  QTimer::singleShot(300, []() {
+    auto v = QApplication::modalWindow();
+    REQUIRE(v);
+    CHECK(v->title().toStdString() == "");
+
+    QTest::keyClick(v, Qt::Key_Escape, Qt::NoModifier, 10);
+    QTest::qWait(300);
+  });
+  QTest::keyClick(v, Qt::Key_W, Qt::ControlModifier, 10);
+  QTest::qWait(500);
+
+  REQUIRE(QApplication::topLevelWindows().size() == 1);
+  v = QApplication::topLevelWindows().front();
+  // does not fly for focus-follows-mouse window managers ...
+  //v = QApplication::focusWindow();
+  REQUIRE(v);
+  CHECK(v->title().endsWith("tap_3_12_small.xml*"));
+  QTest::qWait(300);
+}
+

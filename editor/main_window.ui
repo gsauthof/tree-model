@@ -33,7 +33,10 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="new_action"/>
     <addaction name="open_action"/>
+    <addaction name="close_action"/>
+    <addaction name="separator"/>
     <addaction name="save_action"/>
     <addaction name="save_as_action"/>
     <addaction name="save_a_copy_action"/>
@@ -71,6 +74,22 @@
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="new_action">
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="close_action">
+   <property name="text">
+    <string>&amp;Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
   <action name="open_action">
    <property name="text">
     <string>&amp;Open</string>
@@ -190,22 +209,4 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>quit_action</sender>
-   <signal>triggered()</signal>
-   <receiver>Main_Window</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
 </ui>

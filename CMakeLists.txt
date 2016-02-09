@@ -69,6 +69,8 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/progress_dialog.hh
   editor/tree_view.hh
   editor/recent_menu.hh
+  editor/instance.hh
+  editor/instance_manager.hh
   )
 qt5_wrap_cpp(TREE_MOC
   tree_model/item_adaptor.hh
@@ -111,6 +113,8 @@ set(EDITOR_CC
   editor/progress_dialog.cc
   editor/tree_view.cc
   editor/absolute_slider_style.cc
+  editor/instance.cc
+  editor/instance_manager.cc
   )
 set(TREE_MODEL_CC
   tree_model/index.cc
@@ -237,6 +241,8 @@ add_executable(ut_gui
   test/editor/recent_menu.cc
   test/editor/main_window.cc
   test/editor/slider_bar.cc
+  test/editor/instance.cc
+  test/editor/instance_manager.cc
 
   ${TREE_MODEL_CC}
   ${EDITOR_CC}

@@ -25,6 +25,8 @@
 #include <QMessageBox>
 #include <QClipboard>
 #include <QDebug>
+#include <QMessageBox>
+#include <QCloseEvent>
 
 namespace editor {
 
@@ -37,6 +39,9 @@ namespace editor {
     ui->menu_File->insertMenu(ui->save_action, recent_menu_);
     setup_shortcuts();
     setWindowTitle(tr("unnamed[*]"));
+
+    connect(ui->close_action, &QAction::triggered,
+        this, &Main_Window::close);
 
     connect(ui->about_action, &QAction::triggered,
         [this](){
@@ -70,6 +75,10 @@ namespace editor {
   Tree_Widget &Main_Window::tree_widget()
   {
     return *ui->widget;
+  }
+  QAction &Main_Window::new_action()
+  {
+    return *ui->new_action;
   }
   QAction &Main_Window::open_action()
   {
@@ -115,6 +124,10 @@ namespace editor {
   {
     return *ui->display_subtree_action;
   }
+  QAction &Main_Window::quit_action()
+  {
+    return *ui->quit_action;
+  }
 
   void Main_Window::update_window_title(const QString &filename)
   {
@@ -146,6 +159,40 @@ namespace editor {
   void Main_Window::display_status(const QString &msg)
   {
     statusBar()->showMessage(msg, 30000);
+  }
+
+  void Main_Window::closeEvent(QCloseEvent *event)
+  {
+    if (isWindowModified()) {
+      QMessageBox q(this);
+      q.setText(tr("The file has been modified."));
+      q.setInformativeText(tr("Do you want to save your changes?"));
+      q.setStandardButtons(/*QMessageBox::Save |*/ QMessageBox::Discard
+          | QMessageBox::Cancel);
+      q.setDefaultButton(QMessageBox::Discard);
+      q.setDetailedText(windowTitle());
+      int ret = q.exec();
+      switch (ret) {
+        case QMessageBox::Cancel:
+          event->ignore();
+          break;
+          /*
+        case QMessageBox::Save:
+          // TODO: worth it?
+          // would also need to handle save-as situations
+          // and write errors ...
+          // thus, just calling an async-save is probably
+          // not necessarily sufficient
+          ui->save_action->trigger();
+          event->accept();
+          break;
+          */
+        default:
+          event->accept();
+      }
+    } else {
+      event->accept();
+    }
   }
 
 }

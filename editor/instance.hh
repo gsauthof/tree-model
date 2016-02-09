@@ -18,41 +18,35 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#ifndef EDITOR_SLIDER_BAR_HH
-#define EDITOR_SLIDER_BAR_HH
+#ifndef INSTANCE_HH
+#define INSTANCE_HH
 
-#include <QWidget>
+#include <QObject>
 
 namespace editor {
+  class Main_Window;
+  class Gui_Controller;
 
-  namespace Ui {
-    class Slider_Bar;
-  }
-
-  class Slider_Bar : public QWidget
-  {
+  class Instance : public QObject {
     Q_OBJECT
-
     public:
-      explicit Slider_Bar(QWidget *parent = nullptr);
-      ~Slider_Bar();
+      Instance(QObject *parent = nullptr);
+      ~Instance();
 
     public slots:
-      void init(int pos, int max);
+      void open(const QString &filename);
+      void show();
+      void close();
 
     signals:
-      void jump_requested(int pos);
+      void new_requested();
+      void quit_requested();
 
     private:
-      Ui::Slider_Bar *ui;
-
-      void setup_slider_machine();
-
-    private slots:
-      void jump_to_edit_line_rank();
-
+      Main_Window *main_window_ {nullptr};
+      Gui_Controller *gui_controller_ {nullptr};
   };
 
+}
 
-} // namespace editor
-#endif // EDITOR_SLIDER_BAR_HH
+#endif

@@ -19,9 +19,8 @@
 
 }}} */
 #include "arguments.hh"
-#include "main_window.hh"
-#include "gui_controller.hh"
-#include "vc_matchmaker.hh"
+
+#include "instance_manager.hh"
 
 #include <QApplication>
 #include <QTimer>
@@ -43,15 +42,11 @@ int main(int argc, char **argv)
 
   editor::Arguments args(argc, argv);
 
-  editor::Main_Window w;
-  editor::Gui_Controller c(&w);
-  editor::connect_view_controller(w, c);
+  editor::Instance_Manager im;
 
   args.connect(&args, &editor::Arguments::open_triggered,
-                &c, &editor::Gui_Controller::open);
+                &im, &editor::Instance_Manager::first_open_requested);
   QTimer::singleShot(0, &args, SLOT(parse()));
-
-  w.show();
 
   return a.exec();
 }
