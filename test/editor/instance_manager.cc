@@ -25,6 +25,8 @@
 #include <QDebug>
 #include <QApplication>
 
+#include <boost/filesystem.hpp>
+
 #include <editor/instance_manager.hh>
 
 TEST_CASE("instance manager basic", "[editor][qt][gui][instance][manager]")
@@ -120,3 +122,39 @@ TEST_CASE("instance manager two shortcut", "[editor][qt][gui][instance][manager]
   }
 }
 
+TEST_CASE("im tree close ask discard", "[editor][qt][gui][instance][manager]")
+{
+  editor::Instance_Manager i;
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  auto old_size = boost::filesystem::file_size(in);
+  i.first_open_requested(in.c_str());
+
+  QTest::qWait(300);
+
+  auto v = QApplication::focusWindow();
+  QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Delete,Qt::NoModifier, 10);
+
+  QTest::qWait(100);
+
+  QTimer::singleShot(300, []() {
+    auto v = QApplication::modalWindow();
+    REQUIRE(v);
+    CHECK(v->title().toStdString() == "");
+
+    // default button is discard -> return triggers discard
+    QTest::keyClick(v, Qt::Key_Return, Qt::NoModifier, 10);
+    QTest::qWait(300);
+  });
+  QTest::keyClick(v, Qt::Key_Q, Qt::ControlModifier, 10);
+  QTest::qWait(500);
+
+  for (auto v : QApplication::topLevelWindows()) {
+    CHECK(v->isVisible() == false);
+  }
+  auto new_size = boost::filesystem::file_size(in);
+  // test that it wasn't saved
+  CHECK(old_size == new_size);
+}
