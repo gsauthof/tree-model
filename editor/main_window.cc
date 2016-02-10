@@ -171,8 +171,8 @@ namespace editor {
           | QMessageBox::Cancel);
       q.setDefaultButton(QMessageBox::Discard);
       q.setDetailedText(windowTitle());
-      int ret = q.exec();
-      switch (ret) {
+      int r = q.exec();
+      switch (r) {
         case QMessageBox::Cancel:
           event->ignore();
           break;
