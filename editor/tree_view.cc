@@ -37,9 +37,34 @@ namespace editor {
     edit_action_ = new QAction(tr("&Edit..."), this);
     connect(edit_action_, &QAction::triggered,
         [this](){ emit edit_triggered(context_index_); });
-    add_action_ = new QAction(tr("&Add child..."), this);
-    connect(add_action_, &QAction::triggered,
-        [this](){ emit add_triggered(context_index_); });
+    add_child_action_ = new QAction(tr("&Add child..."), this);
+    connect(add_child_action_, &QAction::triggered,
+        this, &Tree_View::trigger_add_child);
+    add_sibling_action_ = new QAction(tr("Add &sibling..."), this);
+    connect(add_sibling_action_, &QAction::triggered,
+        this, &Tree_View::trigger_add_sibling);
+  }
+
+  QModelIndex Tree_View::index_for_update()
+  {
+    if (context_menu_visible_)
+      return context_index_;
+    else {
+      auto is = selectedIndexes();
+      if (is.empty())
+        return QModelIndex();
+      else
+        return is.front();
+    }
+  }
+
+  void Tree_View::trigger_add_child()
+  {
+    emit add_child_triggered(index_for_update()); 
+  }
+  void Tree_View::trigger_add_sibling()
+  {
+    emit add_sibling_triggered(index_for_update()); 
   }
 
   void Tree_View::contextMenuEvent(QContextMenuEvent *event)
@@ -49,10 +74,14 @@ namespace editor {
 
     QMenu menu(parentWidget());
     menu.addAction(edit_action_);
-    menu.addAction(add_action_);
+    menu.addAction(add_sibling_action_);
+    menu.addAction(add_child_action_);
+    menu.addSeparator();
     menu.addAction(remove_action_);
 
+    context_menu_visible_ = true;
     menu.exec(global_pos);
+    context_menu_visible_ = false;
 
     context_index_ = QModelIndex();
   }

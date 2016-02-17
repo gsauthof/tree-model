@@ -37,13 +37,16 @@ namespace editor {
         explicit Add(QWidget *parent = nullptr);
 
       public slots:
-        void add(const QModelIndex &index);
+        void add_child(const QModelIndex &index);
+        void add_sibling(const QModelIndex &index);
         void set_model(QAbstractItemModel *model);
 
       protected:
         QWidget *parent_widget_ {nullptr};
       private:
         QAbstractItemModel *model_ {nullptr};
+
+        void add_internal(const QModelIndex &index, bool as_child = true);
     };
 
   } // namespace gui_command

@@ -61,7 +61,8 @@ namespace editor {
       void clipboard_paste();
       void clipboard_paste_as_child();
       void display_subtree();
-      void add(const QModelIndex &i);
+      void add_child(const QModelIndex &i);
+      void add_sibling(const QModelIndex &i);
       void edit(const QModelIndex &i);
 
     private:

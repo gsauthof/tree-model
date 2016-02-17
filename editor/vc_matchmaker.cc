@@ -103,8 +103,10 @@ namespace editor {
         &c, &Controller::remove);
     tv.connect(&tv, &editor::Tree_View::edit_triggered,
         &c, &Gui_Controller::edit);
-    tv.connect(&tv, &editor::Tree_View::add_triggered,
-        &c, &Gui_Controller::add);
+    tv.connect(&tv, &editor::Tree_View::add_child_triggered,
+        &c, &Gui_Controller::add_child);
+    tv.connect(&tv, &editor::Tree_View::add_sibling_triggered,
+        &c, &Gui_Controller::add_sibling);
   }
 
   static void connect_tree_widget(Tree_Widget &w, Gui_Controller &c)

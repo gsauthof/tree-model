@@ -34,25 +34,49 @@ namespace editor {
     {
     }
 
-    // XXX don't add child if parent has a value
-    // (i.e. a second column)
-    void Add::add(const QModelIndex &index)
+    void Add::add_internal(const QModelIndex &index, bool as_child)
     {
       if (!model_)
         return;
+      if (!as_child && !index.isValid())
+        return;
+      // Don't add child to node that has a value
+      if (as_child && index.isValid() && !model_->rowCount(index)
+          && model_->data(index.sibling(index.row(), 1)).isValid())
+        return;
 
       editor::Child_Dialog d(parent_widget_);
-      d.setWindowTitle(tr("Add child"));
+      if (as_child)
+        d.setWindowTitle(tr("Add child"));
+      else
+        d.setWindowTitle(tr("Add sibling"));
       if (d.exec()) {
-        int row = model_->rowCount(index);
-        if (model_->insertRow(row, index)) {
-          auto key = model_->index(row, 0, index);
-          auto value = model_->index(row, 1, index);
+        int row = 0;
+        QModelIndex parent;
+        if (as_child) {
+          row = model_->rowCount(index);
+          parent = index;
+        } else {
+          row = index.row();
+          parent = index.parent();
+        }
+        if (model_->insertRow(row, parent)) {
+          auto key = model_->index(row, 0, parent);
+          auto value = model_->index(row, 1, parent);
           model_->setData(key, d.key());
           model_->setData(value, d.value());
         }
       }
     }
+    void Add::add_child(const QModelIndex &index)
+    {
+      add_internal(index, true);
+    }
+    void Add::add_sibling(const QModelIndex &index)
+    {
+      add_internal(index, false);
+    }
+
     void Add::set_model(QAbstractItemModel *model)
     {
       model_ = model;

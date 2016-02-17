@@ -38,7 +38,8 @@ class Tree_View : public QTreeView
   signals:
     void remove_triggered(const QModelIndexList &selected_indexes);
     void edit_triggered  (const QModelIndex &);
-    void add_triggered   (const QModelIndex &);
+    void add_child_triggered  (const QModelIndex &);
+    void add_sibling_triggered(const QModelIndex &);
 
     void selection_model_changed(const QItemSelectionModel *smodel);
     void selection_changed(const QItemSelection &selected,
@@ -50,6 +51,8 @@ class Tree_View : public QTreeView
 
   public slots:
     void set_model(QAbstractItemModel *model);
+    void trigger_add_child();
+    void trigger_add_sibling();
 
   protected slots:
     void selectionChanged(const QItemSelection &selected,
@@ -59,10 +62,13 @@ class Tree_View : public QTreeView
 
   private:
     QModelIndex context_index_;
-    QAction *add_action_    {nullptr};
-    QAction *edit_action_   {nullptr};
-    QAction *remove_action_ {nullptr};
+    QAction *add_child_action_   {nullptr};
+    QAction *add_sibling_action_ {nullptr};
+    QAction *edit_action_        {nullptr};
+    QAction *remove_action_      {nullptr};
+    bool context_menu_visible_   {false};
 
+    QModelIndex index_for_update();
 };
 
 } // namespace editor

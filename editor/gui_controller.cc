@@ -150,9 +150,13 @@ namespace editor {
   {
     display_subtree_->display();
   }
-  void Gui_Controller::add(const QModelIndex &i)
+  void Gui_Controller::add_child(const QModelIndex &i)
   {
-    add_->add(i);
+    add_->add_child(i);
+  }
+  void Gui_Controller::add_sibling(const QModelIndex &i)
+  {
+    add_->add_sibling(i);
   }
   void Gui_Controller::edit(const QModelIndex &i)
   {

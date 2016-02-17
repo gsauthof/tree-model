@@ -21,6 +21,7 @@
 #include "main_window.hh"
 #include "ui_main_window.h"
 #include <editor/recent_menu.hh>
+#include "tree_view.hh"
 
 #include <QMessageBox>
 #include <QClipboard>
@@ -53,6 +54,10 @@ namespace editor {
           QApplication::clipboard()->clear();
           QApplication::clipboard()->clear(QClipboard::Selection);
         });
+    connect(ui->add_child_action, &QAction::triggered,
+        &ui->widget->tree_view(), &Tree_View::trigger_add_child);
+    connect(ui->add_sibling_action, &QAction::triggered,
+        &ui->widget->tree_view(), &Tree_View::trigger_add_sibling);
 
     ui->copy_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,

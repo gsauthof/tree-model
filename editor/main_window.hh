@@ -23,6 +23,7 @@
 
 #include <QMainWindow>
 
+class QModelIndex;
 
 namespace editor {
   class Recent_Menu;
@@ -58,6 +59,11 @@ namespace editor {
     public slots:
       void display_status(const QString &msg);
       void update_window_title(const QString &filename);
+
+    signals:
+      void add_child_triggered  (const QModelIndex &);
+      void add_sibling_triggered(const QModelIndex &);
+
     protected:
       void closeEvent(QCloseEvent *event) override;
     private slots:
