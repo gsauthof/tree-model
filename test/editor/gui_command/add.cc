@@ -29,6 +29,8 @@
 
 #include <editor/command/open.hh>
 #include <editor/gui_command/add.hh>
+#include <tree_model/xml.hh>
+#include <tree_model/item_adaptor.hh>
 
 using namespace std;
 
@@ -139,17 +141,102 @@ TEST_CASE("add child in keyvalue fail", "[editor][qt][gui][add]")
       CHECK(!v);
       //CHECK(v->title().toStdString() != "Add child");
       });
+  QTimer::singleShot(600, [&w]{
+      auto v = QApplication::modalWindow();
+      if (v)
+        QTest::keyClick(v, Qt::Key_Escape, Qt::NoModifier, 10);
+      });
 
   auto point = model->index(0, 0).child(0, 0);
 
   CHECK(model->rowCount(point) == 0);
+
   a.add_child(point); // -> should not open dialog
+  QTest::qWait(1000);
 
   REQUIRE(model->rowCount(point) == 0);
 
   auto x = model->index(0, 0).child(0, 0);
   CHECK(model->data(x).toString().toStdString() == "foo");
   CHECK(model->data(x.sibling(x.row(), 1)).toString().toStdString() == "Hello");
+
+  delete model;
+}
+
+TEST_CASE("add second doc root fail", "[editor][qt][gui][add]")
+{
+  QMainWindow w;
+  w.show();
+
+  editor::command::Open o;
+  editor::gui_command::Add a(&w);
+  o.connect(&o, &editor::command::Open::item_tree_model_created,
+      &a, &editor::gui_command::Add::set_model);
+  QAbstractItemModel *model {nullptr};
+  o.connect(&o, &editor::command::Open::item_tree_model_created,
+      [&model](QAbstractItemModel *m) { model = m; });
+
+  std::string in(test::path::in() + "/small.xml");
+  o.open(in.c_str());
+
+  REQUIRE(model != nullptr);
+
+  QTimer::singleShot(300, [&w]{
+      auto v = QApplication::modalWindow();
+      CHECK(!v);
+      //CHECK(v->title().toStdString() != "Add child");
+      });
+  QTimer::singleShot(600, [&w]{
+      auto v = QApplication::modalWindow();
+      if (v)
+        QTest::keyClick(v, Qt::Key_Escape, Qt::NoModifier, 10);
+      });
+
+
+  CHECK(model->rowCount(QModelIndex()) == 1);
+
+  a.add_child(QModelIndex()); // -> should not open dialog
+  QTest::qWait(1000);
+
+  REQUIRE(model->rowCount(QModelIndex()) == 1);
+
+
+  delete model;
+}
+
+TEST_CASE("add second doc root only if empty", "[editor][qt][gui][add]")
+{
+  QMainWindow w;
+  w.show();
+
+  editor::command::Open o;
+  
+  xxxml::doc::Ptr doc = xxxml::new_doc();
+  tree_model::XML *m = new tree_model::XML(std::move(doc));
+  auto model = new tree_model::Item_Adaptor(m);
+
+  editor::gui_command::Add a(&w);
+  a.set_model(model);
+
+  QTimer::singleShot(300, [&w]{
+      auto v = QApplication::modalWindow();
+      REQUIRE(v);
+      CHECK(v->title().toStdString() == "Add child");
+      });
+  QTimer::singleShot(600, [&w]{
+      auto v = QApplication::modalWindow();
+      if (v)
+        QTest::keyClick(v, Qt::Key_Escape, Qt::NoModifier, 10);
+      });
+
+
+  CHECK(model->rowCount(QModelIndex()) == 0);
+
+  a.add_child(QModelIndex()); // -> should open dialog
+  QTest::qWait(1000);
+
+  REQUIRE(model->rowCount(QModelIndex()) == 0);
+
 
   delete model;
 }

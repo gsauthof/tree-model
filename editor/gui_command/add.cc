@@ -44,6 +44,9 @@ namespace editor {
       if (as_child && index.isValid() && !model_->rowCount(index)
           && model_->data(index.sibling(index.row(), 1)).isValid())
         return;
+      // Don't add second doc root
+      if (as_child && !index.isValid() && model_->rowCount(index))
+        return;
 
       editor::Child_Dialog d(parent_widget_);
       if (as_child)
