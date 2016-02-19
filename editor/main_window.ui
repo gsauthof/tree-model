@@ -56,8 +56,11 @@
     <addaction name="paste_as_child_action"/>
     <addaction name="clear_action"/>
     <addaction name="separator"/>
+    <addaction name="edit_action"/>
     <addaction name="add_sibling_action"/>
     <addaction name="add_child_action"/>
+    <addaction name="separator"/>
+    <addaction name="remove_action"/>
    </widget>
    <widget class="QMenu" name="menu_View">
     <property name="title">
@@ -173,14 +176,24 @@
     <string>Ctrl+L</string>
    </property>
   </action>
+  <action name="edit_action">
+   <property name="text">
+    <string>Ed&amp;it element...</string>
+   </property>
+  </action>
   <action name="add_sibling_action">
    <property name="text">
-    <string>Add &amp;sibling</string>
+    <string>Add &amp;sibling...</string>
    </property>
   </action>
   <action name="add_child_action">
    <property name="text">
-    <string>&amp;Add child</string>
+    <string>&amp;Add child...</string>
+   </property>
+  </action>
+  <action name="remove_action">
+   <property name="text">
+    <string>Re&amp;move</string>
    </property>
   </action>
   <action name="undo_action">

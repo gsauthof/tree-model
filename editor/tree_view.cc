@@ -66,6 +66,15 @@ namespace editor {
   {
     emit add_sibling_triggered(index_for_update()); 
   }
+  void Tree_View::trigger_remove()
+  {
+    auto selected_indexes = selectedIndexes();
+    emit remove_triggered(selected_indexes);
+  }
+  void Tree_View::trigger_edit()
+  {
+    emit edit_triggered(index_for_update()); 
+  }
 
   void Tree_View::contextMenuEvent(QContextMenuEvent *event)
   {
@@ -89,8 +98,7 @@ namespace editor {
   void Tree_View::keyPressEvent(QKeyEvent *event)
   {
     if (event->key() == Qt::Key_Delete) {
-      auto selected_indexes = selectedIndexes();
-      emit remove_triggered(selected_indexes);
+      trigger_remove();
     } else {
       QTreeView::keyPressEvent(event);
     }

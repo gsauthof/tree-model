@@ -54,10 +54,14 @@ namespace editor {
           QApplication::clipboard()->clear();
           QApplication::clipboard()->clear(QClipboard::Selection);
         });
+    connect(ui->edit_action, &QAction::triggered,
+        &ui->widget->tree_view(), &Tree_View::trigger_edit);
     connect(ui->add_child_action, &QAction::triggered,
         &ui->widget->tree_view(), &Tree_View::trigger_add_child);
     connect(ui->add_sibling_action, &QAction::triggered,
         &ui->widget->tree_view(), &Tree_View::trigger_add_sibling);
+    connect(ui->remove_action, &QAction::triggered,
+        &ui->widget->tree_view(), &Tree_View::trigger_remove);
 
     ui->copy_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
@@ -71,6 +75,18 @@ namespace editor {
     ui->display_subtree_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->display_subtree_action, &QAction::setEnabled);
+    ui->remove_action->setEnabled(false);
+    connect(ui->widget, &Tree_Widget::something_selected,
+        ui->remove_action, &QAction::setEnabled);
+    ui->edit_action->setEnabled(false);
+    connect(ui->widget, &Tree_Widget::something_selected,
+        ui->edit_action, &QAction::setEnabled);
+    ui->add_sibling_action->setEnabled(false);
+    connect(ui->widget, &Tree_Widget::something_selected,
+        ui->add_sibling_action, &QAction::setEnabled);
+    ui->add_child_action->setEnabled(false);
+    connect(ui->widget, &Tree_Widget::something_selected,
+        ui->add_child_action, &QAction::setEnabled);
   }
 
   Recent_Menu &Main_Window::recent_menu()

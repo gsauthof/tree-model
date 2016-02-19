@@ -51,8 +51,10 @@ class Tree_View : public QTreeView
 
   public slots:
     void set_model(QAbstractItemModel *model);
+    void trigger_edit();
     void trigger_add_child();
     void trigger_add_sibling();
+    void trigger_remove();
 
   protected slots:
     void selectionChanged(const QItemSelection &selected,

@@ -531,3 +531,34 @@ TEST_CASE("mw tree view add sibling", "[editor][qt][gui][mainwindow]")
   CHECK(old_rowcount + 1 == new_rowcount);
 }
 
+TEST_CASE("mw tree view remove via menu", "[editor][qt][gui][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  c.open(in.c_str());
+  QTest::qWait(300);
+
+  w.show();
+  QTest::qWait(100);
+  QAbstractItemModel *a = c.item_tree_model();
+  REQUIRE(a != nullptr);
+  int old_rowcount = a->rowCount(a->index(0, 0));
+  auto v = QApplication::focusWindow();
+  REQUIRE(v != nullptr);
+  QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_E,     Qt::AltModifier, 10);
+  QTest::qWait(2000);
+  v = QApplication::focusWindow();
+  REQUIRE(v != nullptr);
+  QTest::keyClick(v, Qt::Key_M,     Qt::AltModifier, 10);
+
+  QTest::qWait(2000);
+
+  int new_rowcount = a->rowCount(a->index(0, 0));
+  CHECK(old_rowcount == new_rowcount + 1);
+}
