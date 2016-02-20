@@ -552,12 +552,9 @@ TEST_CASE("mw tree view remove via menu", "[editor][qt][gui][mainwindow]")
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_E,     Qt::AltModifier, 10);
-  QTest::qWait(2000);
-  v = QApplication::focusWindow();
-  REQUIRE(v != nullptr);
+  QTest::qWait(100);
   QTest::keyClick(v, Qt::Key_M,     Qt::AltModifier, 10);
-
-  QTest::qWait(2000);
+  QTest::qWait(100);
 
   int new_rowcount = a->rowCount(a->index(0, 0));
   CHECK(old_rowcount == new_rowcount + 1);
