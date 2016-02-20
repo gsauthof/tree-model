@@ -37,6 +37,8 @@ namespace editor {
     {
       if (!model_)
         return;
+      if (!index.isValid())
+        return;
 
       QModelIndex key(model_->index(index.row(), 0, index.parent()));
       QModelIndex value(model_->index(index.row(), 1, index.parent()));

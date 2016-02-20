@@ -106,3 +106,38 @@ TEST_CASE("edit dialog with children", "[editor][qt][gui][edit]")
 
   delete model;
 }
+
+
+TEST_CASE("edit dialog no root", "[editor][qt][gui][edit]")
+{
+  QMainWindow w;
+  w.show();
+
+  editor::command::Open o;
+  editor::gui_command::Edit e(&w);
+  o.connect(&o, &editor::command::Open::item_tree_model_created,
+      &e, &editor::gui_command::Edit::set_model);
+  QAbstractItemModel *model {nullptr};
+  o.connect(&o, &editor::command::Open::item_tree_model_created,
+      [&model](QAbstractItemModel *m) { model = m; });
+
+  std::string in(test::path::in() + "/small.xml");
+  o.open(in.c_str());
+
+  REQUIRE(model != nullptr);
+
+  QTimer::singleShot(300, [&w]{
+      auto v = QApplication::modalWindow();
+      //auto v = QApplication::focusWindow();
+      CHECK(!v);
+      //CHECK(v->title().toStdString() == "Edit node");
+      if (v)
+        QTest::keyClick(v, Qt::Key_Escape, Qt::NoModifier, 100);
+      });
+
+  e.edit(QModelIndex());
+  QTest::qWait(500);
+
+  delete model;
+}
+
