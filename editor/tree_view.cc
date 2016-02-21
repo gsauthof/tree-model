@@ -78,14 +78,21 @@ namespace editor {
 
   void Tree_View::contextMenuEvent(QContextMenuEvent *event)
   {
+    if (!model())
+      return;
     context_index_ = indexAt(event->pos());
     auto global_pos = event->globalPos();
 
     QMenu menu(parentWidget());
+    edit_action_->setEnabled(context_index_.isValid());
     menu.addAction(edit_action_);
+    add_sibling_action_->setEnabled(context_index_.isValid());
     menu.addAction(add_sibling_action_);
+    add_child_action_->setEnabled(context_index_.isValid()
+        || !model()->rowCount(context_index_));
     menu.addAction(add_child_action_);
     menu.addSeparator();
+    remove_action_->setEnabled(!selectedIndexes().empty());
     menu.addAction(remove_action_);
 
     context_menu_visible_ = true;
