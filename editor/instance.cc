@@ -37,9 +37,9 @@ namespace editor {
       gui_controller_(new Gui_Controller(main_window_))
   {
     connect_view_controller(*main_window_, *gui_controller_);
-    connect(&main_window_->quit_action(), &QAction::triggered,
+    connect(main_window_, &Main_Window::quit_triggered,
         this, &Instance::quit_requested);
-    connect(&main_window_->new_action(), &QAction::triggered,
+    connect(main_window_, &Main_Window::new_triggered,
         this, &Instance::new_requested);
     gui_controller_->request_empty_model();
   }

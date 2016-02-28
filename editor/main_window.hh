@@ -42,25 +42,28 @@ namespace editor {
       ~Main_Window();
       Recent_Menu &recent_menu();
       Tree_Widget &tree_widget();
-      QAction &new_action();
-      QAction &open_action();
-      QAction &save_action();
-      QAction &save_as_action();
-      QAction &save_a_copy_action();
-      QAction &undo_action();
-      QAction &redo_action();
-      QAction &cut_action();
-      QAction &copy_action();
-      QAction &paste_action();
-      QAction &paste_as_child_action();
-      QAction &display_subtree_action();
-      QAction &quit_action();
 
     public slots:
       void display_status(const QString &msg);
       void update_window_title(const QString &filename);
+      void enable_undo(bool b);
+      void enable_redo(bool b);
 
     signals:
+      void new_triggered();
+      void open_triggered();
+      void save_triggered();
+      void save_as_triggered();
+      void save_a_copy_triggered();
+      void undo_triggered();
+      void redo_triggered();
+      void cut_triggered();
+      void copy_triggered();
+      void paste_triggered();
+      void paste_as_child_triggered();
+      void display_subtree_triggered();
+      void quit_triggered();
+
       void add_child_triggered  (const QModelIndex &);
       void add_sibling_triggered(const QModelIndex &);
 
@@ -72,6 +75,7 @@ namespace editor {
       Recent_Menu *recent_menu_ {nullptr};
 
       void setup_shortcuts();
+      void forward_trigger_signals();
   };
 
 }

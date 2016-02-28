@@ -87,6 +87,38 @@ namespace editor {
     ui->add_child_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->add_child_action, &QAction::setEnabled);
+
+    forward_trigger_signals();
+  }
+
+  void Main_Window::forward_trigger_signals()
+  {
+    connect(ui->new_action, &QAction::triggered,
+        this, &Main_Window::new_triggered);
+    connect(ui->open_action, &QAction::triggered,
+        this, &Main_Window::open_triggered);
+    connect(ui->save_action, &QAction::triggered,
+        this, &Main_Window::save_triggered);
+    connect(ui->save_as_action, &QAction::triggered,
+        this, &Main_Window::save_as_triggered);
+    connect(ui->save_a_copy_action, &QAction::triggered,
+        this, &Main_Window::save_a_copy_triggered);
+    connect(ui->undo_action, &QAction::triggered,
+        this, &Main_Window::undo_triggered);
+    connect(ui->redo_action, &QAction::triggered,
+        this, &Main_Window::redo_triggered);
+    connect(ui->cut_action, &QAction::triggered,
+        this, &Main_Window::cut_triggered);
+    connect(ui->copy_action, &QAction::triggered,
+        this, &Main_Window::copy_triggered);
+    connect(ui->paste_action, &QAction::triggered,
+        this, &Main_Window::paste_triggered);
+    connect(ui->paste_as_child_action, &QAction::triggered,
+        this, &Main_Window::paste_as_child_triggered);
+    connect(ui->display_subtree_action, &QAction::triggered,
+        this, &Main_Window::display_subtree_triggered);
+    connect(ui->quit_action, &QAction::triggered,
+        this, &Main_Window::quit_triggered);
   }
 
   Recent_Menu &Main_Window::recent_menu()
@@ -96,58 +128,6 @@ namespace editor {
   Tree_Widget &Main_Window::tree_widget()
   {
     return *ui->widget;
-  }
-  QAction &Main_Window::new_action()
-  {
-    return *ui->new_action;
-  }
-  QAction &Main_Window::open_action()
-  {
-    return *ui->open_action;
-  }
-  QAction &Main_Window::save_action()
-  {
-    return *ui->save_action;
-  }
-  QAction &Main_Window::save_as_action()
-  {
-    return *ui->save_as_action;
-  }
-  QAction &Main_Window::save_a_copy_action()
-  {
-    return *ui->save_a_copy_action;
-  }
-  QAction &Main_Window::undo_action()
-  {
-    return *ui->undo_action;
-  }
-  QAction &Main_Window::redo_action()
-  {
-    return *ui->redo_action;
-  }
-  QAction &Main_Window::cut_action()
-  {
-    return *ui->cut_action;
-  }
-  QAction &Main_Window::copy_action()
-  {
-    return *ui->copy_action;
-  }
-  QAction &Main_Window::paste_action()
-  {
-    return *ui->paste_action;
-  }
-  QAction &Main_Window::paste_as_child_action()
-  {
-    return *ui->paste_as_child_action;
-  }
-  QAction &Main_Window::display_subtree_action()
-  {
-    return *ui->display_subtree_action;
-  }
-  QAction &Main_Window::quit_action()
-  {
-    return *ui->quit_action;
   }
 
   void Main_Window::update_window_title(const QString &filename)
@@ -217,6 +197,15 @@ namespace editor {
     } else {
       event->accept();
     }
+  }
+
+  void Main_Window::enable_undo(bool b)
+  {
+    ui->undo_action->setEnabled(b);
+  }
+  void Main_Window::enable_redo(bool b)
+  {
+    ui->redo_action->setEnabled(b);
   }
 
 }

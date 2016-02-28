@@ -32,27 +32,27 @@ namespace editor {
   static void connect_action_triggers(
       Main_Window &w, Gui_Controller &c)
   {
-    w.connect(&w.open_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::open_triggered,
        &c, &Gui_Controller::select_open);
-    w.connect(&w.save_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::save_triggered,
         &c, &Gui_Controller::save);
-    w.connect(&w.save_as_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::save_as_triggered,
         &c, &Gui_Controller::select_save);
-    w.connect(&w.save_a_copy_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::save_a_copy_triggered,
         &c, &Gui_Controller::select_save_copy);
-    w.connect(&w.undo_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::undo_triggered,
         &c, &Controller::undo);
-    w.connect(&w.redo_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::redo_triggered,
         &c, &Controller::redo);
-    w.connect(&w.copy_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::copy_triggered,
         &c, &Gui_Controller::clipboard_copy);
-    w.connect(&w.cut_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::cut_triggered,
         &c, &Gui_Controller::clipboard_cut);
-    w.connect(&w.paste_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::paste_triggered,
         &c, &Gui_Controller::clipboard_paste);
-    w.connect(&w.paste_as_child_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::paste_as_child_triggered,
         &c, &Gui_Controller::clipboard_paste_as_child);
-    w.connect(&w.display_subtree_action(), &QAction::triggered,
+    w.connect(&w, &Main_Window::display_subtree_triggered,
         &c, &Gui_Controller::display_subtree);
   }
 
@@ -60,9 +60,9 @@ namespace editor {
       Main_Window &w, Gui_Controller &c)
   {
     c.connect(&c, &Controller::rewind_enabled,
-        &w.undo_action(), &QAction::setEnabled);
+        &w, &Main_Window::enable_undo);
     c.connect(&c, &Controller::forward_enabled,
-        &w.redo_action(), &QAction::setEnabled);
+        &w, &Main_Window::enable_redo);
   }
 
   static void connect_recent_menu(
