@@ -39,9 +39,12 @@ namespace editor {
       public slots:
         void edit(const QModelIndex &index);
         void set_model(QAbstractItemModel *model);
+      signals:
+        void begin_transaction_requested(const QString &name);
+        void commit_requested();
 
       protected:
-        QWidget *parent_widget_ {nullptr};
+        QWidget *parent_widget_    {nullptr};
       private:
         QAbstractItemModel *model_ {nullptr};
     };

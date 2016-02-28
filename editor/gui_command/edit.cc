@@ -52,9 +52,11 @@ namespace editor {
       d.set_data(model_->data(key, Qt::EditRole).toString(), v);
       d.enable_value(!has_children);
       if (d.exec()) {
+        emit begin_transaction_requested(tr("edit node"));
         model_->setData(key, d.key());
         if (!has_children)
           model_->setData(value, d.value());
+        emit commit_requested();
       }
     }
     void Edit::set_model(QAbstractItemModel *model)

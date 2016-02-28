@@ -85,6 +85,10 @@ namespace editor {
 
     connect(this, &Controller::item_tree_model_created,
         edit_, &gui_command::Edit::set_model);
+    connect(edit_, SIGNAL(begin_transaction_requested(const QString&)),
+        recorder_, SLOT(begin_transaction(const QString&)));
+    connect(edit_, &gui_command::Edit::commit_requested,
+        recorder_, &tree_model::Recorder::commit);
 
     connect(this, &Controller::item_tree_model_created,
         add_, &gui_command::Add::set_model);
