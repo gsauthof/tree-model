@@ -71,7 +71,11 @@ TEST_CASE("bernoulli", "[list][ranked]" )
 
   double p = 0.5;
   for (size_t i = 0; i < n; ++i)
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+    if (double(rand())/RAND_MAX < p)
+#else
     if (double(random())/RAND_MAX < p)
+#endif
       ++ok;
     else
       ++nok;

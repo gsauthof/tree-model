@@ -651,7 +651,13 @@ namespace list {
             double p = 1.0/Q;
 
             Level_Size_T level = 1;
-            while (double(random())/RAND_MAX < p && level < max_level)
+            while (
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+                double(rand())/RAND_MAX
+#else
+                double(random())/RAND_MAX
+#endif
+                  < p && level < max_level)
               ++level;
             return level;
           }

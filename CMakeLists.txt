@@ -150,11 +150,11 @@ set_property(TARGET main PROPERTY INCLUDE_DIRECTORIES
   ${XML2_INCLUDE_DIR}
   )
 target_link_libraries(main
+  xxxml_static
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_REGEX_LIBRARY}
   ${XML2_LIB}
-  xxxml_static
   Qt5::Widgets
   )
 
@@ -195,11 +195,11 @@ set_property(TARGET ut PROPERTY INCLUDE_DIRECTORIES
   ${XML2_INCLUDE_DIR}
   )
 target_link_libraries(ut
+  xxxml_static
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_REGEX_LIBRARY}
   ${XML2_LIB}
-  xxxml_static
   Qt5::Core
   Qt5::Test
   )
