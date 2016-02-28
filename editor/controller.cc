@@ -121,8 +121,9 @@ namespace editor {
   }
   void Controller::set_tree_model(tree_model::Base *model)
   {
-    if (tree_model_)
-      tree_model_->deleteLater();
+    // don't delete since it is owner by the adaptor ...
+    // if (tree_model_)
+    //   tree_model_->deleteLater();
     tree_model_ = model;
     // don't reparent, since it is owned by the adaptor ...
   }
