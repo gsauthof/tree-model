@@ -63,12 +63,14 @@ namespace editor {
           row = index.row();
           parent = index.parent();
         }
+        emit begin_transaction_requested(tr("insert rows"));
         if (model_->insertRow(row, parent)) {
           auto key = model_->index(row, 0, parent);
           auto value = model_->index(row, 1, parent);
           model_->setData(key, d.key());
           model_->setData(value, d.value());
         }
+        emit commit_requested();
       }
     }
     void Add::add_child(const QModelIndex &index)

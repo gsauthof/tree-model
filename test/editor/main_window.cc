@@ -559,3 +559,54 @@ TEST_CASE("mw tree view remove via menu", "[editor][qt][gui][mainwindow]")
   int new_rowcount = a->rowCount(a->index(0, 0));
   CHECK(old_rowcount == new_rowcount + 1);
 }
+
+
+TEST_CASE("mw tree view add child undo clean", "[editor][qt][gui][mainwindow][add]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+  c.open(in.c_str());
+  QTest::qWait(300);
+
+  w.show();
+  QTest::qWait(100);
+  auto v = QApplication::focusWindow();
+  REQUIRE(v);
+  QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Up,    Qt::NoModifier, 10);
+
+  QTimer::singleShot(300, [&v]{
+      auto v = QApplication::focusWindow();
+      REQUIRE(v);
+      QTest::keyClick(v, Qt::Key_A, Qt::AltModifier, 10);
+      });
+
+  QTimer::singleShot(600, [&w]{
+      auto v = QApplication::modalWindow();
+      REQUIRE(v);
+      auto w = QApplication::focusWidget();
+      REQUIRE(w);
+      CHECK(v->title().toStdString() == "Add child");
+      QTest::keyClicks(w, "blah", Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Tab, Qt::NoModifier, 10);
+      w = QApplication::focusWidget();
+      REQUIRE(w);
+      QTest::keyClicks(w, "blub", Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Return, Qt::NoModifier, 10);
+      });
+
+  CHECK(w.isWindowModified() == false);
+
+  QTest::keyClick(v, Qt::Key_E, Qt::AltModifier, 10);
+  QTest::qWait(1000);
+
+  CHECK(w.isWindowModified() == true);
+  c.undo();
+  CHECK(w.isWindowModified() == false);
+
+}
+

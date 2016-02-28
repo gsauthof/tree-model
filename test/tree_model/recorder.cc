@@ -410,6 +410,35 @@ TEST_CASE("record explicit transaction", "[recorder][adaptor][xml][tree-model]" 
   CHECK(spy_model.back().back() == true);
 }
 
+TEST_CASE("record transaction undo clears model changed", "[recorder][adaptor][xml][tree-model]" )
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><bar>World</bar></root>");
+
+  tree_model::XML *m = new tree_model::XML(std::move(doc));
+  tree_model::Item_Adaptor a(m);
+
+  tree_model::Recorder recorder;
+  QSignalSpy spy_model(&recorder, SIGNAL(model_changed(bool)));
+  recorder.set_model(&a);
+  REQUIRE(spy_model.size() == 1);
+  CHECK(spy_model.back().back() == false);
+
+  recorder.begin_transaction("fuu edit");
+  a.setData(a.index(0, 0).child(0, 0), QVariant("fuu"));
+  a.setData(a.index(0, 0).child(1, 0), QVariant("baa"));
+  recorder.commit();
+  CHECK(a.data(a.index(0, 0).child(0, 0)).toString().toStdString() == "fuu");
+  CHECK(a.data(a.index(0, 0).child(1, 0)).toString().toStdString() == "baa");
+
+  REQUIRE(spy_model.size() == 2);
+  CHECK(spy_model.back().back() == true);
+
+  recorder.rewind();
+  REQUIRE(spy_model.size() == 3);
+  CHECK(spy_model.back().back() == false);
+}
+
 TEST_CASE("rewind triggers data changed", "[recorder][adaptor][xml][tree-model]" )
 {
   xxxml::doc::Ptr doc = xxxml::read_memory(

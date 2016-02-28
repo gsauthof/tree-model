@@ -44,10 +44,12 @@ namespace tree_model {
       Recorder(QObject *parent = nullptr);
       ~Recorder();
 
+    public slots:
       // implicit title: of the observed action
       void begin_transaction(const QString &title,
           bool auto_commit = false);
       void commit();
+    public:
 
       void connect_signals();
 

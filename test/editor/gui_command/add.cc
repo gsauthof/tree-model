@@ -204,7 +204,7 @@ TEST_CASE("add second doc root fail", "[editor][qt][gui][add]")
   delete model;
 }
 
-TEST_CASE("add second doc root only if empty", "[editor][qt][gui][add]")
+TEST_CASE("add doc root only if empty", "[editor][qt][gui][add]")
 {
   QMainWindow w;
   w.show();
@@ -240,3 +240,5 @@ TEST_CASE("add second doc root only if empty", "[editor][qt][gui][add]")
 
   delete model;
 }
+
+

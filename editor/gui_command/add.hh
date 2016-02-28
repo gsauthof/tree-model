@@ -41,6 +41,10 @@ namespace editor {
         void add_sibling(const QModelIndex &index);
         void set_model(QAbstractItemModel *model);
 
+      signals:
+        void begin_transaction_requested(const QString &name);
+        void commit_requested();
+
       protected:
         QWidget *parent_widget_ {nullptr};
       private:

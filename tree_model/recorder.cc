@@ -202,7 +202,7 @@ namespace tree_model {
   {
     if (rewind_stack_.empty())
       return;
-    update_revision(revision_ - 1);
+    update_revision(revision_ - rewind_stack_.back()->size());
     pause();
     auto op = std::move(rewind_stack_.back());
     if (op->state() == operation::Base::INITIALIZED)
@@ -220,7 +220,7 @@ namespace tree_model {
   {
     if (forward_stack_.empty())
       return;
-    update_revision(revision_ + 1);
+    update_revision(revision_ + forward_stack_.back()->size());
     pause();
     auto op = std::move(forward_stack_.back());
     forward_stack_.pop_back();

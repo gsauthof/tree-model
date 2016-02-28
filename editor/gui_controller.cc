@@ -35,6 +35,7 @@
 #include <editor/gui_command/display_subtree.hh>
 #include <editor/subtree_window.hh>
 #include <tree_model/base.hh>
+#include <tree_model/recorder.hh>
 
 namespace editor {
 
@@ -87,6 +88,12 @@ namespace editor {
 
     connect(this, &Controller::item_tree_model_created,
         add_, &gui_command::Add::set_model);
+    //connect(add_, &gui_command::Add::begin_transaction_requested,
+    //    recorder_, &tree_model::Recorder::begin_transaction);
+    connect(add_, SIGNAL(begin_transaction_requested(const QString&)),
+        recorder_, SLOT(begin_transaction(const QString&)));
+    connect(add_, &gui_command::Add::commit_requested,
+        recorder_, &tree_model::Recorder::commit);
 
     connect(this, &Controller::item_tree_model_created,
         clipboard_copy_, &gui_command::Clipboard_Copy::set_model);

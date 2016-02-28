@@ -65,6 +65,7 @@ namespace editor {
 
       QAbstractItemModel   *item_tree_model_ {nullptr};
       tree_model::Base     *tree_model_      {nullptr};
+    protected:
       tree_model::Recorder *recorder_        {nullptr};
 
     signals:
