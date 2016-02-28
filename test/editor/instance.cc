@@ -26,6 +26,8 @@
 #include <QApplication>
 
 #include <editor/instance.hh>
+#include <editor/main_window.hh>
+#include <editor/gui_controller.hh>
 
 TEST_CASE("instance basic", "[editor][qt][gui][instance]")
 {
@@ -53,3 +55,42 @@ TEST_CASE("instance basic", "[editor][qt][gui][instance]")
   CHECK(!w);
 
 }
+
+TEST_CASE("instance has empty model", "[editor][qt][gui][instance]")
+{
+  editor::Instance i;
+
+  i.show();
+
+  QTest::qWait(300);
+  auto v = QApplication::focusWindow();
+  REQUIRE(v);
+
+  QTimer::singleShot(300, []{
+      auto v = QApplication::focusWindow();
+      REQUIRE(v);
+      QTest::keyClick(v, Qt::Key_A,     Qt::AltModifier, 10);
+      });
+
+
+  QTimer::singleShot(600, []{
+      auto v = QApplication::focusWindow();
+      REQUIRE(v);
+      auto w = QApplication::focusWidget();
+      REQUIRE(w);
+      QTest::keyClicks(w, "foo", Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Return, Qt::NoModifier, 10);
+      });
+
+  QTest::mouseClick(v, Qt::RightButton);
+
+  auto main_window = i.main_window();
+  REQUIRE(main_window);
+  auto controller = main_window->findChild<editor::Gui_Controller*>();
+  REQUIRE(controller);
+  auto m = controller->item_tree_model();
+  REQUIRE(m);
+  CHECK(m->rowCount(QModelIndex()) == 1);
+  CHECK(m->data(m->index(0, 0)).toString().toStdString() == "foo");
+}
+

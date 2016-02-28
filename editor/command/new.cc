@@ -18,38 +18,22 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#ifndef INSTANCE_HH
-#define INSTANCE_HH
+#include "new.hh"
 
-#include <QObject>
+#include <tree_model/item_adaptor.hh>
+#include <tree_model/xml.hh>
 
 namespace editor {
-  class Main_Window;
-  class Gui_Controller;
+  namespace command {
 
-  class Instance : public QObject {
-    Q_OBJECT
-    public:
-      Instance(QObject *parent = nullptr);
-      ~Instance();
+    void New::create()
+    {
+      xxxml::doc::Ptr doc = xxxml::new_doc();
+      tree_model::XML *m = new tree_model::XML(std::move(doc));
+      tree_model::Item_Adaptor *a = new tree_model::Item_Adaptor(m);
+      emit item_tree_model_created(a);
+      emit tree_model_created(m);
+    }
 
-      // for testing purposes
-      Main_Window *main_window();
-
-    public slots:
-      void open(const QString &filename);
-      void show();
-      void close();
-
-    signals:
-      void new_requested();
-      void quit_requested();
-
-    private:
-      Main_Window *main_window_ {nullptr};
-      Gui_Controller *gui_controller_ {nullptr};
-  };
-
-}
-
-#endif
+  } // command
+} //editor

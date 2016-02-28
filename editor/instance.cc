@@ -41,6 +41,7 @@ namespace editor {
         this, &Instance::quit_requested);
     connect(&main_window_->new_action(), &QAction::triggered,
         this, &Instance::new_requested);
+    gui_controller_->request_empty_model();
   }
   void Instance::open(const QString &filename)
   {
@@ -57,6 +58,10 @@ namespace editor {
   Instance::~Instance()
   {
     delete main_window_;
+  }
+  Main_Window *Instance::main_window()
+  {
+    return main_window_;
   }
 
 }

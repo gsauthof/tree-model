@@ -22,6 +22,7 @@
 
 #include <QDebug>
 
+#include <editor/command/new.hh>
 #include <editor/command/async_open.hh>
 #include <editor/command/async_save.hh>
 #include <editor/command/remove.hh>
@@ -33,11 +34,17 @@ namespace editor {
   Controller::Controller(QObject *parent)
     :
       QObject(parent),
-      open_(new command::Async_Open(this)),
-      save_(new command::Async_Save(this)),
-      remove_(new command::Remove(this)),
+      new_     (new command::New(this)),
+      open_    (new command::Async_Open(this)),
+      save_    (new command::Async_Save(this)),
+      remove_  (new command::Remove(this)),
       recorder_(new tree_model::Recorder(this))
   {
+    connect(new_, &command::New::item_tree_model_created,
+            this, &Controller::item_tree_model_created);
+    connect(new_, &command::New::tree_model_created,
+            this, &Controller::tree_model_created);
+
     connect(open_, &command::Async_Open::item_tree_model_created,
             this, &Controller::item_tree_model_created);
     connect(open_, &command::Async_Open::tree_model_created,
@@ -118,6 +125,11 @@ namespace editor {
       tree_model_->deleteLater();
     tree_model_ = model;
     // don't reparent, since it is owned by the adaptor ...
+  }
+
+  void Controller::request_empty_model()
+  {
+    new_->create();
   }
 
 }

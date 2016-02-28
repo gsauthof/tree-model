@@ -47,6 +47,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/tree_widget.hh
   editor/slider_bar.hh
   editor/child_dialog.hh
+  editor/command/new.hh
   editor/command/open.hh
   editor/command/async_open.hh
   editor/command/save.hh
@@ -93,6 +94,7 @@ set(EDITOR_CC
   editor/gui_controller.cc
   editor/vc_matchmaker.cc
   editor/recent_menu.cc
+  editor/command/new.cc
   editor/command/open.cc
   editor/command/async_open.cc
   editor/command/save.cc

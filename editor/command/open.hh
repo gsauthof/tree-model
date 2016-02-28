@@ -21,12 +21,12 @@
 #ifndef EDITOR_COMMAND_OPEN_HH
 #define EDITOR_COMMAND_OPEN_HH
 
-#include <QAbstractItemModel>
 #include <QObject>
 
 namespace tree_model {
   class Base;
 }
+class QAbstractItemModel;
 
 namespace editor {
   namespace command {
