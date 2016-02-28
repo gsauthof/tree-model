@@ -39,7 +39,10 @@ namespace editor {
 
     void Save::save()
     {
-      save_as(filename());
+      if (filename().isEmpty())
+        select_save();
+      else
+        save_as(filename());
     }
     void Save::save_as(const QString &filename)
     {

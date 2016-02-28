@@ -172,10 +172,13 @@ add_executable(ut
 
   test/editor/command/remove.cc
   test/editor/command/open.cc
+  test/editor/command/save.cc
   editor/command/remove.cc
   editor/command/open.cc
+  editor/command/save.cc
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_remove.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_open.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_save.cpp
 
   ${TREE_MODEL_CC}
   ${TREE_MOC}

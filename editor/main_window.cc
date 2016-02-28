@@ -152,7 +152,10 @@ namespace editor {
 
   void Main_Window::update_window_title(const QString &filename)
   {
-    setWindowTitle(tr("%1[*]").arg(filename));
+    if (filename.isEmpty())
+      setWindowTitle(tr("unnamed[*]").arg(filename));
+    else
+      setWindowTitle(tr("%1[*]").arg(filename));
   }
 
   void Main_Window::setup_shortcuts()

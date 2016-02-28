@@ -51,6 +51,7 @@ namespace editor {
       if (model_) {
         try {
           model_->save(filename);
+          set_filename(filename);
           QThread::msleep(delay_);
           emit saved(filename);
           emit msg_produced(tr("Successfully saved %1").arg(filename));
