@@ -375,6 +375,18 @@ namespace tree_model {
   bool Item_Adaptor::setData(const QModelIndex &index, const QVariant &value,
       int role)
   {
+    // Attempts to change the value to the same value could also
+    // be filtered at the view level - e.g. in a delegate, e.g.
+    // when a line edit is entered by accident and is accepted
+    // unchanged - but at least with some default delegates
+    // this is not done (reliable enough).
+    // Filtering those neutrals setData() calls improves the
+    // undo/redo/document-is-modified-needs-to-be-saved usability.
+    if (ignore_neutral_set_data_) {
+      auto old_value = data(index, role);
+      if (value == old_value)
+        return false;
+    }
     Index i(create_index(index));
     bool r = model_->set_data(i, value, role);
     // we don't directly emit those signals here, instead

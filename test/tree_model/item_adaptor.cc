@@ -778,3 +778,22 @@ TEST_CASE("adaptor sibling loop from mid", "[adaptor][xml][tree-model]" )
     CHECK(a.data(y).toInt() == i);
   }
 }
+
+TEST_CASE("ignore setting the same value", "[adaptor][xml][tree-model]" )
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><bar>World</bar></root>");
+
+  tree_model::XML *m = new tree_model::XML(std::move(doc));
+  tree_model::Item_Adaptor a(m);
+  QSignalSpy spy_about(&a, SIGNAL(dataAboutToBeChanged(const QModelIndex&,
+          const QModelIndex&, const QVector<int> &)));
+  QSignalSpy spy_change(&a, SIGNAL(dataChanged(const QModelIndex&,
+          const QModelIndex&, const QVector<int> &)));
+
+  CHECK(a.data(a.index(0, 0).child(0, 1)).toString().toStdString() == "Hello");
+  bool r = a.setData(a.index(0, 0).child(0, 1), QVariant(QString("Hello")));
+  CHECK(r == false);
+  CHECK(spy_about.empty());
+  CHECK(spy_change.empty());
+}

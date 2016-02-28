@@ -99,6 +99,7 @@ namespace tree_model {
       Base *model_ {nullptr};
     private:
       bool display_rank_ {true};
+      bool ignore_neutral_set_data_ {true};
 
       std::unordered_map<void*, list::ranked::List<void*>::Basic_Node*>
         index_to_node_map_;
