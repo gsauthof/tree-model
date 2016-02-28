@@ -336,20 +336,23 @@ namespace tree_model {
   int Item_Adaptor::rowCount(const QModelIndex &parent) const
   {
     Index p(create_index(parent));
-    if (model_->has_children(p)) {
 #ifdef USE_SLOW_TREE_MODEL
+    if (model_->has_children(p)) {
       int n = 0;
       for (Index i = model_->first_child(p); i.is_valid();
           i = model_->next_sibling(i))
         ++n;
       return n;
-#else
-      auto &children = cached_children(p);
-      return children.size();
-#endif
     } else {
       return 0;
     }
+#else
+    // Ranked_List::size() is cheap
+    // this also makes sure that the list exists before something is
+    // inserted into an empty document
+    auto &children = cached_children(p);
+    return children.size();
+#endif
   }
 
   int Item_Adaptor::columnCount(const QModelIndex &parent) const

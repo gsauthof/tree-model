@@ -321,7 +321,9 @@ TEST_CASE("insert row into empty model", "[adaptor][xml][tree-model]" )
       SIGNAL(rowsAboutToBeInserted(const QModelIndex &, int, int)));
   QSignalSpy spy_end(&a, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
 
+  CHECK(a.rowCount(QModelIndex()) == 0);
   CHECK(a.insertRow(0) == true);
+  CHECK(a.rowCount(QModelIndex()) == 1);
 
   REQUIRE(spy_begin.size() == 1);
   REQUIRE(spy_end.size() == 1);

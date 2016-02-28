@@ -294,10 +294,36 @@ TEST_CASE("xml insert into empty model", "[xml][tree-model]")
   auto new_node = m.insert(tree_model::Index(), 1);
   REQUIRE(m.has_children() == true);
   CHECK(new_node == m.first_child());
+  CHECK(m.next_sibling(m.first_child()).is_valid() == false);
+  CHECK(new_node == m.last_child());
 
   REQUIRE(spy_begin.size() == 1);
   CHECK(qvariant_cast<tree_model::Index>(spy_begin.front().front()) == tree_model::Index());
   CHECK(qvariant_cast<int>(spy_begin.front().back()) == 1);
+  REQUIRE(spy_end.size() == 1);
+  CHECK(qvariant_cast<tree_model::Index>(spy_end.front().front()) == new_node);
+
+  CHECK(m.data(m.first_child()).toString().toUtf8().data() == string("NEW NODE"));
+}
+
+TEST_CASE("xml insert last into empty model", "[xml][tree-model]")
+{
+  xxxml::doc::Ptr doc = xxxml::new_doc();
+  tree_model::XML m(std::move(doc));
+  QSignalSpy spy_begin(&m,
+      SIGNAL(index_about_to_be_inserted(const tree_model::Index &, int)));
+  QSignalSpy spy_end(&m, SIGNAL(index_inserted(const tree_model::Index &)));
+
+  CHECK(m.has_children() == false);
+  auto new_node = m.insert(tree_model::Index(), -1);
+  REQUIRE(m.has_children() == true);
+  CHECK(new_node == m.first_child());
+  CHECK(m.next_sibling(m.first_child()).is_valid() == false);
+  CHECK(new_node == m.last_child());
+
+  REQUIRE(spy_begin.size() == 1);
+  CHECK(qvariant_cast<tree_model::Index>(spy_begin.front().front()) == tree_model::Index());
+  CHECK(qvariant_cast<int>(spy_begin.front().back()) == -1);
   REQUIRE(spy_end.size() == 1);
   CHECK(qvariant_cast<tree_model::Index>(spy_end.front().front()) == new_node);
 
