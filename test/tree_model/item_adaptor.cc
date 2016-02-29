@@ -519,6 +519,26 @@ TEST_CASE("mime data subtree", "[adaptor][xml][tree-model]" )
   delete r;
 }
 
+TEST_CASE("mime data multi", "[adaptor][xml][tree-model]" )
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><bar><a>Worl</a><b>d</b></bar></root>");
+  tree_model::XML *m = new tree_model::XML(std::move(doc));
+  tree_model::Item_Adaptor a(m);
+
+  QMimeData *r = a.mimeData(QModelIndexList() << a.index(0, 0).child(0, 0)
+      << a.index(0, 0).child(1, 0).child(0, 0));
+  CHECK(r != nullptr);
+
+  QByteArray d(r->data("text/xml"));
+  QString s(d);
+  s.remove(' ');
+  s.remove('\n');
+  CHECK(s.toUtf8().data() == string("<foo>Hello</foo><a>Worl</a>"));
+
+  delete r;
+}
+
 TEST_CASE("mime drop", "[adaptor][xml][tree-model]" )
 {
   xxxml::doc::Ptr doc = xxxml::read_memory(

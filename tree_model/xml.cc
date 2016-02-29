@@ -277,16 +277,19 @@ namespace tree_model {
     if (indexes.empty())
       return std::unique_ptr<QMimeData>();
     auto r = std::make_unique<QMimeData>();
-    // XXX support index lists > 1?
-    Index i(indexes.front());
-    if (i.is_valid()) {
-      const xmlNode *node = static_cast<const xmlNode*>(i.internal_pointer());
-      auto x = xxxml::util::dump(doc_, node);
-      r->setData("text/xml", QByteArray(x.first.first,
-            x.first.second - x.first.first));
-    } else {
+    if (indexes.size() == 1 && !indexes.front().is_valid()) {
       auto p = xxxml::doc::dump_format_memory(doc_);
       r->setData("text/xml", QByteArray(p.first.get(), p.second));
+    } else {
+      QByteArray b;
+      for (auto &i : indexes) {
+        if (!i.is_valid())
+          continue;
+        const xmlNode *node = static_cast<const xmlNode*>(i.internal_pointer());
+        auto x = xxxml::util::dump(doc_, node);
+        b.append(x.first.first, x.first.second - x.first.first);
+      }
+      r->setData("text/xml", b);
     }
     return r;
   }

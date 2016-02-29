@@ -418,7 +418,7 @@ TEST_CASE("xml children in empty doc", "[xml][tree-model]")
 TEST_CASE("xml mime drop two siblings", "[xml][tree-model]")
 {
   xxxml::doc::Ptr doc = xxxml::read_memory(
-      "<root><foo>Hello</foo><bar>World</bar></root>");
+      "<root><foo>Hello</foo><mid>23</mid><bar>World</bar></root>");
   tree_model::XML m(std::move(doc));
   auto root = m.first_child();
   const char inp[] = "<x>1</x><x>2</x>";
@@ -433,3 +433,19 @@ TEST_CASE("xml mime drop two siblings", "[xml][tree-model]")
   CHECK(m.data(root.first_child().attribute(1)).toString()
       .toStdString() == "Hello");
 }
+
+TEST_CASE("xml mime data", "[xml][tree-model]")
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><bar>World</bar></root>");
+  tree_model::XML m(std::move(doc));
+  auto root = m.first_child();
+
+  deque<tree_model::Index> is;
+  is.push_back(root.first_child());
+  is.push_back(root.last_child());
+  auto md = m.mime_data(is);
+  auto a = md->data("text/xml");
+  CHECK(string(a.data(), a.size()) == "<foo>Hello</foo><bar>World</bar>");
+}
+
