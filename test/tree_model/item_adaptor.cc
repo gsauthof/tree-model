@@ -608,6 +608,24 @@ TEST_CASE("mime drop into empty doc", "[adaptor][xml][tree-model]" )
   CHECK(spy_inserted.back().at(2) == 0);
 }
 
+TEST_CASE("mime drop two siblings", "[adaptor][xml][tree-model]" )
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><bar>World</bar></root>");
+  tree_model::XML *m = new tree_model::XML(std::move(doc));
+  tree_model::Item_Adaptor a(m);
+
+  const char inp[] = "<x>1</x><x>2</x>";
+  QByteArray b(inp, sizeof(inp)-1);
+  QMimeData md;
+  md.setData("text/xml", b);
+  CHECK(a.rowCount(a.index(0, 0)) == 2);
+  REQUIRE(a.dropMimeData(&md, Qt::CopyAction, -1, -1, a.index(0,0)) == true);
+  REQUIRE(a.rowCount(a.index(0, 0)) == 4);
+  CHECK(a.data(a.index(0, 0).child(2, 1)).toString().toStdString()== "1");
+  CHECK(a.data(a.index(0, 0).child(3, 1)).toString().toStdString()== "2");
+}
+
 TEST_CASE("adaptor header", "[adaptor][xml][tree-model]" )
 {
   xxxml::doc::Ptr doc = xxxml::read_memory(

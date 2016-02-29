@@ -27,6 +27,7 @@
 #include <QDebug>
 
 #include <string>
+#include <deque>
 
 
 namespace tree_model {
@@ -298,12 +299,28 @@ namespace tree_model {
       xmlNode *node = static_cast<xmlNode*>(i.internal_pointer());
       QByteArray a(data->data("text/xml"));
       try {
+        QByteArray data;
+        data.reserve(a.size() + 32);
+        // we wrap the XML in an artificial root in case there are
+        // multiple top level elements
+        data.append("<root>");
+        data.append(a.data(), a.size());
+        data.append("</root>");
         auto new_node = xxxml::util::create_node(doc_,
-            a.data(), a.data() + a.size());
-        begin_insert_index(i, position);
-        auto x = new_node.release();
-        xxxml::util::insert(doc_, node, x, position);
-        end_insert_index(create_index(0, x));
+            data.data(), data.data() + data.size());
+        std::deque<xxxml::Node_Ptr> children;
+        if (position < 0)
+          while (auto c = xxxml::first_element_child(new_node.get()))
+            children.push_back(xxxml::unlink_node(c));
+        else
+          while (auto c = xxxml::first_element_child(new_node.get()))
+            children.push_front(xxxml::unlink_node(c));
+        for (auto &c : children) {
+          begin_insert_index(i, position);
+          auto x = c.release();
+          xxxml::util::insert(doc_, node, x, position);
+          end_insert_index(create_index(0, x));
+        }
       } catch (const xxxml::Parse_Error &e) {
         return false;
       }

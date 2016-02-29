@@ -178,5 +178,39 @@ TEST_CASE("paste malformed", "[editor][qt][gui][clipboard]")
   delete doc;
 }
 
-// XXX test pasting 2 rooted xml
-// XXX use same pos semantics with add
+TEST_CASE("paste two siblings", "[editor][qt][gui][clipboard]")
+{
+  QClipboard *cb = QApplication::clipboard();
+  cb->clear();
+  auto d = new QMimeData();
+  d->setData("text/xml", QByteArray("<x>1</x><x>2</x>"));
+  cb->setMimeData(d);
+
+  tree_model::XML *m = new tree_model::XML(xxxml::read_file(
+        test::path::in() + "/small.xml"));
+  tree_model::Item_Adaptor *a = new tree_model::Item_Adaptor(m);
+  editor::gui_command::Clipboard_Paste cp;
+  cp.set_model(a);
+  auto sm = new QItemSelectionModel(a);
+  cp.set_selection_model(sm);
+  sm->select(a->index(0, 0), QItemSelectionModel::Select);
+
+  cp.paste_as_child();
+
+  auto doc = a->mimeData(QModelIndexList() << QModelIndex());
+
+  const char ref[] = R"(<?xml version="1.0"?>
+<root>
+  <foo>Hello</foo>
+  <bar>World</bar>
+<x>1</x><x>2</x></root>
+)";
+  CHECK(doc->data("text/xml").toStdString() == ref);
+
+  cb->clear();
+
+  delete sm;
+  delete a;
+  delete doc;
+}
+

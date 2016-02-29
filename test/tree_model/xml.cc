@@ -25,6 +25,8 @@
 #include <string>
 
 #include <QSignalSpy>
+#include <QMimeData>
+#include <QByteArray>
 
 using namespace std;
 
@@ -411,4 +413,23 @@ TEST_CASE("xml children in empty doc", "[xml][tree-model]")
   CHECK(i.is_valid() == false);
   auto j = m.first_child(tree_model::Index());
   CHECK(j.is_valid() == false);
+}
+
+TEST_CASE("xml mime drop two siblings", "[xml][tree-model]")
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><bar>World</bar></root>");
+  tree_model::XML m(std::move(doc));
+  auto root = m.first_child();
+  const char inp[] = "<x>1</x><x>2</x>";
+  QByteArray b(inp, sizeof(inp)-1);
+  QMimeData md;
+  md.setData("text/xml", b);
+  bool r = m.drop_mime_data(&md, Qt::CopyAction, root, -1);
+  CHECK(r == true);
+  CHECK(m.data(root.last_child().attribute(1)).toString().toStdString() == "2");
+  CHECK(m.data(root.last_child().prev_sibling().attribute(1)).toString()
+      .toStdString() == "1");
+  CHECK(m.data(root.first_child().attribute(1)).toString()
+      .toStdString() == "Hello");
 }

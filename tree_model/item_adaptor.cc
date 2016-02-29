@@ -481,8 +481,6 @@ namespace tree_model {
       for (int k = 0; k < count; ++k) {
         auto new_index = model_->insert(p, -1);
         r = r || new_index.is_valid();
-        if (new_index.is_valid())
-          ++insert_row_;
       }
     } else if (row < row_count) {
       for (int k = 0; k < count; ++k) {
@@ -490,8 +488,6 @@ namespace tree_model {
         Index j(create_index(i));
         auto new_index = model_->insert(j, -2);
         r = r || new_index.is_valid();
-        if (new_index.is_valid())
-          ++insert_row_;
       }
     }
     return r;
@@ -528,7 +524,7 @@ namespace tree_model {
 #ifndef USE_SLOW_TREE_MODEL
     if (i.is_valid()) {
       auto &children = cached_children(i.parent());
-      auto &node = children.insert(insert_row_, i.internal_pointer());
+      auto &node = children.insert(insert_row_++, i.internal_pointer());
       index_to_node_map_[i.internal_pointer()] = &node;
       auto ancestors = this->ancestors(i);
       for (auto a : ancestors)
