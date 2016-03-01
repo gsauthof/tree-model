@@ -28,6 +28,7 @@
 
 #include <string>
 #include <deque>
+#include <algorithm>
 
 
 namespace tree_model {
@@ -211,6 +212,7 @@ namespace tree_model {
       switch (index.column()) {
         case 0:
           r |= Qt::ItemIsEditable;
+          r |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
           break;
         case 1:
           if (!has_children(attribute(index, 0)))
@@ -218,8 +220,10 @@ namespace tree_model {
           break;
       }
       return r;
-    } else
-      return 0;
+    } else {
+      Qt::ItemFlags r = Qt::ItemIsDropEnabled;
+      return r;
+    }
   }
 
   bool XML::remove(const Index &index)
@@ -296,41 +300,57 @@ namespace tree_model {
   bool XML::drop_mime_data(const QMimeData *data, Qt::DropAction action,
       const Index &i, int position)
   {
-    if (!data)
+    if (!can_drop_mime_data(data, action, i, position))
       return false;
-    if (action == Qt::CopyAction) {
-      xmlNode *node = static_cast<xmlNode*>(i.internal_pointer());
-      QByteArray a(data->data("text/xml"));
-      try {
-        QByteArray data;
-        data.reserve(a.size() + 32);
-        // we wrap the XML in an artificial root in case there are
-        // multiple top level elements
-        data.append("<root>");
-        data.append(a.data(), a.size());
-        data.append("</root>");
-        auto new_node = xxxml::util::create_node(doc_,
-            data.data(), data.data() + data.size());
-        std::deque<xxxml::Node_Ptr> children;
-        if (position < 0)
-          while (auto c = xxxml::first_element_child(new_node.get()))
-            children.push_back(xxxml::unlink_node(c));
-        else
-          while (auto c = xxxml::first_element_child(new_node.get()))
-            children.push_front(xxxml::unlink_node(c));
-        for (auto &c : children) {
-          begin_insert_index(i, position);
-          auto x = c.release();
-          xxxml::util::insert(doc_, node, x, position);
-          end_insert_index(create_index(0, x));
-        }
-      } catch (const xxxml::Parse_Error &e) {
-        return false;
-      }
+    if (action == Qt::IgnoreAction)
       return true;
-    } else {
+
+    xmlNode *node = static_cast<xmlNode*>(i.internal_pointer());
+    QByteArray a(data->data("text/xml"));
+    try {
+      QByteArray data;
+      data.reserve(a.size() + 32);
+      // we wrap the XML in an artificial root in case there are
+      // multiple top level elements
+      data.append("<root>");
+      data.append(a.data(), a.size());
+      data.append("</root>");
+      auto new_node = xxxml::util::create_node(doc_,
+          data.data(), data.data() + data.size());
+      std::deque<xxxml::Node_Ptr> children;
+      if (position < 0)
+        while (auto c = xxxml::first_element_child(new_node.get()))
+          children.push_back(xxxml::unlink_node(c));
+      else
+        while (auto c = xxxml::first_element_child(new_node.get()))
+          children.push_front(xxxml::unlink_node(c));
+      for (auto &c : children) {
+        begin_insert_index(i, position);
+        auto x = c.release();
+        xxxml::util::insert(doc_, node, x, position);
+        end_insert_index(create_index(0, x));
+      }
+    } catch (const xxxml::Parse_Error &e) {
       return false;
     }
+    return true;
+  }
+  Qt::DropActions XML::supported_drop_actions() const
+  {
+    return Qt::CopyAction | Qt::MoveAction;
+  }
+  bool XML::can_drop_mime_data(const QMimeData *data, Qt::DropAction action,
+      const Index &index, int position) const
+  {
+    if (action == Qt::IgnoreAction)
+      return true;
+    bool r = Base::can_drop_mime_data(data, action, index, position);
+    if (!r)
+      return false;
+    if (!index.is_valid())
+      return position == -1 || position == 1;
+    //return !index.column();
+    return true;
   }
 
   QVariant XML::header_data(size_t section, Qt::Orientation orientation,

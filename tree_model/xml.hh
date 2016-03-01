@@ -73,6 +73,9 @@ namespace tree_model {
           const std::deque<Index> &indexes) const override;
       bool drop_mime_data(const QMimeData *data, Qt::DropAction action,
           const Index &index, int position) override;
+      Qt::DropActions supported_drop_actions() const override;
+      bool can_drop_mime_data(const QMimeData *data, Qt::DropAction action,
+          const Index &index, int position) const override;
 
   };
 

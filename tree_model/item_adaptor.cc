@@ -548,17 +548,34 @@ namespace tree_model {
     return up.release();
   }
 
+  std::pair<Index, int> Item_Adaptor::drop_location(int row, int column,
+      const QModelIndex &parent) const
+  {
+    if (row == -1 && column == -1)
+      return std::make_pair(create_index(parent), -1);
+    else
+      return std::make_pair(create_index(index(row, column, parent)), -2);
+  }
   bool Item_Adaptor::dropMimeData(const QMimeData *data, Qt::DropAction action,
       int row, int column, const QModelIndex &parent)
   {
-    if (row == -1 && column == -1) {
+    auto p(drop_location(row, column, parent));
+    if (row == -1 && column == -1)
       insert_row_ = rowCount(parent);
-      return model_->drop_mime_data(data, action, create_index(parent), -1);
-    } else {
+    else
       insert_row_ = row;
-      return model_->drop_mime_data(data, action,
-          create_index(index(row, column, parent)), -2);
-    }
+    return model_->drop_mime_data(data, action, p.first, p.second);
+  }
+  Qt::DropActions Item_Adaptor::supportedDropActions() const
+  {
+    return model_->supported_drop_actions();
+  }
+  bool Item_Adaptor::canDropMimeData(const QMimeData *data,
+      Qt::DropAction action,
+      int row, int column, const QModelIndex &parent) const
+  {
+    auto p(drop_location(row, column, parent));
+    return model_->can_drop_mime_data(data, action, p.first, p.second);
   }
 
 }

@@ -31,6 +31,14 @@ namespace editor {
     :
       QTreeView(parent)
   {
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    // or:
+    // setDragDropMode(QAbstractItemView::DragDrop);
+    // ?
+    setDragEnabled(true);
+    setAcceptDrops(true);
+    setDropIndicatorShown(true);
+
     remove_action_ = new QAction(tr("&Remove"), this);
     connect(remove_action_, &QAction::triggered,
         [this](){ emit remove_triggered(selectedIndexes()); });

@@ -75,6 +75,9 @@ namespace tree_model {
           const std::deque<Index> &indexes) const;
       virtual bool drop_mime_data(const QMimeData *data, Qt::DropAction action,
           const Index &index, int position);
+      virtual Qt::DropActions supported_drop_actions() const;
+      virtual bool can_drop_mime_data(const QMimeData *data,
+          Qt::DropAction action, const Index &index, int position) const;
 
     signals:
       void data_about_to_be_changed(const tree_model::Index &index,

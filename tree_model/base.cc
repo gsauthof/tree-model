@@ -105,6 +105,20 @@ namespace tree_model {
   {
     return false;
   }
+  Qt::DropActions Base::supported_drop_actions() const
+  {
+    // Qt::MoveAction
+    return Qt::CopyAction;
+  }
+  bool Base::can_drop_mime_data(const QMimeData *data, Qt::DropAction action,
+      const Index &index, int position) const
+  {
+    auto m = mime_types();
+    return data
+      && std::any_of(m.begin(), m.end(),
+        [data](auto &f){ return data->hasFormat(f); })
+      && (action & supported_drop_actions());
+  }
 
   QVariant Base::header_data(size_t section, Qt::Orientation orientation,
       int role) const

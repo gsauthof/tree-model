@@ -107,7 +107,8 @@ TEST_CASE("invalid has no flags", "[xml][tree-model]")
   xxxml::doc::Ptr doc = xxxml::read_memory(
       "<root><foo>Hello</foo><bar>World</bar></root>");
   tree_model::XML m(std::move(doc));
-  REQUIRE(m.flags(tree_model::Index()) == 0);
+  //REQUIRE(m.flags(tree_model::Index()) == 0);
+  REQUIRE(m.flags(tree_model::Index()) == Qt::ItemIsDropEnabled);
 }
 
 TEST_CASE("xml same parents", "[xml][tree-model]")
@@ -115,7 +116,6 @@ TEST_CASE("xml same parents", "[xml][tree-model]")
   xxxml::doc::Ptr doc = xxxml::read_memory(
       "<root><foo>Hello</foo><bar>World</bar></root>");
   tree_model::XML m(std::move(doc));
-  REQUIRE(m.flags(tree_model::Index()) == 0);
   auto doc_root = m.first_child();
   auto foo = doc_root.first_child();
   auto bar = doc_root.last_child();
@@ -127,7 +127,6 @@ TEST_CASE("xml different column, same parents", "[xml][tree-model]")
   xxxml::doc::Ptr doc = xxxml::read_memory(
       "<root><foo>Hello</foo><bar>World</bar></root>");
   tree_model::XML m(std::move(doc));
-  REQUIRE(m.flags(tree_model::Index()) == 0);
   auto doc_root = m.first_child();
   auto foo = doc_root.first_child();
   auto bar = doc_root.last_child().attribute(1);
@@ -139,7 +138,6 @@ TEST_CASE("xml is editable", "[xml][tree-model]")
   xxxml::doc::Ptr doc = xxxml::read_memory(
       "<root><foo>Hello</foo><bar>World</bar></root>");
   tree_model::XML m(std::move(doc));
-  REQUIRE(m.flags(tree_model::Index()) == 0);
   auto doc_root = m.first_child();
   Qt::ItemFlags r = 0;
   r = m.flags(doc_root) & Qt::ItemIsEditable;
@@ -447,5 +445,50 @@ TEST_CASE("xml mime data", "[xml][tree-model]")
   auto md = m.mime_data(is);
   auto a = md->data("text/xml");
   CHECK(string(a.data(), a.size()) == "<foo>Hello</foo><bar>World</bar>");
+}
+
+TEST_CASE("xml can drop", "[xml][tree-model]")
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><bar>World</bar></root>");
+  tree_model::XML m(std::move(doc));
+  CHECK(m.can_drop_mime_data(nullptr, Qt::CopyAction, tree_model::Index(), -1)
+      == false);
+  CHECK(m.can_drop_mime_data(nullptr, Qt::IgnoreAction, tree_model::Index(), -1)
+      == true);
+
+  const char inp[] = "<x>1</x><x>2</x>";
+  QByteArray b(inp, sizeof(inp)-1);
+  QMimeData md;
+  md.setData("text/xml", b);
+
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, m.first_child(), -1)
+      == true);
+  CHECK(m.can_drop_mime_data(&md, Qt::MoveAction, m.first_child(), -1)
+      == true);
+
+  CHECK((m.flags(m.first_child()) & Qt::ItemIsDropEnabled)
+      == Qt::ItemIsDropEnabled);
+  CHECK((m.flags(m.first_child()) & Qt::ItemIsDragEnabled)
+      == Qt::ItemIsDragEnabled);
+}
+
+TEST_CASE("xml can drop into empty", "[xml][tree-model]")
+{
+  tree_model::XML m(xxxml::new_doc());
+  const char inp[] = "<x>1</x><x>2</x>";
+  QByteArray b(inp, sizeof(inp)-1);
+  QMimeData md;
+  md.setData("text/xml", b);
+
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, m.first_child(), -1)
+      == true);
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, m.first_child(), 1)
+      == true);
+
+  CHECK((m.flags(tree_model::Index()) & Qt::ItemIsDropEnabled)
+      == Qt::ItemIsDropEnabled);
+  CHECK((m.flags(tree_model::Index()) & Qt::ItemIsDragEnabled)
+      == 0);
 }
 

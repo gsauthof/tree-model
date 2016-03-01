@@ -74,6 +74,9 @@ namespace tree_model {
       QMimeData *mimeData(const QModelIndexList &indexes) const override;
       bool dropMimeData(const QMimeData *data, Qt::DropAction action,
           int row, int column, const QModelIndex &parent) override;
+      Qt::DropActions supportedDropActions() const override;
+      bool canDropMimeData(const QMimeData *data, Qt::DropAction action,
+          int row, int column, const QModelIndex &parent) const override;
 
     signals:
       void dataAboutToBeChanged(const QModelIndex &topLeft,
@@ -114,6 +117,9 @@ namespace tree_model {
       list::ranked::List<void*> &cached_children(const Index &p) const;
       std::deque<void*> ancestors(const Index &x, bool include_self = true)
         const;
+
+      std::pair<Index, int> drop_location(int row, int column,
+          const QModelIndex &parent) const;
 
   };
 
