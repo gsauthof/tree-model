@@ -287,7 +287,7 @@ namespace tree_model {
     } else {
       QByteArray b;
       for (auto &i : indexes) {
-        if (!i.is_valid())
+        if (!i.is_valid() || i.column())
           continue;
         const xmlNode *node = static_cast<const xmlNode*>(i.internal_pointer());
         auto x = xxxml::util::dump(doc_, node);

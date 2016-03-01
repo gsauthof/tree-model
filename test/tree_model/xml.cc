@@ -447,6 +447,21 @@ TEST_CASE("xml mime data", "[xml][tree-model]")
   CHECK(string(a.data(), a.size()) == "<foo>Hello</foo><bar>World</bar>");
 }
 
+TEST_CASE("xml mime data ignore column one", "[xml][tree-model]")
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><bar>World</bar></root>");
+  tree_model::XML m(std::move(doc));
+  auto root = m.first_child();
+
+  deque<tree_model::Index> is;
+  is.push_back(root.first_child());
+  is.push_back(root.first_child().attribute(1));
+  auto md = m.mime_data(is);
+  auto a = md->data("text/xml");
+  CHECK(string(a.data(), a.size()) == "<foo>Hello</foo>");
+}
+
 TEST_CASE("xml can drop", "[xml][tree-model]")
 {
   xxxml::doc::Ptr doc = xxxml::read_memory(
