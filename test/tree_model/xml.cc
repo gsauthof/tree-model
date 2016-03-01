@@ -481,6 +481,18 @@ TEST_CASE("xml can drop", "[xml][tree-model]")
       == true);
   CHECK(m.can_drop_mime_data(&md, Qt::MoveAction, m.first_child(), -1)
       == true);
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, m.first_child().first_child(), -1)
+      == false);
+  CHECK(m.can_drop_mime_data(&md, Qt::MoveAction, m.first_child().first_child(), 1)
+      == false);
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, m.first_child().first_child(), -2)
+      == true);
+  CHECK(m.can_drop_mime_data(&md, Qt::MoveAction, m.first_child().first_child(), 2)
+      == true);
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, tree_model::Index(), -1)
+      == false);
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, tree_model::Index(), 1)
+      == false);
 
   CHECK((m.flags(m.first_child()) & Qt::ItemIsDropEnabled)
       == Qt::ItemIsDropEnabled);
@@ -496,10 +508,14 @@ TEST_CASE("xml can drop into empty", "[xml][tree-model]")
   QMimeData md;
   md.setData("text/xml", b);
 
-  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, m.first_child(), -1)
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, tree_model::Index(), -1)
       == true);
-  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, m.first_child(), 1)
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, tree_model::Index(), 1)
       == true);
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, tree_model::Index(), -2)
+      == false);
+  CHECK(m.can_drop_mime_data(&md, Qt::CopyAction, tree_model::Index(), 2)
+      == false);
 
   CHECK((m.flags(tree_model::Index()) & Qt::ItemIsDropEnabled)
       == Qt::ItemIsDropEnabled);

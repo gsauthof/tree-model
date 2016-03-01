@@ -347,10 +347,20 @@ namespace tree_model {
     bool r = Base::can_drop_mime_data(data, action, index, position);
     if (!r)
       return false;
-    if (!index.is_valid())
-      return position == -1 || position == 1;
+
+    if (index.is_valid()) {
+      if (index.parent().is_valid()) {
+        if (position == -2 || position == 2)
+          return true;
+        else
+          return has_children(index) || !this->data(attribute(index, 1)).isValid();
+      } else {
+        return position == -1 || position == 1;
+      }
+    } else {
+      return (position == -1 || position == 1) && !has_children(index);
+    }
     //return !index.column();
-    return true;
   }
 
   QVariant XML::header_data(size_t section, Qt::Orientation orientation,
