@@ -103,13 +103,85 @@ if many different kind of edit operations need to be covered. But
 this is not the case for an QAbstractItemModel model, where you
 need to cover 'just' set-data, insert and remove.
   
- Thus, the tree-model library implements the 2nd approach for
- undo/redo in the class `tree_model::Recorder`. An Recorder
- instance is associated to a QAbstractItemModel instance via
- being connected to all its 'interesting' edit related signals.
- It records edit operations via storing edit operation objects
- into double-ended queue. Transactions and limited undo are
- supported, where unlimited undo/redo is the default.
+Thus, the tree-model library implements the 2nd approach for
+undo/redo in the class `tree_model::Recorder`. An Recorder
+instance is associated to a QAbstractItemModel instance via
+being connected to all its 'interesting' edit related signals.
+It records edit operations via storing edit operation objects
+into double-ended queue. Transactions and limited undo are
+supported, where unlimited undo/redo is the default.
+
+### Clipboard Support
+
+Qt has a class for interacting with the system's clipboard in a
+portable fashion. When dealing with `QAbstractItemModel`s it is
+natural to also use the drag-and-drop related methods
+`dropMimeData()` and `mimeData()` to paste and copy the clipboard
+data. The adaptor model thus also implements them and translates
+them into equivalent calls of the `tree_model::Base` model.
+
+Using XML as the serialization format of the clipboard has the
+advantage that it is human readable and can be easiliy changed
+with a normal text editor. When multiple elements should be
+copied or inserted one has to decide how to map that to XML since
+an XML document may only have one root. One possibility is to
+create an artificial root element that is part of the mime data.
+The editor example implements a variation. The serialized XML is just a
+concatenation of serialized subtrees, thus, not necessarily a
+valid XML document as such.  But, on deserialization the document
+is implicitly wrapped with an artificical root element such that
+an off-the-shelf XML parser can be used (after insert that root
+is discarded).
+
+With the Qt clipboard API one has to decide which clipboards to
+support exactly. For example under X11, there is the primary
+selection buffer and a normal clipboard. Also, a clipboard may
+contain a document in several versions (with different mime
+types). The editor example thus exports a copied selection multiple
+times: into the selection buffer, into the normal clipboard as
+normal text and with mime-type 'text/xml'. The normal text copy
+is done because this is what normal text editor request; such
+that the 'text/xml' version is ignored. The mime-type 'text/xml'
+is what is expected by the editor - also for drag-and-drop
+operations. The X11 selection copy is done for convenience, e.g.
+to easily paste something into a terminal window.
+
+### Drag and Drop
+
+After central methods of the `QAbstractItemModel` are
+implemented in the `tree_model::Base` (like removal, mime data
+export/import) it isn't much work to get drag and drop
+functionality enabled in the view and the model.
+
+See also
+
+- `Item_Adaptor::mimeTypes()`
+- `Item_Adaptor::mimeData()`
+- `Item_Adaptor::dropMimeData()`
+- `Item_Adaptor::canDropMimeData()`
+- `Item_Adaptor::supportedDropActions()`
+- `Item_Adaptor::flags()`
+
+and
+
+- `XML::mime_types()`
+- `XML::mime_data()`
+- `XML::drop_mime_data()`
+- `XML::can_drop_mime_data()`
+- `XML::supported_drop_actions()`
+- `XML::flags()`
+
+and the `Tree_View` constructor for details what is necessary to
+implement and customize drag-and-drop (supporting copy and move
+actions) for hierachical models.
+
+### UI
+
+Creating dialog and widgets, thus, distributing the widgets and
+configuring layout policies can get challenging.  Thus, a
+graphical editor like the UI component of Qt-Creator is a help.
+Challenges still occur, e.g. if you want to use namespaces. It is
+possible, but the support in Qt Creator is limited (as of 2015).
 
 ## Architecture
 
@@ -140,14 +212,6 @@ into a non-GUI and GUI part, where the GUI part extends the
 non-GUI one. For example, the open command reads a file and
 creates the model - the GUI part extends that command and adds a
 graphical progress dialog to it.
-
-### UI
-
-Creating dialog and widgets, thus, distributing the widgets and
-configuring layout policies can get challenging.  Thus, a
-graphical editor like the UI component of Qt-Creator is a help.
-Challenges still occur, e.g. if you want to use namespaces. It is
-possible, but the support in Qt Creator is limited (as of 2015).
 
 
 ## Structure
