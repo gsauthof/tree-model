@@ -46,8 +46,9 @@ namespace editor {
       // We don't overload save because we want to use
       // Qt 5 new signal slot syntax ... otherwise we had to use
       // SLOT(save(const QString&)) ...
-      connect(this, &Async_Save::save_as_requested,
-          save_, &Save::save_as);
+      connect(this, &Async_Save::save_as_requested, save_, &Save::save_as);
+      connect(this, &Async_Save::save_copy_as_requested,
+          save_, &Save::save_copy_as);
 
       connect(save_, &Save::msg_produced, this, &Async_Save::msg_produced);
       connect(save_, &Save::failed,       this, &Async_Save::failed);
@@ -70,6 +71,10 @@ namespace editor {
     void Async_Save::save_as(const QString &filename)
     {
       emit save_as_requested(filename);
+    }
+    void Async_Save::save_copy_as(const QString &filename)
+    {
+      emit save_copy_as_requested(filename);
     }
 
     void Async_Save::set_tree_model(tree_model::Base *model)

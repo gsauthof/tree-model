@@ -46,14 +46,24 @@ namespace editor {
       }
       save_as(filename_);
     }
+    void Save::save_copy_as(const QString &filename)
+    {
+      save_as_prime(filename, true);
+    }
     void Save::save_as(const QString &filename)
+    {
+      save_as_prime(filename, false);
+    }
+    void Save::save_as_prime(const QString &filename, bool as_copy)
     {
       if (model_) {
         try {
           model_->save(filename);
-          set_filename(filename);
           QThread::msleep(delay_);
-          emit saved(filename);
+          if (!as_copy) {
+            set_filename(filename);
+            emit saved(filename);
+          }
           emit msg_produced(tr("Successfully saved %1").arg(filename));
         } catch (const exception &e) {
           QString m(e.what());

@@ -34,13 +34,15 @@ namespace editor {
       public slots:
         void save();
         void save_as(const QString &filename);
+        void save_copy_as(const QString &filename);
         void select_save();
         void select_save_copy();
 
       protected:
         QWidget *parent_widget_ {nullptr};
 
-        QString select_save_prime(const QString &caption);
+        QString select_filename(const QString &caption);
+        void save_with_progress(const QString &filename, bool as_copy);
 
     };
 

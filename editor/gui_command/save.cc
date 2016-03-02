@@ -44,7 +44,7 @@ namespace editor {
       else
         save_as(filename());
     }
-    void Save::save_as(const QString &filename)
+    void Save::save_with_progress(const QString &filename, bool as_copy)
     {
       Progress_Dialog progress_dialog(tr("Saving %1 ...").arg(filename),
           QString(), parent_widget_);
@@ -55,23 +55,30 @@ namespace editor {
       connect(this, SIGNAL(saved(const QString&)),
           &progress_dialog, SLOT(finish()));
 
-      Async_Save::save_as(filename);
+      if (as_copy)
+        Async_Save::save_copy_as(filename);
+      else
+        Async_Save::save_as(filename);
 
       progress_dialog.wait();
-
-      if (progress_dialog.result() == Progress_Dialog::Accepted
-          && filename != this->filename())
-        set_filename(filename);
     }
-    QString Save::select_save_prime(const QString &caption)
+    void Save::save_as(const QString &filename)
     {
+      save_with_progress(filename, false);
+    }
+    void Save::save_copy_as(const QString &filename)
+    {
+      save_with_progress(filename, true);
+    }
+    QString Save::select_filename(const QString &caption)
+    {
+      QString filename;
       QFileDialog file_dialog(parent_widget_, caption,
             QString(),
             tr("XML (*.xml)"));
       // for consistency with the open dialog ...
       file_dialog.setOption(QFileDialog::DontUseNativeDialog);
       file_dialog.setAcceptMode(QFileDialog::AcceptSave);
-      QString filename;
       int r = file_dialog.exec();
       if (r) {
         auto filenames = file_dialog.selectedFiles();
@@ -81,22 +88,20 @@ namespace editor {
         else if (filenames.size() > 1) // QFileDialog does not allow this
           QMessageBox::critical(parent_widget_, tr("Save error"),
               tr("More than one file selected"));
-        else {
+        else
           filename = filenames.front();
-          save_as(filename);
-        }
       }
       return filename;
     }
     void Save::select_save()
     {
-      QString filename(select_save_prime(tr("Select file to save to")));
-      if (!filename.isEmpty() && filename != this->filename())
-        set_filename(filename);
+      QString filename(select_filename(tr("Select file to save to")));
+      save_as(filename);
     }
     void Save::select_save_copy()
     {
-      select_save_prime(tr("Select a file to save a copy to"));
+      QString filename(select_filename(tr("Select a file to save a copy to")));
+      save_copy_as(filename);
     }
 
   }

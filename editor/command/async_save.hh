@@ -48,10 +48,12 @@ namespace editor {
 
         void save_requested();
         void save_as_requested(const QString &);
+        void save_copy_as_requested(const QString &);
 
       public slots:
         void save();
         void save_as(const QString &filename);
+        void save_copy_as(const QString &filename);
 
         void set_tree_model(tree_model::Base *model);
         void set_filename(const QString &filename);

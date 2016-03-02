@@ -48,6 +48,7 @@ namespace editor {
       public slots:
         void save();
         void save_as(const QString &filename);
+        void save_copy_as(const QString &filename);
 
         void set_tree_model(tree_model::Base *model);
         void set_filename(const QString &filename);
@@ -56,6 +57,8 @@ namespace editor {
         tree_model::Base *model_ {nullptr};
         QString filename_;
         unsigned delay_{0};
+
+        void save_as_prime(const QString &filename, bool as_copy);
     };
   }
 }
