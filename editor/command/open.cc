@@ -22,21 +22,22 @@
 
 #include <QCoreApplication>
 #include <QThread>
+#include <QAbstractItemModel>
 
 #include <exception>
 #include <stdexcept>
 
-#include <tree_model/item_adaptor.hh>
-#include <tree_model/xml.hh>
 #include <editor/file_type.hh>
 
+#include "open_xml.hh"
+#include "open_ber.hh"
 
 namespace editor {
   namespace command {
 
-    Open::Open(QObject *parent) : QObject(parent)
+    Open::Open(QObject *parent)
+      : QObject(parent)
     {
-
     }
 
     void Open::open(const QString &filename)
@@ -53,15 +54,18 @@ namespace editor {
         switch (ft.major()) {
           case File_Type::XML:
             {
-              xxxml::doc::Ptr doc = xxxml::read_file(filename.toUtf8().data());
-
-              m = new tree_model::XML(std::move(doc));
-              // We don't call moveToThread() on m, because m is
-              // getting adopted by a, and moveThread() works
-              // recursively.
-              //m->moveToThread(QApplication::instance()->thread());
-              a = new tree_model::Item_Adaptor(m);
-            } break;
+              auto p = open_xml(filename);
+              a = p.first;
+              m = p.second;
+            }
+            break;
+          case File_Type::BER:
+            {
+              auto p = open_ber(filename);
+              a = p.first;
+              m = p.second;
+            }
+            break;
           default:
             throw std::logic_error("File Type not implemented yet");
         }

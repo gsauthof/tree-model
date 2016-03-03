@@ -23,6 +23,7 @@
 
 #include <Qt>
 #include <QMetaType>
+#include <QVariant>
 
 namespace tree_model {
 

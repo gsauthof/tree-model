@@ -104,6 +104,8 @@ set(EDITOR_CC
   editor/recent_menu.cc
   editor/command/new.cc
   editor/command/open.cc
+  editor/command/open_xml.cc
+  editor/command/open_ber.cc
   editor/command/async_open.cc
   editor/command/save.cc
   editor/command/async_save.cc
@@ -160,6 +162,7 @@ set_property(TARGET main PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/libixxx
   ${CMAKE_CURRENT_SOURCE_DIR}/libixxxutil
   ${CMAKE_CURRENT_SOURCE_DIR}/libgrammar
+  ${CMAKE_CURRENT_SOURCE_DIR}/libxfsx
   )
 target_link_libraries(main
   xfsx
@@ -191,6 +194,8 @@ add_executable(ut
   test/editor/command/save.cc
   editor/command/remove.cc
   editor/command/open.cc
+  editor/command/open_xml.cc
+  editor/command/open_ber.cc
   editor/command/save.cc
   editor/file_type.cc
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_remove.cpp
@@ -210,6 +215,7 @@ set_property(TARGET ut PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIRS}
   ${XML2_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/libxfsx
   )
 target_link_libraries(ut
   xxxml_static
