@@ -22,7 +22,7 @@
 #define TREE_MODEL_INDEX_HH
 
 #include <Qt>
-#include <QVariant>
+#include <QMetaType>
 
 namespace tree_model {
 

@@ -25,6 +25,7 @@
 #include <tree_model/base.hh>
 
 #include "open.hh"
+#include <editor/file_type.hh>
 
 namespace editor {
   namespace command {
@@ -45,6 +46,8 @@ namespace editor {
 
       connect(this, &Async_Open::open_requested,
           open_, &Open::open);
+      connect(this, &Async_Open::open_ft_requested,
+          open_, &Open::open_ft);
 
       connect(open_, &Open::item_tree_model_created,
           this, &Async_Open::item_tree_model_created);
@@ -91,6 +94,10 @@ namespace editor {
     void Async_Open::open(const QString &filename)
     {
       emit open_requested(filename);
+    }
+    void Async_Open::open_ft(const QString &filename, const File_Type &ft)
+    {
+      emit open_ft_requested(filename, ft);
     }
     void Async_Open::set_delay(unsigned msecs)
     {

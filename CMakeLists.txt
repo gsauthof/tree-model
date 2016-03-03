@@ -117,6 +117,7 @@ set(EDITOR_CC
   editor/absolute_slider_style.cc
   editor/instance.cc
   editor/instance_manager.cc
+  editor/file_type.cc
   )
 set(TREE_MODEL_CC
   tree_model/index.cc
@@ -176,6 +177,7 @@ add_executable(ut
   editor/command/remove.cc
   editor/command/open.cc
   editor/command/save.cc
+  editor/file_type.cc
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_remove.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_open.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_save.cpp

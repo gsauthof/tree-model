@@ -29,6 +29,7 @@
 
 #include <editor/gui_command/select_open.hh>
 #include <editor/gui_command/open.hh>
+#include <editor/file_type.hh>
 #include <test/test.hh>
 
 #include <string>
@@ -42,6 +43,7 @@ namespace test {
         :
           QObject(parent)
       {
+        ::editor::File_Type::register_meta_type();
       }
       void Select_Open::test_cancel()
       {

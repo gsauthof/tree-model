@@ -23,8 +23,13 @@
 #include <QCoreApplication>
 #include <QThread>
 
+#include <exception>
+#include <stdexcept>
+
 #include <tree_model/item_adaptor.hh>
 #include <tree_model/xml.hh>
+#include <editor/file_type.hh>
+
 
 namespace editor {
   namespace command {
@@ -36,19 +41,34 @@ namespace editor {
 
     void Open::open(const QString &filename)
     {
+      // TODO implement content based autodetection?
+      open_ft(filename, filename.toLower().endsWith(".xml") ?
+          File_Type(File_Type::XML) : File_Type(File_Type::BER));
+    }
+    void Open::open_ft(const QString &filename, const File_Type &ft)
+    {
       try {
-        xxxml::doc::Ptr doc = xxxml::read_file(filename.toUtf8().data());
+        tree_model::Base *m = nullptr;
+        QAbstractItemModel *a = nullptr;
+        switch (ft.major()) {
+          case File_Type::XML:
+            {
+              xxxml::doc::Ptr doc = xxxml::read_file(filename.toUtf8().data());
 
+              m = new tree_model::XML(std::move(doc));
+              // We don't call moveToThread() on m, because m is
+              // getting adopted by a, and moveThread() works
+              // recursively.
+              //m->moveToThread(QApplication::instance()->thread());
+              a = new tree_model::Item_Adaptor(m);
+            } break;
+          default:
+            throw std::logic_error("File Type not implemented yet");
+        }
         // In the non-async case, this should be an no-op
         // otherwise it is necessary such that it can be 
         // adaptaped by the main thread (i.e. the thread
         // that calls setParent())
-        tree_model::XML *m = new tree_model::XML(std::move(doc));
-        // We don't call moveToThread() on m, because m is
-        // getting adopted by a, and moveThread() works
-        // recursively.
-        //m->moveToThread(QApplication::instance()->thread());
-        tree_model::Item_Adaptor *a = new tree_model::Item_Adaptor(m);
         if (QCoreApplication::instance())
           a->moveToThread(QCoreApplication::instance()->thread());
         // for debugging purposes:

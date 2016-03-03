@@ -29,6 +29,9 @@ namespace tree_model {
 class QAbstractItemModel;
 
 namespace editor {
+
+  class File_Type;
+
   namespace command {
 
     class Open : public QObject
@@ -48,6 +51,7 @@ namespace editor {
 
       public slots:
         void open(const QString &filename);
+        void open_ft(const QString &filename, const File_Type &ft);
       private:
         unsigned delay_ {0};
     };

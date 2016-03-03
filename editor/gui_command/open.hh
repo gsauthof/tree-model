@@ -24,6 +24,8 @@
 #include <QAbstractItemModel>
 #include <QObject>
 
+#include <functional>
+
 #include <editor/command/async_open.hh>
 
 class QTimer;
@@ -31,6 +33,9 @@ class QProgressDialog;
 class QWidget;
 
 namespace editor {
+
+  class File_Type;
+
   namespace gui_command {
 
     class Open : public editor::command::Async_Open {
@@ -40,9 +45,14 @@ namespace editor {
 
       public slots:
         void open(const QString &filename);
+        // we don't overload because we can't use the
+        // new signal/slot syntax then ...
+        void open_ft(const QString &filename, const File_Type &ft);
 
       protected:
         QWidget *parent_widget_{nullptr};
+      private:
+        void open_prime(const QString &filename, std::function<void()>);
     };
 
   } // namespace command

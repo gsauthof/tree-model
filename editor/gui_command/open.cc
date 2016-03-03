@@ -21,36 +21,48 @@
 #include "open.hh"
 
 #include <editor/progress_dialog.hh>
+#include <editor/file_type.hh>
 
 #include <tree_model/base.hh>
 
 #include <QWidget>
 #include <QDebug>
 
+
 namespace editor {
-namespace gui_command {
+  namespace gui_command {
 
-  Open::Open(QWidget *parent)
-    :
-      Async_Open(static_cast<QObject*>(parent)),
-      parent_widget_(parent)
-  {
-  }
-  void Open::open(const QString &filename)
-  {
-    Progress_Dialog progress_dialog(tr("Opening %1 ...").arg(filename),
-        tr("&Cancel"), parent_widget_);
-    connect(&progress_dialog, &Progress_Dialog::canceled,
-        this, &Open::ignore_result);
+    Open::Open(QWidget *parent)
+      :
+        Async_Open(static_cast<QObject*>(parent)),
+        parent_widget_(parent)
+    {
+    }
+    void Open::open_prime(const QString &filename, std::function<void()> f)
+    {
+      Progress_Dialog progress_dialog(tr("Opening %1 ...").arg(filename),
+          tr("&Cancel"), parent_widget_);
+      connect(&progress_dialog, &Progress_Dialog::canceled,
+          this, &Open::ignore_result);
 
-    connect(this, &Open::failed,
-        &progress_dialog, &Progress_Dialog::display_error);
-    connect(this, SIGNAL(file_opened(const QString&)),
-        &progress_dialog, SLOT(finish()));
+      connect(this, &Open::failed,
+          &progress_dialog, &Progress_Dialog::display_error);
+      connect(this, SIGNAL(file_opened(const QString&)),
+          &progress_dialog, SLOT(finish()));
 
-    Async_Open::open(filename);
+      f();
 
-    progress_dialog.wait();
-  }
-}
-}
+      progress_dialog.wait();
+    }
+    void Open::open(const QString &filename)
+    {
+      open_prime(filename, [this, &filename](){ Async_Open::open(filename); });
+    }
+    void Open::open_ft(const QString &filename, const File_Type &ft)
+    {
+      open_prime(filename, [this, &filename, &ft](){
+          Async_Open::open_ft(filename, ft); });
+    }
+
+  } // gui_command
+} // editor

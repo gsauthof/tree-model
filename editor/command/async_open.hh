@@ -29,6 +29,9 @@ namespace tree_model {
   class Base;
 }
 namespace editor {
+
+  class File_Type;
+
   namespace command {
     class Open;
 
@@ -49,9 +52,11 @@ namespace editor {
         void finished();
 
         void open_requested(const QString &filename);
+        void open_ft_requested(const QString &filename, const File_Type &ft);
 
       public slots:
           void open(const QString &filename);
+          void open_ft(const QString &filename, const File_Type &ft);
           void ignore_result();
 
       private:

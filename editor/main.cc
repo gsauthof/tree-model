@@ -25,6 +25,8 @@
 #include <QApplication>
 #include <QTimer>
 
+#include "file_type.hh"
+
 
 using namespace std;
 
@@ -39,6 +41,8 @@ int main(int argc, char **argv)
   // is automatically trailing the window title
   // (seperated with a dash)
   a.setApplicationDisplayName(QApplication::tr("XML Editor"));
+
+  File_Type::register_meta_type();
 
   editor::Arguments args(argc, argv);
 
