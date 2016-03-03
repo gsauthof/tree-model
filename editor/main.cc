@@ -42,7 +42,7 @@ int main(int argc, char **argv)
   // (seperated with a dash)
   a.setApplicationDisplayName(QApplication::tr("XML Editor"));
 
-  File_Type::register_meta_type();
+  editor::File_Type::register_meta_type();
 
   editor::Arguments args(argc, argv);
 

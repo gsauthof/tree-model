@@ -7,3 +7,21 @@
 [submodule "cmake/modules"]
 	path = cmake/modules
 	url = https://github.com/gsauthof/cmake-modules.git
+[submodule "libixxx"]
+	path = libixxx
+	url = https://github.com/gsauthof/libixxx.git
+[submodule "libixxxutil"]
+	path = libixxxutil
+	url = https://github.com/gsauthof/libixxxutil.git
+[submodule "cppformat"]
+	path = cppformat
+	url = https://github.com/cppformat/cppformat.git
+[submodule "libgrammar"]
+	path = libgrammar
+	url = https://github.com/gsauthof/libgrammar.git
+[submodule "libxfsx"]
+	path = libxfsx
+	url = https://github.com/gsauthof/libxfsx.git
+[submodule "cmake/ragel"]
+	path = cmake/ragel
+	url = https://github.com/gsauthof/cmake-ragel.git

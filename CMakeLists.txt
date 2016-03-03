@@ -31,7 +31,15 @@ find_package(Boost 1.55
       system
   REQUIRED)
 
+add_subdirectory(libixxx)
+add_subdirectory(libixxxutil)
 add_subdirectory(libxxxml)
+add_subdirectory(libgrammar)
+set(OLD_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+set(BUILD_SHARED_LIBS true)
+add_subdirectory(cppformat)
+set(BUILD_SHARED_LIBS ${OLD_BUILD_SHARED_LIBS})
+add_subdirectory(libxfsx)
 
 qt5_wrap_ui(EDITOR_UI
   editor/main_window.ui
@@ -149,9 +157,16 @@ set_property(TARGET main PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIRS}
   ${XML2_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/libixxx
+  ${CMAKE_CURRENT_SOURCE_DIR}/libixxxutil
+  ${CMAKE_CURRENT_SOURCE_DIR}/libgrammar
   )
 target_link_libraries(main
-  xxxml_static
+  xfsx
+  grammar
+  ixxxutil
+  ixxx
+  xxxml
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_REGEX_LIBRARY}
