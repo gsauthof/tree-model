@@ -47,6 +47,7 @@ namespace editor {
         void failed(const QString &msg);
         void msg_produced(const QString &msg);
         void file_opened(const QString &filename);
+        void file_type_opened(const File_Type &ft);
         void finished();
 
       public slots:

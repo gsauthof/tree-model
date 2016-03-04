@@ -18,26 +18,29 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#define CATCH_CONFIG_RUNNER
-#include <catch.hpp>
 
-#include <editor/file_type.hh>
+#include "save_ber.hh"
 
-#include <QApplication>
+#include <xfsx/lxml2ber.hh>
+#include <xfsx/tap.hh>
 
-static char arg0[10] = "fake";
-static char *fake_argv[2] = {arg0};
-static int fake_argc = 1;
+#include <tree_model/xml.hh>
 
-int main(int argc, char **argv)
-{
-  // without QApplication, widgets can segfault
-  // on uninitialized singleton data ...
-  // Also, QApplication must be constructed once, constructing it e.g.
-  // in each test case yields segfaults ...
-  QApplication app(fake_argc, fake_argv);
-  app.setAttribute(Qt::AA_Use96Dpi, true);
-  editor::File_Type::register_meta_type();
-  int result = Catch::Session().run( argc, argv );
-  return result;
-}
+using namespace std;
+
+namespace editor {
+  namespace command {
+
+    void save_ber(const tree_model::Base &m, const QString &filename,
+        const deque<string> &asn_filenames)
+    {
+      auto x = dynamic_cast<const tree_model::XML*>(&m);
+      if (!x)
+        throw logic_error("not an xml model");
+      xfsx::BER_Writer_Arguments args;
+      xfsx::tap::apply_grammar(asn_filenames, args);
+      xfsx::xml::l2::write_ber(x->doc(), filename.toStdString(), args);
+    }
+
+  } // command
+} // editor

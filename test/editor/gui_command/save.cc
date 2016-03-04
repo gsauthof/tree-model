@@ -72,6 +72,8 @@ TEST_CASE("escape is ignored during save", "[editor][qt][gui][save]")
       &s, &editor::gui_command::Save::set_tree_model);
   o.connect(&o, &editor::gui_command::Open::file_opened,
       &s, &editor::gui_command::Save::set_filename);
+  o.connect(&o, &editor::gui_command::Open::file_type_opened,
+      &s, &editor::gui_command::Save::set_file_type);
   o.open(filename);
 
   s.set_delay(3000);

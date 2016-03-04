@@ -56,6 +56,8 @@ namespace editor {
       connect(open_, &Open::failed,      this, &Async_Open::failed);
       connect(open_, &Open::msg_produced,this, &Async_Open::msg_produced);
       connect(open_, &Open::file_opened, this, &Async_Open::file_opened);
+      connect(open_, &Open::file_type_opened,
+          this, &Async_Open::file_type_opened);
       connect(open_, &Open::finished,    this, &Async_Open::finished);
 
       thread_->start();

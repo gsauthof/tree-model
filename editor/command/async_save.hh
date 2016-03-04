@@ -28,6 +28,7 @@ namespace tree_model {
   class Base;
 }
 namespace editor {
+  class File_Type;
 
   namespace command {
     class Save;
@@ -57,6 +58,7 @@ namespace editor {
 
         void set_tree_model(tree_model::Base *model);
         void set_filename(const QString &filename);
+        void set_file_type(const File_Type &ft);
 
       private:
         QThread *thread_ {nullptr};

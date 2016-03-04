@@ -59,6 +59,8 @@ namespace editor {
             this, &Gui_Controller::tree_model_created);
     connect(open_, &gui_command::Open::file_opened,
             this, &Gui_Controller::file_opened);
+    connect(open_, &gui_command::Open::file_type_opened,
+            this, &Gui_Controller::file_type_opened);
     connect(open_, &gui_command::Open::msg_produced,
             this, &Gui_Controller::msg_produced);
 
@@ -70,6 +72,8 @@ namespace editor {
             this, &Gui_Controller::tree_model_created);
     connect(select_open_, &gui_command::Select_Open::file_opened,
             this, &Gui_Controller::file_opened);
+    connect(select_open_, &gui_command::Select_Open::file_type_opened,
+            this, &Gui_Controller::file_type_opened);
     connect(select_open_, &gui_command::Select_Open::msg_produced,
             this, &Gui_Controller::msg_produced);
 
@@ -82,6 +86,8 @@ namespace editor {
             save_, &gui_command::Save::set_tree_model);
     connect(this, &Controller::file_opened,
         save_, &gui_command::Save::set_filename);
+    connect(this, &Controller::file_type_opened,
+        save_, &gui_command::Save::set_file_type);
 
     connect(this, &Controller::item_tree_model_created,
         edit_, &gui_command::Edit::set_model);

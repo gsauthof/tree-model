@@ -37,7 +37,7 @@ using namespace std;
 namespace editor {
   namespace command {
 
-    std::pair<QAbstractItemModel *, tree_model::Base*>
+    std::tuple<QAbstractItemModel *, tree_model::Base*, std::deque<string> >
       open_ber(const QString &filename)
     {
       ixxx::util::Mapped_File in(filename.toStdString());
@@ -53,7 +53,7 @@ namespace editor {
 
       tree_model::Base   *m = new tree_model::XML(std::move(doc));
       QAbstractItemModel *a = new tree_model::Item_Adaptor(m);
-      return std::make_pair(a, m);
+      return std::make_tuple(a, m, std::move(asn_filenames));
     }
 
   }

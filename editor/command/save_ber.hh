@@ -18,26 +18,26 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#define CATCH_CONFIG_RUNNER
-#include <catch.hpp>
 
-#include <editor/file_type.hh>
+#ifndef EDITOR_COMMAND_SAVE_BER_HH
+#define EDITOR_COMMAND_SAVE_BER_HH
 
-#include <QApplication>
+#include <deque>
+#include <string>
 
-static char arg0[10] = "fake";
-static char *fake_argv[2] = {arg0};
-static int fake_argc = 1;
+class QString;
 
-int main(int argc, char **argv)
-{
-  // without QApplication, widgets can segfault
-  // on uninitialized singleton data ...
-  // Also, QApplication must be constructed once, constructing it e.g.
-  // in each test case yields segfaults ...
-  QApplication app(fake_argc, fake_argv);
-  app.setAttribute(Qt::AA_Use96Dpi, true);
-  editor::File_Type::register_meta_type();
-  int result = Catch::Session().run( argc, argv );
-  return result;
+namespace tree_model {
+  class Base;
 }
+
+namespace editor {
+  namespace command {
+
+    void save_ber(const tree_model::Base &m, const QString &filename,
+        const std::deque<std::string> &asn_filenames);
+
+  } // command
+} // editor
+
+#endif

@@ -25,10 +25,17 @@
 #include <editor/command/save.hh>
 #include <tree_model/base.hh>
 
+#include <ixxx/util.hh>
+#include <ixxx/ansi.hh>
+
 #include <QAbstractItemModel>
 #include <QSignalSpy>
 
 #include <boost/filesystem.hpp>
+
+#include <algorithm>
+
+using namespace std;
 
 TEST_CASE("save as changes filename", "[editor][qt][save]")
 {
@@ -52,6 +59,8 @@ TEST_CASE("save as changes filename", "[editor][qt][save]")
       [&m](auto x) { m = x; });
   o.connect(&o, &editor::command::Open::file_opened,
       &s, &editor::command::Save::set_filename);
+  o.connect(&o, &editor::command::Open::file_type_opened,
+      &s, &editor::command::Save::set_file_type);
 
   o.open(out_a.c_str());
 
@@ -100,6 +109,8 @@ TEST_CASE("save copy as does not change filename", "[editor][qt][save]")
       [&m](auto x) { m = x; });
   o.connect(&o, &editor::command::Open::file_opened,
       &s, &editor::command::Save::set_filename);
+  o.connect(&o, &editor::command::Open::file_type_opened,
+      &s, &editor::command::Save::set_file_type);
 
   o.open(out_a.c_str());
 
@@ -124,3 +135,47 @@ TEST_CASE("save copy as does not change filename", "[editor][qt][save]")
 
   delete m;
 }
+
+TEST_CASE("save ber", "[editor][qt][save][ber]")
+{
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+  std::string out(test::path::out() + "/save_ber.ber");
+  ixxx::ansi::setenv("ASN1_PATH", test::path::in()
+      + "/../../libgrammar/test/in/asn1", true);
+
+  boost::filesystem::create_directories(test::path::out());
+  boost::filesystem::remove(out);
+
+  editor::command::Open o;
+  editor::command::Save s;
+
+  QAbstractItemModel *m = nullptr;
+
+  o.connect(&o, &editor::command::Open::tree_model_created,
+      &s, &editor::command::Save::set_tree_model);
+  o.connect(&o, &editor::command::Open::item_tree_model_created,
+      [&m](auto x) { m = x; });
+  o.connect(&o, &editor::command::Open::file_opened,
+      &s, &editor::command::Save::set_filename);
+  o.connect(&o, &editor::command::Open::file_type_opened,
+      &s, &editor::command::Save::set_file_type);
+
+  o.open(in.c_str());
+
+  REQUIRE(m);
+
+  m->setData(m->index(0, 0).child(0, 0).child(1, 1), QVariant("FOO23"));
+
+  s.save_as(out.c_str());
+
+  ixxx::util::Mapped_File a(in);
+  ixxx::util::Mapped_File b(out);
+  REQUIRE(a.size() == b.size());
+  CHECK(string(b.s_begin() + 15 + 4, b.s_begin() + 15 + 4 + 5) == "FOO23");
+  CHECK(equal(a.begin(), a.begin() + 15 + 4, b.begin(), b.begin() + 15 + 4));
+  CHECK(equal(a.begin() + 15 + 4 + 5, a.end(), b.begin() + 15 + 4+ 5, b.end()));
+
+  delete m;
+}
+

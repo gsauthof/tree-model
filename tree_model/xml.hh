@@ -42,6 +42,7 @@ namespace tree_model {
       XML(xxxml::doc::Ptr &&doc, QObject *parent = nullptr);
 
       void save(const QString &filename) override;
+      const xxxml::doc::Ptr &doc() const;
 
       QVariant data(const Index &index, int role = Qt::DisplayRole) const override;
       bool set_data(const Index &index, const QVariant & value,

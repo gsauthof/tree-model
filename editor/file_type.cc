@@ -30,6 +30,14 @@ namespace editor {
 
   File_Type::Major File_Type::major() const { return major_; }
   File_Type::Minor File_Type::minor() const { return minor_; }
+  const std::deque<std::string> &File_Type::asn_filenames() const
+  {
+    return asn_filenames_;
+  }
+  void File_Type::set_asn_filenames(std::deque<std::string> &&asn_filenames)
+  {
+    asn_filenames_ = std::move(asn_filenames);
+  }
 
   void File_Type::register_meta_type()
   {

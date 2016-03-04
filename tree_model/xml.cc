@@ -37,6 +37,10 @@ namespace tree_model {
   {
     xxxml::save_format_file_enc(filename.toUtf8().data(), doc_);
   }
+  const xxxml::doc::Ptr &XML::doc() const
+  {
+    return doc_;
+  }
 
   Index XML::create_index(unsigned column, const xmlNode *ptr) const
   {

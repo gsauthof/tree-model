@@ -32,6 +32,8 @@
 #include "open_xml.hh"
 #include "open_ber.hh"
 
+using namespace std;
+
 namespace editor {
   namespace command {
 
@@ -46,11 +48,13 @@ namespace editor {
       open_ft(filename, filename.toLower().endsWith(".xml") ?
           File_Type(File_Type::XML) : File_Type(File_Type::BER));
     }
-    void Open::open_ft(const QString &filename, const File_Type &ft)
+    void Open::open_ft(const QString &filename, const File_Type &ft_P)
     {
       try {
+        File_Type ft(ft_P);
         tree_model::Base *m = nullptr;
         QAbstractItemModel *a = nullptr;
+        deque<string> asn_filenames;
         switch (ft.major()) {
           case File_Type::XML:
             {
@@ -60,11 +64,8 @@ namespace editor {
             }
             break;
           case File_Type::BER:
-            {
-              auto p = open_ber(filename);
-              a = p.first;
-              m = p.second;
-            }
+            std::tie(a, m, asn_filenames) = open_ber(filename);
+            ft.set_asn_filenames(std::move(asn_filenames));
             break;
           default:
             throw std::logic_error("File Type not implemented yet");
@@ -81,6 +82,7 @@ namespace editor {
           emit item_tree_model_created(a);
           emit tree_model_created(m);
           emit file_opened(filename);
+          emit file_type_opened(ft);
           emit msg_produced(tr("Opened %1").arg(filename));
         }
         else

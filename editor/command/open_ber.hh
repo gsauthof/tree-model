@@ -22,7 +22,9 @@
 #ifndef EDITOR_COMMAND_OPEN_BER_HH
 #define EDITOR_COMMAND_OPEN_BER_HH
 
-#include <utility>
+#include <tuple>
+#include <deque>
+#include <string>
 
 class QAbstractItemModel;
 class QString;
@@ -35,7 +37,8 @@ namespace editor {
   namespace command {
 
 
-    std::pair<QAbstractItemModel *, tree_model::Base*>
+    std::tuple<QAbstractItemModel *, tree_model::Base*,
+      std::deque<std::string> >
         open_ber(const QString &filename);
 
   }

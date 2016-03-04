@@ -24,6 +24,9 @@
 
 #include <QMetaType>
 
+#include <deque>
+#include <string>
+
 // work around glibc bug, cf.
 // http://stackoverflow.com/questions/22240973/major-and-minor-macros-defined-in-sys-sysmacros-h-pulled-in-by-iterator
 #ifdef minor
@@ -46,6 +49,8 @@ namespace editor {
 
       Major major() const;
       Minor minor() const;
+      const std::deque<std::string> &asn_filenames() const;
+      void set_asn_filenames(std::deque<std::string> &&asn_filenames);
 
       // call this if signals having File_Type arguments
       // should be able to be queued
@@ -54,6 +59,7 @@ namespace editor {
     private:
       Major major_ {ANY};
       Minor minor_ {ANY_MINOR};
+      std::deque<std::string> asn_filenames_;
 
   };
 

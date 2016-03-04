@@ -31,6 +31,7 @@ namespace tree_model {
 }
 namespace editor {
 
+  class File_Type;
   namespace command {
     class New;
     class Async_Open;
@@ -70,6 +71,7 @@ namespace editor {
 
     signals:
       void file_opened(const QString &filename);
+      void file_type_opened(const File_Type &file_type);
       void saved(const QString &filename);
       void item_tree_model_created(QAbstractItemModel *model);
       void tree_model_created(tree_model::Base *model);

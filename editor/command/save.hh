@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QString>
 
+#include <editor/file_type.hh>
+
 namespace tree_model {
   class Base;
 }
@@ -52,10 +54,12 @@ namespace editor {
 
         void set_tree_model(tree_model::Base *model);
         void set_filename(const QString &filename);
+        void set_file_type(const File_Type &ft);
 
       private:
         tree_model::Base *model_ {nullptr};
         QString filename_;
+        File_Type file_type_;
         unsigned delay_{0};
 
         void save_as_prime(const QString &filename, bool as_copy);

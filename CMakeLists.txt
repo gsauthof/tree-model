@@ -108,6 +108,7 @@ set(EDITOR_CC
   editor/command/open_ber.cc
   editor/command/async_open.cc
   editor/command/save.cc
+  editor/command/save_ber.cc
   editor/command/async_save.cc
   editor/command/remove.cc
   editor/gui_command/open.cc
@@ -197,6 +198,7 @@ add_executable(ut
   editor/command/open_xml.cc
   editor/command/open_ber.cc
   editor/command/save.cc
+  editor/command/save_ber.cc
   editor/file_type.cc
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_remove.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_open.cpp
@@ -205,6 +207,8 @@ add_executable(ut
   ${TREE_MODEL_CC}
   ${TREE_MOC}
   #${UT_MOC}
+  
+  ${CMAKE_SOURCE_DIR}/cppformat/format.cc
 )
 set_property(TARGET ut PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}
@@ -215,10 +219,17 @@ set_property(TARGET ut PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIRS}
   ${XML2_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/libixxx
+  ${CMAKE_CURRENT_SOURCE_DIR}/libixxxutil
+  ${CMAKE_CURRENT_SOURCE_DIR}/libgrammar
   ${CMAKE_CURRENT_SOURCE_DIR}/libxfsx
   )
 target_link_libraries(ut
   xxxml_static
+  xfsx_static
+  grammar_static
+  ixxxutil_static
+  ixxx_static
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_REGEX_LIBRARY}
@@ -237,18 +248,28 @@ add_executable(ut_select_open
   ${UT_SELECT_OPEN_MOC}
   ${EDITOR_MOC}
   ${TREE_MOC}
+
+  ${CMAKE_SOURCE_DIR}/cppformat/format.cc
   )
 set_property(TARGET ut_select_open PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/libxxxml
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${XML2_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/libixxx
+  ${CMAKE_CURRENT_SOURCE_DIR}/libixxxutil
+  ${CMAKE_CURRENT_SOURCE_DIR}/libgrammar
+  ${CMAKE_CURRENT_SOURCE_DIR}/libxfsx
   )
 target_link_libraries(ut_select_open
+  xxxml_static
+  xfsx_static
+  grammar_static
+  ixxxutil_static
+  ixxx_static
   Qt5::Core
   Qt5::Widgets
   Qt5::Test
-  xxxml_static
   ${XML2_LIB}
   ${Boost_REGEX_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
@@ -278,6 +299,8 @@ add_executable(ut_gui
   ${EDITOR_MOC}
   ${EDITOR_UI}
   ${TREE_MOC}
+
+  ${CMAKE_SOURCE_DIR}/cppformat/format.cc
   )
 set_property(TARGET ut_gui PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/libxxxml
@@ -285,12 +308,20 @@ set_property(TARGET ut_gui PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_BINARY_DIR}
   ${XML2_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Catch/single_include
+  ${CMAKE_CURRENT_SOURCE_DIR}/libixxx
+  ${CMAKE_CURRENT_SOURCE_DIR}/libixxxutil
+  ${CMAKE_CURRENT_SOURCE_DIR}/libgrammar
+  ${CMAKE_CURRENT_SOURCE_DIR}/libxfsx
   )
 target_link_libraries(ut_gui
+  xxxml_static
+  xfsx_static
+  grammar_static
+  ixxxutil_static
+  ixxx_static
   Qt5::Core
   Qt5::Widgets
   Qt5::Test
-  xxxml_static
   ${XML2_LIB}
   ${Boost_REGEX_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}

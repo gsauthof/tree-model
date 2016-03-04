@@ -52,6 +52,8 @@ namespace editor {
 
     connect(open_, &command::Async_Open::file_opened,
             this, &Controller::file_opened);
+    connect(open_, &command::Async_Open::file_type_opened,
+            this, &Controller::file_type_opened);
 
     connect(open_, &command::Async_Open::msg_produced,
         this, &Controller::msg_produced);
@@ -70,6 +72,8 @@ namespace editor {
             save_, &command::Async_Save::set_tree_model);
     connect(this, &Controller::file_opened,
         save_, &command::Async_Save::set_filename);
+    connect(this, &Controller::file_type_opened,
+        save_, &command::Async_Save::set_file_type);
 
     connect(this, &Controller::item_tree_model_created,
         remove_, &command::Remove::set_model);

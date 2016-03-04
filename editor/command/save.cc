@@ -25,7 +25,10 @@
 
 #include <tree_model/base.hh>
 
+#include "save_ber.hh"
+
 #include <exception>
+#include <stdexcept>
 using namespace std;
 
 namespace editor {
@@ -58,7 +61,16 @@ namespace editor {
     {
       if (model_) {
         try {
-          model_->save(filename);
+          switch (file_type_.major()) {
+            case File_Type::XML:
+              model_->save(filename);
+              break;
+            case File_Type::BER:
+              save_ber(*model_, filename, file_type_.asn_filenames());
+              break;
+            default:
+              throw logic_error("Unknown filetype");
+          }
           QThread::msleep(delay_);
           if (!as_copy) {
             set_filename(filename);
@@ -82,6 +94,10 @@ namespace editor {
     void Save::set_filename(const QString &filename)
     {
       filename_ = filename;
+    }
+    void Save::set_file_type(const File_Type &file_type)
+    {
+      file_type_ = file_type;
     }
     const QString &Save::filename() const
     {
