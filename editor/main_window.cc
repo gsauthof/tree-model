@@ -184,6 +184,9 @@ namespace editor {
 
     //ui->remove_action         ->setIcon(fa_instance()->icon(fa::remove));
     ui->remove_action         ->setIcon(fa_instance()->icon(fa::trash));
+    ui->add_child_action      ->setIcon(fa_instance()->icon(fa::plussquareo));
+    ui->add_sibling_action    ->setIcon(fa_instance()->icon(fa::pluscircle));
+    ui->close_action          ->setIcon(fa_instance()->icon(fa::times));
   }
 
 
