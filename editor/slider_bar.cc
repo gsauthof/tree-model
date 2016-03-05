@@ -35,7 +35,8 @@ namespace editor {
     ui->setupUi(this);
 
     auto font_metrics = fontMetrics();
-    ui->ok_button->setMaximumWidth(font_metrics.averageCharWidth()*3);
+    ui->ok_button->setIcon(style()->standardIcon(QStyle::SP_DialogOkButton, 0,
+          ui->ok_button));
     ui->rank_edit->setMaximumWidth(font_metrics.averageCharWidth()*8);
     ui->rank_edit->setClearButtonEnabled(true);
 
