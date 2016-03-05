@@ -27,6 +27,9 @@
 #include <QClipboard>
 #include <QEventLoop>
 #include <QDialog>
+#include <QSettings>
+#include <QToolBar>
+#include <QAction>
 #include <string>
 
 #include <editor/gui_controller.hh>
@@ -658,5 +661,113 @@ TEST_CASE("mw tree view edit child undo clean", "[editor][qt][gui][mainwindow][a
   c.undo();
   CHECK(w.isWindowModified() == false);
 
+}
+
+TEST_CASE("mw toolbar on off", "[editor][gui][mainwindow][toolbar]")
+{
+  QSettings s;
+  s.setValue("main_window/geometry", QByteArray());
+  s.setValue("main_window/window_state", QByteArray());
+  editor::Main_Window w;
+  w.show();
+
+  QTest::qWait(300);
+
+  auto toolbar = w.findChild<QToolBar*>();
+  REQUIRE(toolbar);
+  CHECK(toolbar->isVisible() == true);
+
+
+  auto show_tool_bar_action = w.findChild<QAction*>("show_tool_bar_action");
+  REQUIRE(show_tool_bar_action);
+
+  CHECK(show_tool_bar_action->isChecked() == true);
+
+  show_tool_bar_action->setChecked(false);
+
+  QTest::qWait(300);
+
+  CHECK(toolbar->isVisible() == false);
+
+  s.setValue("main_window/geometry", QByteArray());
+  s.setValue("main_window/window_state", QByteArray());
+}
+
+TEST_CASE("mw toolbar menu update", "[editor][gui][mainwindow][toolbar]")
+{
+  QSettings s;
+  s.setValue("main_window/geometry", QByteArray());
+  s.setValue("main_window/window_state", QByteArray());
+  editor::Main_Window w;
+  w.show();
+
+  QTest::qWait(300);
+
+  auto toolbar = w.findChild<QToolBar*>();
+  REQUIRE(toolbar);
+
+  auto show_tool_bar_action = w.findChild<QAction*>("show_tool_bar_action");
+  REQUIRE(show_tool_bar_action);
+
+  CHECK(toolbar->isVisible() == true);
+  CHECK(show_tool_bar_action->isChecked() == true);
+
+  toolbar->setVisible(false);
+
+  QTest::qWait(300);
+
+  CHECK(show_tool_bar_action->isChecked() == false);
+
+  s.setValue("main_window/geometry", QByteArray());
+  s.setValue("main_window/window_state", QByteArray());
+}
+
+TEST_CASE("mw state", "[editor][gui][mainwindow][state]")
+{
+  QSettings s;
+  s.setValue("main_window/geometry", QByteArray());
+  s.setValue("main_window/window_state", QByteArray());
+
+  QRect old_geometry;
+  QRect new_geometry;
+  {
+    editor::Main_Window w;
+    w.show();
+
+    QTest::qWait(300);
+
+    auto toolbar = w.findChild<QToolBar*>();
+    REQUIRE(toolbar);
+    toolbar->setVisible(false);
+
+    old_geometry = w.geometry();
+    new_geometry = old_geometry;
+    new_geometry.setHeight(old_geometry.height()+10);
+    w.setGeometry(new_geometry);
+
+    QTest::qWait(300);
+    w.close();
+  }
+  QTest::qWait(300);
+
+  auto a = s.value("main_window/geometry");
+  CHECK(a.isValid());
+  CHECK(a.toByteArray().size() > 1);
+  auto b = s.value("main_window/window_state");
+  CHECK(b.isValid());
+  CHECK(b.toByteArray().size() > 1);
+
+  {
+    editor::Main_Window w;
+    w.show();
+
+    QTest::qWait(300);
+
+    auto g = w.geometry();
+    CHECK(new_geometry.height() == g.height());
+  }
+
+  s.setValue("main_window/geometry", QByteArray());
+  s.setValue("main_window/window_state", QByteArray());
 }
 
