@@ -62,25 +62,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="clear_button">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>40</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>&amp;X</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="ok_button">
         <property name="maximumSize">
          <size>

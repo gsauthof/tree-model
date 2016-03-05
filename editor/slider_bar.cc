@@ -35,9 +35,9 @@ namespace editor {
     ui->setupUi(this);
 
     auto font_metrics = fontMetrics();
-    ui->clear_button->setMaximumWidth(font_metrics.averageCharWidth()*3);
     ui->ok_button->setMaximumWidth(font_metrics.averageCharWidth()*3);
     ui->rank_edit->setMaximumWidth(font_metrics.averageCharWidth()*8);
+    ui->rank_edit->setClearButtonEnabled(true);
 
     ui->rank_edit->setValidator(new QIntValidator(this));
     auto edit_shortcut = new QShortcut(
@@ -84,8 +84,6 @@ namespace editor {
 
     connect(ui->rank_edit, &QLineEdit::editingFinished,
         this, &Slider_Bar::jump_to_edit_line_rank );
-    connect(ui->clear_button, &QPushButton::clicked,
-        [this]() { ui->rank_edit->clear(); });
     connect(ui->ok_button, &QPushButton::clicked,
         this, &Slider_Bar::jump_to_edit_line_rank );
   }
