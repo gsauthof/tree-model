@@ -67,6 +67,8 @@
      <string>&amp;View</string>
     </property>
     <addaction name="display_subtree_action"/>
+    <addaction name="separator"/>
+    <addaction name="show_tool_bar_action"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -249,6 +251,14 @@
     <string>&amp;About...</string>
    </property>
   </action>
+  <action name="show_tool_bar_action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Show toolbar</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -259,4 +269,38 @@
   </customwidget>
  </customwidgets>
  <resources/>
+ <connections>
+  <connection>
+   <sender>tool_bar</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>show_tool_bar_action</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>399</x>
+     <y>42</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>show_tool_bar_action</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>tool_bar</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>42</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
