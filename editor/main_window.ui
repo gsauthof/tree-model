@@ -91,6 +91,7 @@
     <bool>true</bool>
    </attribute>
    <addaction name="new_action"/>
+   <addaction name="open_action"/>
    <addaction name="save_action"/>
    <addaction name="save_as_action"/>
    <addaction name="separator"/>

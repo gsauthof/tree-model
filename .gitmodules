@@ -25,3 +25,6 @@
 [submodule "cmake/ragel"]
 	path = cmake/ragel
 	url = https://github.com/gsauthof/cmake-ragel.git
+[submodule "QtAwesome"]
+	path = QtAwesome
+	url = https://github.com/gamecreature/QtAwesome.git

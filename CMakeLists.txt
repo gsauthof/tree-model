@@ -92,6 +92,10 @@ qt5_wrap_cpp(UT_SELECT_OPEN_MOC
   test/editor/gui_command/select_open.hh
   )
 
+qt5_add_resources(EDITOR_RES
+  QtAwesome/QtAwesome/QtAwesome.qrc
+  )
+
 set(EDITOR_CC
   editor/main_window.cc
   editor/subtree_window.cc
@@ -145,6 +149,17 @@ set(TREE_MODEL_CC
   tree_model/util.cc
   )
 
+set(QT_AWESOME_CC
+  QtAwesome/QtAwesome/QtAwesomeAnim.cpp
+  QtAwesome/QtAwesome/QtAwesome.cpp
+
+  editor/qt_awesome.cc
+  )
+qt5_wrap_cpp(QT_AWESOME_MOC
+  QtAwesome/QtAwesome/QtAwesomeAnim.h
+  QtAwesome/QtAwesome/QtAwesome.h
+  )
+
 add_executable(main
   editor/main.cc
   ${EDITOR_CC}
@@ -152,6 +167,9 @@ add_executable(main
   ${EDITOR_MOC}
   ${TREE_MOC}
   ${EDITOR_UI}
+  ${QT_AWESOME_CC}
+  ${QT_AWESOME_MOC}
+  ${EDITOR_RES}
   )
 set_property(TARGET main PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}
@@ -164,6 +182,7 @@ set_property(TARGET main PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/libixxxutil
   ${CMAKE_CURRENT_SOURCE_DIR}/libgrammar
   ${CMAKE_CURRENT_SOURCE_DIR}/libxfsx
+  ${CMAKE_CURRENT_SOURCE_DIR}/QtAwesome
   )
 target_link_libraries(main
   xfsx
@@ -300,6 +319,10 @@ add_executable(ut_gui
   ${EDITOR_UI}
   ${TREE_MOC}
 
+  ${QT_AWESOME_CC}
+  ${QT_AWESOME_MOC}
+  ${EDITOR_RES}
+
   ${CMAKE_SOURCE_DIR}/cppformat/format.cc
   )
 set_property(TARGET ut_gui PROPERTY INCLUDE_DIRECTORIES
@@ -312,6 +335,7 @@ set_property(TARGET ut_gui PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/libixxxutil
   ${CMAKE_CURRENT_SOURCE_DIR}/libgrammar
   ${CMAKE_CURRENT_SOURCE_DIR}/libxfsx
+  ${CMAKE_CURRENT_SOURCE_DIR}/QtAwesome
   )
 target_link_libraries(ut_gui
   xxxml_static

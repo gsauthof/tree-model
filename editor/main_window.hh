@@ -75,6 +75,7 @@ namespace editor {
       Recent_Menu *recent_menu_ {nullptr};
 
       void setup_shortcuts();
+      void setup_icons();
       void forward_trigger_signals();
   };
 

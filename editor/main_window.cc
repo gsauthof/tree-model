@@ -22,6 +22,7 @@
 #include "ui_main_window.h"
 #include <editor/recent_menu.hh>
 #include "tree_view.hh"
+#include "qt_awesome.hh"
 
 #include <QMessageBox>
 #include <QClipboard>
@@ -39,6 +40,7 @@ namespace editor {
     recent_menu_ = new Recent_Menu(ui->menu_File);
     ui->menu_File->insertMenu(ui->save_action, recent_menu_);
     setup_shortcuts();
+    setup_icons();
     setWindowTitle(tr("unnamed[*]"));
 
     connect(ui->close_action, &QAction::triggered,
@@ -143,17 +145,31 @@ namespace editor {
     // it's a pitty that Qt Creator does not support
     // adding standard key sequences ... cf.
     // https://bugreports.qt.io/browse/QTBUG-1278
-    ui->open_action->setShortcut(QKeySequence::Open);
-    ui->save_action->setShortcut(QKeySequence::Save);
-    ui->save_as_action->setShortcut(QKeySequence::SaveAs);
+    ui->open_action         ->setShortcut(QKeySequence::Open);
+    ui->save_action         ->setShortcut(QKeySequence::Save);
+    ui->save_as_action      ->setShortcut(QKeySequence::SaveAs);
     //ui->save_a_copy_action->setShortcut(...);
-    ui->quit_action->setShortcut(QKeySequence::Quit);
-    ui->undo_action->setShortcut(QKeySequence::Undo);
-    ui->redo_action->setShortcut(QKeySequence::Redo);
-    ui->copy_action->setShortcut(QKeySequence::Copy);
-    ui->cut_action->setShortcut(QKeySequence::Cut);
-    ui->paste_action->setShortcut(QKeySequence::Paste);
+    ui->quit_action         ->setShortcut(QKeySequence::Quit);
+    ui->undo_action         ->setShortcut(QKeySequence::Undo);
+    ui->redo_action         ->setShortcut(QKeySequence::Redo);
+    ui->copy_action         ->setShortcut(QKeySequence::Copy);
+    ui->cut_action          ->setShortcut(QKeySequence::Cut);
+    ui->paste_action        ->setShortcut(QKeySequence::Paste);
   }
+  void Main_Window::setup_icons()
+  {
+    ui->new_action            ->setIcon(fa_instance()->icon(fa::plus));
+    ui->open_action           ->setIcon(fa_instance()->icon(fa::fileo));
+    ui->save_action           ->setIcon(fa_instance()->icon(fa::floppyo));
+    ui->save_as_action        ->setIcon(fa_instance()->icon(fa::filetext));
+    ui->undo_action           ->setIcon(fa_instance()->icon(fa::undo));
+    ui->redo_action           ->setIcon(fa_instance()->icon(fa::repeat));
+    ui->cut_action            ->setIcon(fa_instance()->icon(fa::scissors));
+    ui->copy_action           ->setIcon(fa_instance()->icon(fa::clone));
+    ui->paste_action          ->setIcon(fa_instance()->icon(fa::clipboard));
+    ui->display_subtree_action->setIcon(fa_instance()->icon(fa::externallink));
+  }
+
 
   Main_Window::~Main_Window()
   {

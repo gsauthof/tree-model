@@ -25,7 +25,10 @@
 #include <QApplication>
 #include <QTimer>
 
+#include <memory>
+
 #include "file_type.hh"
+#include "qt_awesome.hh"
 
 
 using namespace std;
@@ -43,6 +46,8 @@ int main(int argc, char **argv)
   a.setApplicationDisplayName(QApplication::tr("XML Editor"));
 
   editor::File_Type::register_meta_type();
+
+  unique_ptr<QtAwesome> fai(editor::fa_instance());
 
   editor::Arguments args(argc, argv);
 
