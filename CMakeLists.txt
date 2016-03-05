@@ -268,6 +268,10 @@ add_executable(ut_select_open
   ${EDITOR_MOC}
   ${TREE_MOC}
 
+  ${QT_AWESOME_CC}
+  ${QT_AWESOME_MOC}
+  ${EDITOR_RES}
+
   ${CMAKE_SOURCE_DIR}/cppformat/format.cc
   )
 set_property(TARGET ut_select_open PROPERTY INCLUDE_DIRECTORIES
@@ -279,6 +283,7 @@ set_property(TARGET ut_select_open PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/libixxxutil
   ${CMAKE_CURRENT_SOURCE_DIR}/libgrammar
   ${CMAKE_CURRENT_SOURCE_DIR}/libxfsx
+  ${CMAKE_CURRENT_SOURCE_DIR}/QtAwesome
   )
 target_link_libraries(ut_select_open
   xxxml_static
