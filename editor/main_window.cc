@@ -66,14 +66,10 @@ namespace editor {
           QApplication::clipboard()->clear();
           QApplication::clipboard()->clear(QClipboard::Selection);
         });
-    connect(ui->edit_action, &QAction::triggered,
-        &ui->widget->tree_view(), &Tree_View::trigger_edit);
-    connect(ui->add_child_action, &QAction::triggered,
-        &ui->widget->tree_view(), &Tree_View::trigger_add_child);
-    connect(ui->add_sibling_action, &QAction::triggered,
-        &ui->widget->tree_view(), &Tree_View::trigger_add_sibling);
-    connect(ui->remove_action, &QAction::triggered,
-        &ui->widget->tree_view(), &Tree_View::trigger_remove);
+    ui->widget->tree_view().set_edit_action       (ui->edit_action);
+    ui->widget->tree_view().set_add_child_action  (ui->add_child_action);
+    ui->widget->tree_view().set_add_sibling_action(ui->add_sibling_action);
+    ui->widget->tree_view().set_remove_action     (ui->remove_action);
 
     ui->copy_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
@@ -165,9 +161,16 @@ namespace editor {
     ui->copy_action         ->setShortcut(QKeySequence::Copy);
     ui->cut_action          ->setShortcut(QKeySequence::Cut);
     ui->paste_action        ->setShortcut(QKeySequence::Paste);
+
+    // usually that maps to the DEL key
+    // even without that shortcut, the QTreeView interprets by
+    // default Delete (DEL) and removes the selected rows
+    // from the model
+    ui->remove_action       ->setShortcut(QKeySequence::Delete);
   }
   void Main_Window::setup_icons()
   {
+    // cf. http://fontawesome.io/icons/ for a list
     ui->new_action            ->setIcon(fa_instance()->icon(fa::plus));
     ui->open_action           ->setIcon(fa_instance()->icon(fa::fileo));
     ui->save_action           ->setIcon(fa_instance()->icon(fa::floppyo));
@@ -178,6 +181,9 @@ namespace editor {
     ui->copy_action           ->setIcon(fa_instance()->icon(fa::clone));
     ui->paste_action          ->setIcon(fa_instance()->icon(fa::clipboard));
     ui->display_subtree_action->setIcon(fa_instance()->icon(fa::externallink));
+
+    //ui->remove_action         ->setIcon(fa_instance()->icon(fa::remove));
+    ui->remove_action         ->setIcon(fa_instance()->icon(fa::trash));
   }
 
 

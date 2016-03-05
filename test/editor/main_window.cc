@@ -386,7 +386,8 @@ TEST_CASE("mw tree view context menu", "[editor][qt][gui][mainwindow]")
   QTimer::singleShot(900, [&w]{
       auto v = QApplication::focusWindow();
       REQUIRE(v);
-      QTest::keyClick(v, Qt::Key_R, Qt::AltModifier, 10);
+      // remove action
+      QTest::keyClick(v, Qt::Key_M, Qt::AltModifier, 10);
       });
   int new_rowcount = 0;
   QTimer::singleShot(1200, [&w, &a, &old_rowcount, &new_rowcount]{

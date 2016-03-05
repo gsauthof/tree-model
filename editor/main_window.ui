@@ -221,6 +221,9 @@
    <property name="text">
     <string>Re&amp;move</string>
    </property>
+   <property name="shortcut">
+    <string>DEL</string>
+   </property>
   </action>
   <action name="undo_action">
    <property name="text">

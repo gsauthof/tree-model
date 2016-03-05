@@ -40,15 +40,36 @@ namespace editor {
     setDropIndicatorShown(true);
 
     remove_action_ = new QAction(tr("&Remove"), this);
-    connect(remove_action_, &QAction::triggered,
-        [this](){ emit remove_triggered(selectedIndexes()); });
+    set_remove_action(remove_action_);
     edit_action_ = new QAction(tr("&Edit..."), this);
-    connect(edit_action_, &QAction::triggered,
-        [this](){ emit edit_triggered(context_index_); });
+    set_edit_action(edit_action_);
     add_child_action_ = new QAction(tr("&Add child..."), this);
+    set_add_child_action(add_child_action_);
+    add_sibling_action_ = new QAction(tr("Add &sibling..."), this);
+    set_add_sibling_action(add_sibling_action_);
+  }
+
+  void Tree_View::set_remove_action(QAction *a)
+  {
+    remove_action_ = a;
+    connect(remove_action_, &QAction::triggered,
+        this, &Tree_View::trigger_remove);
+  }
+  void Tree_View::set_edit_action(QAction *a)
+  {
+    edit_action_ = a;
+    connect(edit_action_, &QAction::triggered,
+        this, &Tree_View::trigger_edit);
+  }
+  void Tree_View::set_add_child_action(QAction *a)
+  {
+    add_child_action_ = a;
     connect(add_child_action_, &QAction::triggered,
         this, &Tree_View::trigger_add_child);
-    add_sibling_action_ = new QAction(tr("Add &sibling..."), this);
+  }
+  void Tree_View::set_add_sibling_action(QAction *a)
+  {
+    add_sibling_action_ = a;
     connect(add_sibling_action_, &QAction::triggered,
         this, &Tree_View::trigger_add_sibling);
   }

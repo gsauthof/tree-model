@@ -35,6 +35,11 @@ class Tree_View : public QTreeView
     void contextMenuEvent(QContextMenuEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
+    void set_remove_action(QAction *a);
+    void set_edit_action(QAction *a);
+    void set_add_child_action(QAction *a);
+    void set_add_sibling_action(QAction *a);
+
   signals:
     void remove_triggered(const QModelIndexList &selected_indexes);
     void edit_triggered  (const QModelIndex &);
