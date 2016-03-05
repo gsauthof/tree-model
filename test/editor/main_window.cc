@@ -427,7 +427,6 @@ TEST_CASE("mw tree view slider goto", "[editor][qt][gui][mainwindow]")
       QTest::keyClick(v, Qt::Key_Return,Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_Tab,   Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_Tab,   Qt::NoModifier, 10);
-      QTest::keyClick(v, Qt::Key_Tab,   Qt::NoModifier, 10);
       // -> in tree_view
       QTest::keyClick(v, Qt::Key_Up,    Qt::NoModifier, 10);
       // -> make sure that current index is also correctly set
