@@ -56,21 +56,41 @@ namespace editor {
     connect(ui->close_action, &QAction::triggered,
         this, &Main_Window::close);
 
+    setup_about_action();
+    setup_clear_action();
+    connect_actions_to_tree_view();
+    setup_selection_dependent_actions();
+    forward_trigger_signals();
+  }
+
+  void Main_Window::setup_about_action()
+  {
     connect(ui->about_action, &QAction::triggered,
         [this](){
           QMessageBox::about(this, tr("About..."),
               tr("Hierarchical tree model editor example."));
         });
+  }
+
+  void Main_Window::setup_clear_action()
+  {
     connect(ui->clear_action, &QAction::triggered,
         [this](){
           QApplication::clipboard()->clear();
           QApplication::clipboard()->clear(QClipboard::Selection);
         });
+  }
+
+  void Main_Window::connect_actions_to_tree_view()
+  {
     ui->widget->tree_view().set_edit_action       (ui->edit_action);
     ui->widget->tree_view().set_add_child_action  (ui->add_child_action);
     ui->widget->tree_view().set_add_sibling_action(ui->add_sibling_action);
     ui->widget->tree_view().set_remove_action     (ui->remove_action);
+  }
 
+  void Main_Window::setup_selection_dependent_actions()
+  {
     ui->copy_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->copy_action, &QAction::setEnabled);
@@ -95,8 +115,6 @@ namespace editor {
     ui->add_child_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->add_child_action, &QAction::setEnabled);
-
-    forward_trigger_signals();
   }
 
   void Main_Window::forward_trigger_signals()

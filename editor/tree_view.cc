@@ -39,6 +39,9 @@ namespace editor {
     setAcceptDrops(true);
     setDropIndicatorShown(true);
 
+    // these are just temporary actions
+    // they are replaced by the Main_Window ones when the
+    // widget is setup inside the main window
     remove_action_ = new QAction(tr("&Remove"), this);
     set_remove_action(remove_action_);
     edit_action_ = new QAction(tr("&Edit..."), this);
@@ -113,6 +116,8 @@ namespace editor {
     auto global_pos = event->globalPos();
 
     QMenu menu(parentWidget());
+    // those actions are usually also part of the main window's
+    // menu, thus changing the state here effects the menu as well
     edit_action_->setEnabled(context_index_.isValid());
     menu.addAction(edit_action_);
     add_sibling_action_->setEnabled(context_index_.isValid());

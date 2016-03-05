@@ -78,6 +78,10 @@ namespace editor {
       void store_settings();
       void setup_shortcuts();
       void setup_icons();
+      void setup_about_action();
+      void setup_clear_action();
+      void connect_actions_to_tree_view();
+      void setup_selection_dependent_actions();
       void forward_trigger_signals();
   };
 
