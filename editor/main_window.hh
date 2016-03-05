@@ -74,6 +74,8 @@ namespace editor {
       Ui::Main_Window *ui {nullptr};
       Recent_Menu *recent_menu_ {nullptr};
 
+      void restore_settings();
+      void store_settings();
       void setup_shortcuts();
       void setup_icons();
       void forward_trigger_signals();

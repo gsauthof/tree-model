@@ -29,14 +29,24 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QSettings>
 
 namespace editor {
+
+  namespace {
+    namespace key {
+      static const char main_window [] = "main_window";
+      static const char geometry    [] = "geometry";
+      static const char window_state[] = "window_state";
+    }
+  }
 
   Main_Window::Main_Window(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Main_Window)
   {
     ui->setupUi(this);
+    restore_settings();
     recent_menu_ = new Recent_Menu(ui->menu_File);
     ui->menu_File->insertMenu(ui->save_action, recent_menu_);
     setup_shortcuts();
@@ -183,6 +193,7 @@ namespace editor {
 
   void Main_Window::closeEvent(QCloseEvent *event)
   {
+    store_settings();
     if (isWindowModified()) {
       QMessageBox q(this);
       q.setText(tr("The file has been modified."));
@@ -213,6 +224,22 @@ namespace editor {
     } else {
       event->accept();
     }
+  }
+  void Main_Window::store_settings()
+  {
+    QSettings s;
+    s.beginGroup(key::main_window);
+    s.setValue(key::geometry, saveGeometry());
+    s.setValue(key::window_state, saveState());
+    s.endGroup();
+  }
+  void Main_Window::restore_settings()
+  {
+    QSettings s;
+    s.beginGroup(key::main_window);
+    restoreGeometry(s.value(key::geometry).toByteArray());
+    restoreState(s.value(key::window_state).toByteArray());
+    s.endGroup();
   }
 
   void Main_Window::enable_undo(bool b)
