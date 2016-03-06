@@ -26,7 +26,7 @@
 #include <tree_model/base.hh>
 
 #include <ixxx/util.hh>
-#include <ixxx/ansi.hh>
+#include <ixxx/posix.hh>
 
 #include <QAbstractItemModel>
 #include <QSignalSpy>
@@ -141,7 +141,7 @@ TEST_CASE("save ber", "[editor][qt][save][ber]")
   std::string in(test::path::in()
       + "/../../libxfsx/test/in/tap_3_12_valid.ber");
   std::string out(test::path::out() + "/save_ber.ber");
-  ixxx::ansi::setenv("ASN1_PATH", test::path::in()
+  ixxx::posix::setenv("ASN1_PATH", test::path::in()
       + "/../../libgrammar/test/in/asn1", true);
 
   boost::filesystem::create_directories(test::path::out());
