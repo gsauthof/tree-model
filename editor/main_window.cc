@@ -92,6 +92,11 @@ namespace editor {
     ui->widget->tree_view().set_add_child_action  (ui->add_child_action);
     ui->widget->tree_view().set_add_sibling_action(ui->add_sibling_action);
     ui->widget->tree_view().set_remove_action     (ui->remove_action);
+    ui->widget->tree_view().set_copy_action       (ui->copy_action);
+    ui->widget->tree_view().set_cut_action        (ui->cut_action);
+    ui->widget->tree_view().set_paste_action      (ui->paste_action);
+    ui->widget->tree_view().set_paste_as_child_action(
+        ui->paste_as_child_action);
   }
 
   void Main_Window::setup_selection_dependent_actions()
@@ -138,14 +143,6 @@ namespace editor {
         this, &Main_Window::undo_triggered);
     connect(ui->redo_action, &QAction::triggered,
         this, &Main_Window::redo_triggered);
-    connect(ui->cut_action, &QAction::triggered,
-        this, &Main_Window::cut_triggered);
-    connect(ui->copy_action, &QAction::triggered,
-        this, &Main_Window::copy_triggered);
-    connect(ui->paste_action, &QAction::triggered,
-        this, &Main_Window::paste_triggered);
-    connect(ui->paste_as_child_action, &QAction::triggered,
-        this, &Main_Window::paste_as_child_triggered);
     connect(ui->display_subtree_action, &QAction::triggered,
         this, &Main_Window::display_subtree_triggered);
     connect(ui->quit_action, &QAction::triggered,

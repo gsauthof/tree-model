@@ -40,26 +40,10 @@ namespace editor {
     {
       model_ = model;
     }
-    void Clipboard_Copy::set_selection_model(const QItemSelectionModel *smodel)
-    {
-      smodel_ = smodel;
-    }
 
-    QModelIndexList Clipboard_Copy::selected_indexes()
-    {
-      if (!model_ || !smodel_)
-        throw underflow_error("no model assigned");
-      auto is = smodel_->selectedIndexes();
-      if (is.empty())
-        throw underflow_error("nothing selected");
-      return is;
-    }
-
-    void Clipboard_Copy::copy()
+    void Clipboard_Copy::copy(const QModelIndexList &is)
     {
       try {
-        auto is = selected_indexes();
-
         QClipboard *cb = QApplication::clipboard();
 
         auto d = model_->mimeData(is);

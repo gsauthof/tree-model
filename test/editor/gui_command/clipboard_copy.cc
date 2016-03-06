@@ -52,14 +52,10 @@ TEST_CASE("basic copy clipboard", "[editor][qt][gui][clipboard]")
 
   editor::gui_command::Clipboard_Copy cc;
   cc.set_model(a);
-  auto sm = new QItemSelectionModel(a);
-  cc.set_selection_model(sm);
 
   auto i = a->index(0, 0, QModelIndex()).child(0, 0).child(4, 0);
 
-  sm->select(i, QItemSelectionModel::Select);
-
-  cc.copy();
+  cc.copy(QModelIndexList() << i);
 
   const char ref[] = R"(<TransferCutOffTimeStamp>
             <LocalTimeStamp>20050405090547</LocalTimeStamp>
@@ -72,7 +68,6 @@ TEST_CASE("basic copy clipboard", "[editor][qt][gui][clipboard]")
 
   cb->clear();
   cb->clear(QClipboard::Selection);
-  delete sm;
   delete a;
 
 }

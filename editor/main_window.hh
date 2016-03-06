@@ -57,15 +57,9 @@ namespace editor {
       void save_a_copy_triggered();
       void undo_triggered();
       void redo_triggered();
-      void cut_triggered();
-      void copy_triggered();
-      void paste_triggered();
-      void paste_as_child_triggered();
       void display_subtree_triggered();
       void quit_triggered();
 
-      void add_child_triggered  (const QModelIndex &);
-      void add_sibling_triggered(const QModelIndex &);
 
     protected:
       void closeEvent(QCloseEvent *event) override;

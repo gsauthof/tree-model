@@ -44,14 +44,6 @@ namespace editor {
         &c, &Controller::undo);
     w.connect(&w, &Main_Window::redo_triggered,
         &c, &Controller::redo);
-    w.connect(&w, &Main_Window::copy_triggered,
-        &c, &Gui_Controller::clipboard_copy);
-    w.connect(&w, &Main_Window::cut_triggered,
-        &c, &Gui_Controller::clipboard_cut);
-    w.connect(&w, &Main_Window::paste_triggered,
-        &c, &Gui_Controller::clipboard_paste);
-    w.connect(&w, &Main_Window::paste_as_child_triggered,
-        &c, &Gui_Controller::clipboard_paste_as_child);
     w.connect(&w, &Main_Window::display_subtree_triggered,
         &c, &Gui_Controller::display_subtree);
   }
@@ -107,6 +99,14 @@ namespace editor {
         &c, &Gui_Controller::add_child);
     tv.connect(&tv, &editor::Tree_View::add_sibling_triggered,
         &c, &Gui_Controller::add_sibling);
+    tv.connect(&tv, &editor::Tree_View::cut_triggered,
+        &c, &Gui_Controller::clipboard_cut);
+    tv.connect(&tv, &editor::Tree_View::copy_triggered,
+        &c, &Gui_Controller::clipboard_copy);
+    tv.connect(&tv, &editor::Tree_View::paste_triggered,
+        &c, &Gui_Controller::clipboard_paste);
+    tv.connect(&tv, &editor::Tree_View::paste_as_child_triggered,
+        &c, &Gui_Controller::clipboard_paste_as_child);
   }
 
   static void connect_tree_widget(Tree_Widget &w, Gui_Controller &c)

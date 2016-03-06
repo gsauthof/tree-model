@@ -20,6 +20,10 @@
 }}} */
 #include "tree_view.hh"
 
+#include "qt_awesome.hh"
+
+#include <tree_model/util.hh>
+
 #include <QContextMenuEvent>
 #include <QDebug>
 #include <QMenu>
@@ -27,7 +31,6 @@
 
 #include <deque>
 
-#include <tree_model/util.hh>
 
 using namespace std;
 
@@ -45,42 +48,91 @@ namespace editor {
     setAcceptDrops(true);
     setDropIndicatorShown(true);
 
-    // these are just temporary actions
-    // they are replaced by the Main_Window ones when the
-    // widget is setup inside the main window
-    remove_action_ = new QAction(tr("&Remove"), this);
-    set_remove_action(remove_action_);
-    edit_action_ = new QAction(tr("&Edit..."), this);
-    set_edit_action(edit_action_);
-    add_child_action_ = new QAction(tr("&Add child..."), this);
-    set_add_child_action(add_child_action_);
-    add_sibling_action_ = new QAction(tr("Add &sibling..."), this);
-    set_add_sibling_action(add_sibling_action_);
+    // when added to a main window these action are replaced
+    // with the menu ones
+    // when added to a subtree view they are used as is
+    set_remove_action(new QAction(tr("&Remove"), this));
+    set_edit_action(new QAction(tr("&Edit..."), this));
+    set_add_child_action(new QAction(tr("&Add child..."), this));
+    set_add_sibling_action(new QAction(tr("Add &sibling..."), this));
+
+    set_cut_action(new QAction(tr("Cu&t"), this));
+    cut_action_->setShortcut(QKeySequence::Cut);
+    cut_action_->setIcon(fa_instance()->icon(fa::scissors));
+    // othwise the shortcut is not enabled
+    addAction(cut_action_);
+
+    set_copy_action(new QAction(tr("&Copy"), this));
+    copy_action_->setShortcut(QKeySequence::Copy);
+    copy_action_->setIcon(fa_instance()->icon(fa::clone));
+    addAction(copy_action_);
+
+    set_paste_action(new QAction(tr("Paste"), this));
+    paste_action_->setShortcut(QKeySequence::Paste);
+    paste_action_->setIcon(fa_instance()->icon(fa::clipboard));
+    addAction(paste_action_);
+
+    set_paste_as_child_action(new QAction(tr("Paste as c&amp;hild"), this));
+    paste_as_child_action_->setShortcut(tr("Ctrl+Shift+V"));
+    addAction(paste_as_child_action_);
   }
 
   void Tree_View::set_remove_action(QAction *a)
   {
+    removeAction(remove_action_);
     remove_action_ = a;
     connect(remove_action_, &QAction::triggered,
         this, &Tree_View::trigger_remove);
   }
   void Tree_View::set_edit_action(QAction *a)
   {
+    removeAction(edit_action_);
     edit_action_ = a;
     connect(edit_action_, &QAction::triggered,
         this, &Tree_View::trigger_edit);
   }
   void Tree_View::set_add_child_action(QAction *a)
   {
+    removeAction(add_child_action_);
     add_child_action_ = a;
     connect(add_child_action_, &QAction::triggered,
         this, &Tree_View::trigger_add_child);
   }
   void Tree_View::set_add_sibling_action(QAction *a)
   {
+    removeAction(add_sibling_action_);
     add_sibling_action_ = a;
     connect(add_sibling_action_, &QAction::triggered,
         this, &Tree_View::trigger_add_sibling);
+  }
+  void Tree_View::set_copy_action(QAction *a)
+  {
+    removeAction(copy_action_);
+    copy_action_ = a;
+    connect(copy_action_, &QAction::triggered,
+        this, &Tree_View::trigger_copy);
+  }
+  void Tree_View::set_cut_action(QAction *a)
+  {
+    // othwerwise the shortcut of the old action is still active
+    removeAction(cut_action_);
+    cut_action_ = a;
+    connect(cut_action_, &QAction::triggered,
+        this, &Tree_View::trigger_cut);
+  }
+  void Tree_View::set_paste_action(QAction *a)
+  {
+    removeAction(paste_action_);
+    paste_action_ = a;
+    connect(paste_action_, &QAction::triggered,
+        this, &Tree_View::trigger_paste);
+  }
+  void Tree_View::set_paste_as_child_action(QAction *a)
+  {
+    removeAction(paste_as_child_action_);
+    paste_as_child_action_ = a;
+    connect(paste_as_child_action_, &QAction::triggered,
+        this, &Tree_View::trigger_paste_as_child);
   }
 
   QModelIndex Tree_View::index_for_update()
@@ -113,6 +165,22 @@ namespace editor {
   {
     emit edit_triggered(index_for_update()); 
   }
+  void Tree_View::trigger_cut()
+  {
+    emit cut_triggered(selectedIndexes());
+  }
+  void Tree_View::trigger_copy()
+  {
+    emit copy_triggered(selectedIndexes());
+  }
+  void Tree_View::trigger_paste()
+  {
+    emit paste_triggered(selectedIndexes());
+  }
+  void Tree_View::trigger_paste_as_child()
+  {
+    emit paste_as_child_triggered(selectedIndexes());
+  }
 
   void Tree_View::contextMenuEvent(QContextMenuEvent *event)
   {
@@ -122,8 +190,7 @@ namespace editor {
     auto global_pos = event->globalPos();
 
     QMenu menu(parentWidget());
-    // those actions are usually also part of the main window's
-    // menu, thus changing the state here effects the menu as well
+    // if part of a main window those actions are shared with the menu
     edit_action_->setEnabled(context_index_.isValid());
     menu.addAction(edit_action_);
     add_sibling_action_->setEnabled(context_index_.isValid());
@@ -131,6 +198,15 @@ namespace editor {
     add_child_action_->setEnabled(context_index_.isValid()
         || !model()->rowCount(context_index_));
     menu.addAction(add_child_action_);
+    menu.addSeparator();
+    // XXX alternatively setEnabled could be connected to the selection
+    // signal, on setAction - then it to be disconnected in the main window
+    cut_action_->setEnabled(!selectedIndexes().empty());
+    menu.addAction(cut_action_);
+    copy_action_->setEnabled(!selectedIndexes().empty());
+    menu.addAction(copy_action_);
+    paste_action_->setEnabled(!selectedIndexes().empty());
+    menu.addAction(paste_action_);
     menu.addSeparator();
     remove_action_->setEnabled(!selectedIndexes().empty());
     menu.addAction(remove_action_);

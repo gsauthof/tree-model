@@ -107,16 +107,10 @@ namespace editor {
 
     connect(this, &Controller::item_tree_model_created,
         clipboard_copy_, &gui_command::Clipboard_Copy::set_model);
-    connect(this, &Gui_Controller::selection_model_changed,
-        clipboard_copy_, &gui_command::Clipboard_Copy::set_selection_model);
     connect(this, &Controller::item_tree_model_created,
         clipboard_cut_, &gui_command::Clipboard_Cut::set_model);
-    connect(this, &Gui_Controller::selection_model_changed,
-        clipboard_cut_, &gui_command::Clipboard_Cut::set_selection_model);
     connect(this, &Controller::item_tree_model_created,
         clipboard_paste_, &gui_command::Clipboard_Paste::set_model);
-    connect(this, &Gui_Controller::selection_model_changed,
-        clipboard_paste_, &gui_command::Clipboard_Paste::set_selection_model);
 
     connect(this, &Controller::item_tree_model_created,
         display_subtree_, &gui_command::Display_Subtree::set_model);
@@ -147,21 +141,21 @@ namespace editor {
   {
     save_->select_save_copy();
   }
-  void Gui_Controller::clipboard_cut()
+  void Gui_Controller::clipboard_cut(const QModelIndexList &is)
   {
-    clipboard_cut_->cut();
+    clipboard_cut_->cut(is);
   }
-  void Gui_Controller::clipboard_copy()
+  void Gui_Controller::clipboard_copy(const QModelIndexList &is)
   {
-    clipboard_copy_->copy();
+    clipboard_copy_->copy(is);
   }
-  void Gui_Controller::clipboard_paste()
+  void Gui_Controller::clipboard_paste(const QModelIndexList &is)
   {
-    clipboard_paste_->paste();
+    clipboard_paste_->paste(is);
   }
-  void Gui_Controller::clipboard_paste_as_child()
+  void Gui_Controller::clipboard_paste_as_child(const QModelIndexList &is)
   {
-    clipboard_paste_->paste_as_child();
+    clipboard_paste_->paste_as_child(is);
   }
   void Gui_Controller::display_subtree()
   {

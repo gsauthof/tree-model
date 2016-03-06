@@ -33,25 +33,20 @@ namespace editor {
     {
       model_ = model;
     }
-    void Clipboard_Paste::set_selection_model(const QItemSelectionModel *smodel)
+
+    void Clipboard_Paste::paste(const QModelIndexList &is)
     {
-      smodel_ = smodel;
+      paste(is, true);
+    }
+    void Clipboard_Paste::paste_as_child(const QModelIndexList &is)
+    {
+      paste(is, false);
     }
 
-    void Clipboard_Paste::paste()
+    void Clipboard_Paste::paste(const QModelIndexList &is, bool insert_before)
     {
-      paste(true);
-    }
-    void Clipboard_Paste::paste_as_child()
-    {
-      paste(false);
-    }
-
-    void Clipboard_Paste::paste(bool insert_before)
-    {
-      if (!model_ || !smodel_)
+      if (!model_)
         return;
-      auto is = smodel_->selectedIndexes();
       QModelIndex i;
       if (is.empty()) {
         if (model_->index(0, 0).isValid())

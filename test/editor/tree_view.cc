@@ -55,3 +55,28 @@ TEST_CASE("tv starts with some expanded", "[editor][gui][tree_view]")
 
 }
 
+TEST_CASE("tv also provides own cut shortcut", "[editor][gui][tree_view]")
+{
+  qRegisterMetaType<QModelIndexList>();
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+
+  auto p = editor::command::open_xml(in.c_str());
+  REQUIRE(p.first);
+  unique_ptr<QAbstractItemModel> mm(p.first);
+  auto m = mm.get();
+
+  editor::Tree_View tv;
+  QSignalSpy spy_cut(&tv, SIGNAL(cut_triggered(const QModelIndexList &)));
+
+  tv.set_model(m);
+  tv.show();
+  QTest::qWait(300);
+
+  tv.selectionModel()->select(m->index(0, 0).child(0, 0),
+      QItemSelectionModel::Select);
+  QTest::keyClick(&tv, Qt::Key_X,  Qt::ControlModifier, 10);
+
+  REQUIRE(spy_cut.size() == 1);
+  CHECK(qvariant_cast<QModelIndexList>(spy_cut.front().front()).size() == 1);
+
+}

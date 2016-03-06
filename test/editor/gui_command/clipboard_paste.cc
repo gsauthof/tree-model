@@ -48,10 +48,8 @@ TEST_CASE("basic paste clipboard", "[editor][qt][gui][clipboard]")
   tree_model::Item_Adaptor *a = new tree_model::Item_Adaptor(m);
   editor::gui_command::Clipboard_Paste cp;
   cp.set_model(a);
-  auto sm = new QItemSelectionModel(a);
-  cp.set_selection_model(sm);
 
-  cp.paste();
+  cp.paste(QModelIndexList());
 
   auto doc = a->mimeData(QModelIndexList() << QModelIndex());
 
@@ -65,7 +63,6 @@ TEST_CASE("basic paste clipboard", "[editor][qt][gui][clipboard]")
 
   cb->clear();
 
-  delete sm;
   delete a;
   delete doc;
 }
@@ -83,11 +80,8 @@ TEST_CASE("paste in between clipboard", "[editor][qt][gui][clipboard]")
   tree_model::Item_Adaptor *a = new tree_model::Item_Adaptor(m);
   editor::gui_command::Clipboard_Paste cp;
   cp.set_model(a);
-  auto sm = new QItemSelectionModel(a);
-  cp.set_selection_model(sm);
-  sm->select(a->index(0, 0).child(1, 0), QItemSelectionModel::Select);
 
-  cp.paste();
+  cp.paste(QModelIndexList() << a->index(0, 0).child(1, 0));
 
   auto doc = a->mimeData(QModelIndexList() << QModelIndex());
 
@@ -101,7 +95,6 @@ TEST_CASE("paste in between clipboard", "[editor][qt][gui][clipboard]")
 
   cb->clear();
 
-  delete sm;
   delete a;
   delete doc;
 }
@@ -119,11 +112,8 @@ TEST_CASE("paste child clipboard", "[editor][qt][gui][clipboard]")
   tree_model::Item_Adaptor *a = new tree_model::Item_Adaptor(m);
   editor::gui_command::Clipboard_Paste cp;
   cp.set_model(a);
-  auto sm = new QItemSelectionModel(a);
-  cp.set_selection_model(sm);
-  sm->select(a->index(0, 0), QItemSelectionModel::Select);
 
-  cp.paste_as_child();
+  cp.paste_as_child(QModelIndexList() << a->index(0, 0));
 
   auto doc = a->mimeData(QModelIndexList() << QModelIndex());
 
@@ -137,7 +127,6 @@ TEST_CASE("paste child clipboard", "[editor][qt][gui][clipboard]")
 
   cb->clear();
 
-  delete sm;
   delete a;
   delete doc;
 }
@@ -155,11 +144,8 @@ TEST_CASE("paste malformed", "[editor][qt][gui][clipboard]")
   tree_model::Item_Adaptor *a = new tree_model::Item_Adaptor(m);
   editor::gui_command::Clipboard_Paste cp;
   cp.set_model(a);
-  auto sm = new QItemSelectionModel(a);
-  cp.set_selection_model(sm);
-  sm->select(a->index(0, 0), QItemSelectionModel::Select);
 
-  cp.paste_as_child();
+  cp.paste_as_child(QModelIndexList() << a->index(0, 0));
 
   auto doc = a->mimeData(QModelIndexList() << QModelIndex());
 
@@ -173,7 +159,6 @@ TEST_CASE("paste malformed", "[editor][qt][gui][clipboard]")
 
   cb->clear();
 
-  delete sm;
   delete a;
   delete doc;
 }
@@ -191,11 +176,8 @@ TEST_CASE("paste two siblings", "[editor][qt][gui][clipboard]")
   tree_model::Item_Adaptor *a = new tree_model::Item_Adaptor(m);
   editor::gui_command::Clipboard_Paste cp;
   cp.set_model(a);
-  auto sm = new QItemSelectionModel(a);
-  cp.set_selection_model(sm);
-  sm->select(a->index(0, 0), QItemSelectionModel::Select);
 
-  cp.paste_as_child();
+  cp.paste_as_child(QModelIndexList() << a->index(0, 0));
 
   auto doc = a->mimeData(QModelIndexList() << QModelIndex());
 
@@ -209,7 +191,6 @@ TEST_CASE("paste two siblings", "[editor][qt][gui][clipboard]")
 
   cb->clear();
 
-  delete sm;
   delete a;
   delete doc;
 }

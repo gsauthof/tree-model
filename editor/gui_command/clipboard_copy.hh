@@ -39,15 +39,12 @@ namespace editor {
 
       public slots:
         void set_model(const QAbstractItemModel *model);
-        void set_selection_model(const QItemSelectionModel *smodel);
 
-        void copy();
+        void copy(const QModelIndexList &is);
 
       protected:
         const QAbstractItemModel  *model_  {nullptr};
-        const QItemSelectionModel *smodel_ {nullptr};
 
-        QModelIndexList selected_indexes();
     };
 
   } // namespace gui_command

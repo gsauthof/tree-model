@@ -28,22 +28,24 @@ using namespace std;
 namespace editor {
   namespace gui_command {
 
-    void Clipboard_Cut::cut()
+    void Clipboard_Cut::cut(const QModelIndexList &is)
     {
       try {
-        copy();
-        auto is = selected_indexes();
+        copy(is);
         editor::command::remove(model_, is);
       } catch (const underflow_error &e) {
         // do nothing
       }
     }
 
+    // we need it non-const in contrast to the base class
     void Clipboard_Cut::set_model(QAbstractItemModel *model)
     {
       Clipboard_Copy::set_model(model);
       model_ = model;
     }
+
+
 
   }
 }

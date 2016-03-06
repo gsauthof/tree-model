@@ -56,10 +56,10 @@ namespace editor {
       void save();
       void select_save();
       void select_save_copy();
-      void clipboard_cut();
-      void clipboard_copy();
-      void clipboard_paste();
-      void clipboard_paste_as_child();
+      void clipboard_cut(const QModelIndexList &is);
+      void clipboard_copy(const QModelIndexList &is);
+      void clipboard_paste(const QModelIndexList &is);
+      void clipboard_paste_as_child(const QModelIndexList &is);
       void display_subtree();
       void add_child(const QModelIndex &i);
       void add_sibling(const QModelIndex &i);

@@ -39,6 +39,10 @@ class Tree_View : public QTreeView
     void set_edit_action(QAction *a);
     void set_add_child_action(QAction *a);
     void set_add_sibling_action(QAction *a);
+    void set_cut_action(QAction *a);
+    void set_copy_action(QAction *a);
+    void set_paste_action(QAction *a);
+    void set_paste_as_child_action(QAction *a);
 
     void breadth_first_expand(unsigned n);
     void breadth_first_collapse(unsigned n);
@@ -48,6 +52,10 @@ class Tree_View : public QTreeView
     void edit_triggered  (const QModelIndex &);
     void add_child_triggered  (const QModelIndex &);
     void add_sibling_triggered(const QModelIndex &);
+    void cut_triggered(const QModelIndexList &selected_indexes);
+    void copy_triggered(const QModelIndexList &selected_indexes);
+    void paste_triggered(const QModelIndexList &selected_indexes);
+    void paste_as_child_triggered(const QModelIndexList &selected_indexes);
 
     void selection_model_changed(const QItemSelectionModel *smodel);
     void selection_changed(const QItemSelection &selected,
@@ -59,10 +67,15 @@ class Tree_View : public QTreeView
 
   public slots:
     void set_model(QAbstractItemModel *model);
+  private slots:
     void trigger_edit();
     void trigger_add_child();
     void trigger_add_sibling();
     void trigger_remove();
+    void trigger_cut();
+    void trigger_copy();
+    void trigger_paste();
+    void trigger_paste_as_child();
 
   protected slots:
     void selectionChanged(const QItemSelection &selected,
@@ -76,6 +89,10 @@ class Tree_View : public QTreeView
     QAction *add_sibling_action_ {nullptr};
     QAction *edit_action_        {nullptr};
     QAction *remove_action_      {nullptr};
+    QAction *cut_action_         {nullptr};
+    QAction *copy_action_        {nullptr};
+    QAction *paste_action_       {nullptr};
+    QAction *paste_as_child_action_{nullptr};
     bool context_menu_visible_   {false};
 
     QModelIndex index_for_update();

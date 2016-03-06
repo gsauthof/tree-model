@@ -34,7 +34,7 @@ namespace editor {
       public slots:
         // unlike base-class, non-const is needed
         void set_model(QAbstractItemModel *model);
-        void cut();
+        void cut(const QModelIndexList &is);
 
       private:
         QAbstractItemModel  *model_  {nullptr};
