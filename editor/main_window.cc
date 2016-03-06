@@ -83,6 +83,11 @@ namespace editor {
 
   void Main_Window::connect_actions_to_tree_view()
   {
+    connect(ui->expand_some_action, &QAction::triggered, [this]() {
+        ui->widget->tree_view().breadth_first_expand(20); });
+    connect(ui->collapse_some_action, &QAction::triggered, [this]() {
+        ui->widget->tree_view().breadth_first_collapse(100); });
+
     ui->widget->tree_view().set_edit_action       (ui->edit_action);
     ui->widget->tree_view().set_add_child_action  (ui->add_child_action);
     ui->widget->tree_view().set_add_sibling_action(ui->add_sibling_action);

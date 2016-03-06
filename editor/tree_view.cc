@@ -25,6 +25,12 @@
 #include <QMenu>
 #include <QAction>
 
+#include <deque>
+
+#include <tree_model/util.hh>
+
+using namespace std;
+
 namespace editor {
 
   Tree_View::Tree_View(QWidget *parent)
@@ -151,6 +157,8 @@ namespace editor {
     auto font_metrics = fontMetrics();
     setColumnWidth(0, font_metrics.averageCharWidth()*32);
 
+    breadth_first_expand(20);
+
     emit selection_model_changed(selectionModel());
   }
 
@@ -166,6 +174,26 @@ namespace editor {
   {
     QTreeView::currentChanged(current, previous);
     emit current_changed(current, previous);
+  }
+
+  void Tree_View::breadth_first_expand(unsigned n)
+  {
+    auto m = model();
+    if (!m)
+      return;
+    auto root = m->index(0, 0);
+    tree_model::util::breadth_first(root, n, [this](const QModelIndex &p) {
+        expand(p); });
+  }
+
+  void Tree_View::breadth_first_collapse(unsigned n)
+  {
+    auto m = model();
+    if (!m)
+      return;
+    auto root = m->index(0, 0);
+    tree_model::util::breadth_first(root, n, [this](const QModelIndex &p) {
+        collapse(p); });
   }
 
 } // namespace editor

@@ -156,6 +156,9 @@ TEST_CASE("delete shortcut", "[editor][qt][gui][mainwindow]")
       REQUIRE(a != nullptr);
       old_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(1, 0));
 
+      // collapse some
+      QTest::keyClick(w.focusWidget(), Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
+
       QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
@@ -201,6 +204,9 @@ TEST_CASE("paste shortcut", "[editor][qt][gui][mainwindow]")
       a = c.item_tree_model();
       REQUIRE(a != nullptr);
       old_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(1, 0));
+
+      // collapse some
+      QTest::keyClick(w.focusWidget(), Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
 
       QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
@@ -282,6 +288,9 @@ TEST_CASE("mw display subtree", "[editor][qt][gui][mainwindow]")
       a = c.item_tree_model();
       REQUIRE(a != nullptr);
 
+      // collapse some
+      QTest::keyClick(w.focusWidget(), Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
+
       QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
@@ -324,6 +333,9 @@ TEST_CASE("mw display subtree model change", "[editor][qt][gui][mainwindow]")
   QTimer::singleShot(300, [&w, &a, &c]{
       a = c.item_tree_model();
       REQUIRE(a != nullptr);
+
+      // collapse some
+      QTest::keyClick(w.focusWidget(), Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
 
       QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
@@ -374,6 +386,11 @@ TEST_CASE("mw tree view context menu", "[editor][qt][gui][mainwindow]")
       REQUIRE(a != nullptr);
       old_rowcount = a->rowCount(a->index(0, 0));
       auto v = w.focusWidget();
+      REQUIRE(v);
+
+      // collapse some
+      QTest::keyClick(v, Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
+
       QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
@@ -506,6 +523,10 @@ TEST_CASE("mw tree view add sibling", "[editor][qt][gui][mainwindow]")
   int old_rowcount = a->rowCount(a->index(0, 0));
   auto v = QApplication::focusWindow();
   REQUIRE(v != nullptr);
+
+  // collapse some
+  QTest::keyClick(v, Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
+
   QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
@@ -551,6 +572,10 @@ TEST_CASE("mw tree view remove via menu", "[editor][qt][gui][mainwindow]")
   int old_rowcount = a->rowCount(a->index(0, 0));
   auto v = QApplication::focusWindow();
   REQUIRE(v != nullptr);
+
+  // collapse some
+  QTest::keyClick(v, Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
+
   QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);

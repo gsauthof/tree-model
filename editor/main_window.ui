@@ -69,6 +69,9 @@
     <addaction name="display_subtree_action"/>
     <addaction name="separator"/>
     <addaction name="show_tool_bar_action"/>
+    <addaction name="separator"/>
+    <addaction name="expand_some_action"/>
+    <addaction name="collapse_some_action"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -260,6 +263,22 @@
    </property>
    <property name="text">
     <string>&amp;Show toolbar</string>
+   </property>
+  </action>
+  <action name="expand_some_action">
+   <property name="text">
+    <string>&amp;Expand some</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="collapse_some_action">
+   <property name="text">
+    <string>&amp;Collapse some</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Ctrl+E</string>
    </property>
   </action>
  </widget>

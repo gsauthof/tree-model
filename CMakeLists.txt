@@ -316,6 +316,7 @@ add_executable(ut_gui
   test/editor/slider_bar.cc
   test/editor/instance.cc
   test/editor/instance_manager.cc
+  test/editor/tree_view.cc
 
   ${TREE_MODEL_CC}
   ${EDITOR_CC}

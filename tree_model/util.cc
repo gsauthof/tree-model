@@ -57,6 +57,35 @@ namespace tree_model {
       return true;
     }
 
-  }
+    void breadth_first(const QModelIndex &root, unsigned n,
+        std::function<void(const QModelIndex &)> f)
+    {
+      auto m = root.model();
+      if (!m)
+        return;
+      if (!root.isValid())
+        return;
+      deque<QModelIndex> parents;
+      parents.push_back(root);
+      deque<QModelIndex> future_parents;
 
-}
+      unsigned x = 1;
+
+      while (!parents.empty()) {
+        for (auto &p : parents) {
+          x += 1 + m->rowCount(p);
+          if (x > n)
+            return;
+          for (auto i = p.child(0, 0); i.isValid(); i = i.sibling(i.row()+1, 0))
+            future_parents.push_back(i);
+          f(p);
+        }
+        //parents = std::move(future_parents);
+        swap(parents, future_parents);
+        future_parents.clear();
+      }
+    }
+
+  } // util
+
+} // tree_model

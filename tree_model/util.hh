@@ -25,6 +25,7 @@ class QAbstractItemModel;
 class QModelIndex;
 
 #include <stddef.h>
+#include <functional>
 
 namespace tree_model {
 
@@ -32,6 +33,9 @@ namespace tree_model {
 
     bool descendents_less_than(const QAbstractItemModel &m,
         const QModelIndex &i, size_t n);
+
+    void breadth_first(const QModelIndex &root, unsigned n,
+        std::function<void(const QModelIndex &)> f);
 
   }
 

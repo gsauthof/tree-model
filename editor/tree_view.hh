@@ -40,6 +40,9 @@ class Tree_View : public QTreeView
     void set_add_child_action(QAction *a);
     void set_add_sibling_action(QAction *a);
 
+    void breadth_first_expand(unsigned n);
+    void breadth_first_collapse(unsigned n);
+
   signals:
     void remove_triggered(const QModelIndexList &selected_indexes);
     void edit_triggered  (const QModelIndex &);
