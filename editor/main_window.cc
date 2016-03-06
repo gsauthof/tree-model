@@ -210,6 +210,7 @@ namespace editor {
     ui->add_child_action      ->setIcon(fa_instance()->icon(fa::plussquareo));
     ui->add_sibling_action    ->setIcon(fa_instance()->icon(fa::pluscircle));
     ui->close_action          ->setIcon(fa_instance()->icon(fa::times));
+    ui->quit_action           ->setIcon(fa_instance()->icon(fa::signout));
   }
 
 
