@@ -90,6 +90,10 @@ namespace editor {
     edit_action_ = a;
     connect(edit_action_, &QAction::triggered,
         this, &Tree_View::trigger_edit);
+
+    edit_action_->setEnabled(false);
+    connect(this, &Tree_View::something_selected,
+        edit_action_, &QAction::setEnabled);
   }
   void Tree_View::set_add_child_action(QAction *a)
   {
@@ -97,6 +101,10 @@ namespace editor {
     add_child_action_ = a;
     connect(add_child_action_, &QAction::triggered,
         this, &Tree_View::trigger_add_child);
+
+    add_child_action_->setEnabled(false);
+    connect(this, &Tree_View::something_selected,
+        add_child_action_, &QAction::setEnabled);
   }
   void Tree_View::set_add_sibling_action(QAction *a)
   {
@@ -104,6 +112,10 @@ namespace editor {
     add_sibling_action_ = a;
     connect(add_sibling_action_, &QAction::triggered,
         this, &Tree_View::trigger_add_sibling);
+
+    add_sibling_action_->setEnabled(false);
+    connect(this, &Tree_View::something_selected,
+        add_sibling_action_, &QAction::setEnabled);
   }
   void Tree_View::set_copy_action(QAction *a)
   {
@@ -111,6 +123,10 @@ namespace editor {
     copy_action_ = a;
     connect(copy_action_, &QAction::triggered,
         this, &Tree_View::trigger_copy);
+
+    copy_action_->setEnabled(false);
+    connect(this, &Tree_View::something_selected,
+        copy_action_, &QAction::setEnabled);
   }
   void Tree_View::set_cut_action(QAction *a)
   {
@@ -119,6 +135,10 @@ namespace editor {
     cut_action_ = a;
     connect(cut_action_, &QAction::triggered,
         this, &Tree_View::trigger_cut);
+
+    cut_action_->setEnabled(false);
+    connect(this, &Tree_View::something_selected,
+        cut_action_, &QAction::setEnabled);
   }
   void Tree_View::set_paste_action(QAction *a)
   {
@@ -126,6 +146,10 @@ namespace editor {
     paste_action_ = a;
     connect(paste_action_, &QAction::triggered,
         this, &Tree_View::trigger_paste);
+
+    remove_action_->setEnabled(false);
+    connect(this, &Tree_View::something_selected,
+        remove_action_, &QAction::setEnabled);
   }
   void Tree_View::set_paste_as_child_action(QAction *a)
   {
@@ -133,6 +157,10 @@ namespace editor {
     paste_as_child_action_ = a;
     connect(paste_as_child_action_, &QAction::triggered,
         this, &Tree_View::trigger_paste_as_child);
+
+    paste_as_child_action_->setEnabled(false);
+    connect(this, &Tree_View::something_selected,
+        paste_as_child_action_, &QAction::setEnabled);
   }
 
   QModelIndex Tree_View::index_for_update()
@@ -191,29 +219,35 @@ namespace editor {
 
     QMenu menu(parentWidget());
     // if part of a main window those actions are shared with the menu
-    edit_action_->setEnabled(context_index_.isValid());
-    menu.addAction(edit_action_);
+
+    auto edit_enabled        = edit_action_       ->isEnabled();
+    auto add_sibling_enabled = add_sibling_action_->isEnabled();
+    auto add_child_enabled   = add_child_action_  ->isEnabled();
+
+    edit_action_       ->setEnabled(context_index_.isValid());
     add_sibling_action_->setEnabled(context_index_.isValid());
+    add_child_action_  ->setEnabled((context_index_.isValid()
+          && !model()->data(context_index_.sibling(context_index_.row(), 1))
+                         .isValid() )
+        || (!context_index_.isValid() && !model()->rowCount(context_index_)));
+
+    menu.addAction(edit_action_);
     menu.addAction(add_sibling_action_);
-    add_child_action_->setEnabled(context_index_.isValid()
-        || !model()->rowCount(context_index_));
     menu.addAction(add_child_action_);
     menu.addSeparator();
-    // XXX alternatively setEnabled could be connected to the selection
-    // signal, on setAction - then it to be disconnected in the main window
-    cut_action_->setEnabled(!selectedIndexes().empty());
     menu.addAction(cut_action_);
-    copy_action_->setEnabled(!selectedIndexes().empty());
     menu.addAction(copy_action_);
-    paste_action_->setEnabled(!selectedIndexes().empty());
     menu.addAction(paste_action_);
     menu.addSeparator();
-    remove_action_->setEnabled(!selectedIndexes().empty());
     menu.addAction(remove_action_);
 
     context_menu_visible_ = true;
     menu.exec(global_pos);
     context_menu_visible_ = false;
+
+    edit_action_       ->setEnabled(edit_enabled);
+    add_sibling_action_->setEnabled(add_sibling_enabled);
+    add_child_action_  ->setEnabled(add_child_enabled);
 
     context_index_ = QModelIndex();
   }

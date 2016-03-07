@@ -101,30 +101,9 @@ namespace editor {
 
   void Main_Window::setup_selection_dependent_actions()
   {
-    ui->copy_action->setEnabled(false);
-    connect(ui->widget, &Tree_Widget::something_selected,
-        ui->copy_action, &QAction::setEnabled);
-    ui->cut_action->setEnabled(false);
-    connect(ui->widget, &Tree_Widget::something_selected,
-        ui->cut_action, &QAction::setEnabled);
-    ui->paste_as_child_action->setEnabled(false);
-    connect(ui->widget, &Tree_Widget::something_selected,
-        ui->paste_as_child_action, &QAction::setEnabled);
     ui->display_subtree_action->setEnabled(false);
     connect(ui->widget, &Tree_Widget::something_selected,
         ui->display_subtree_action, &QAction::setEnabled);
-    ui->remove_action->setEnabled(false);
-    connect(ui->widget, &Tree_Widget::something_selected,
-        ui->remove_action, &QAction::setEnabled);
-    ui->edit_action->setEnabled(false);
-    connect(ui->widget, &Tree_Widget::something_selected,
-        ui->edit_action, &QAction::setEnabled);
-    ui->add_sibling_action->setEnabled(false);
-    connect(ui->widget, &Tree_Widget::something_selected,
-        ui->add_sibling_action, &QAction::setEnabled);
-    ui->add_child_action->setEnabled(false);
-    connect(ui->widget, &Tree_Widget::something_selected,
-        ui->add_child_action, &QAction::setEnabled);
   }
 
   void Main_Window::forward_trigger_signals()
