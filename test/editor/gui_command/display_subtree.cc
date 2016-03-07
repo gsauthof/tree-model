@@ -125,4 +125,7 @@ TEST_CASE("subtree has undo redo", "[editor][gui][subtree]")
 
   CHECK(spy_redo.size() == 1);
 
+  w->hide();
+  delete w;
+
 }
