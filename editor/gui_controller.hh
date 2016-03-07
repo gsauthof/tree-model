@@ -68,6 +68,11 @@ namespace editor {
       void add_sibling(const QModelIndex &i);
       void edit(const QModelIndex &i);
 
+    signals:
+      void selection_model_changed(const QItemSelectionModel *smodel);
+      void subtree_window_created(editor::Subtree_Window *w);;
+      void open_more_urls_requested(const QList<QUrl> &urls);
+
     private:
       QWidget                           *parent_widget_        {nullptr};
 
@@ -81,11 +86,13 @@ namespace editor {
       gui_command::Clipboard_Paste      *clipboard_paste_      {nullptr};
       gui_command::Display_Subtree      *display_subtree_      {nullptr};
 
-    signals:
-      void selection_model_changed(const QItemSelectionModel *smodel);
-      void subtree_window_created(editor::Subtree_Window *w);;
-      void open_more_urls_requested(const QList<QUrl> &urls);
-
+      void connect_open_action();
+      void connect_select_open_action();
+      void connect_save_action();
+      void connect_edit_action();
+      void connect_add_action();
+      void connect_cliboard();
+      void connect_subtree_action();
 
   };
 

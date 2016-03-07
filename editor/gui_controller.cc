@@ -53,6 +53,16 @@ namespace editor {
       clipboard_paste_(new gui_command::Clipboard_Paste(this)),
       display_subtree_(new gui_command::Display_Subtree(parent_widget_))
   {
+    connect_open_action();
+    connect_select_open_action();
+    connect_save_action();
+    connect_edit_action();
+    connect_add_action();
+    connect_cliboard();
+    connect_subtree_action();
+  }
+  void Gui_Controller::connect_open_action()
+  {
     connect(open_, &gui_command::Open::item_tree_model_created,
             this, &Gui_Controller::item_tree_model_created);
     connect(open_, &gui_command::Open::tree_model_created,
@@ -67,7 +77,9 @@ namespace editor {
             this, &Gui_Controller::open_more_urls_requested);
     connect(this, &Controller::model_changed,
             open_, &gui_command::Open::set_modified);
-
+  }
+  void Gui_Controller::connect_select_open_action()
+  {
     connect(select_open_,
         &gui_command::Select_Open::item_tree_model_created,
             this, &Gui_Controller::item_tree_model_created);
@@ -80,7 +92,9 @@ namespace editor {
             this, &Gui_Controller::file_type_opened);
     connect(select_open_, &gui_command::Select_Open::msg_produced,
             this, &Gui_Controller::msg_produced);
-
+  }
+  void Gui_Controller::connect_save_action()
+  {
     connect(save_, &gui_command::Save::msg_produced,
             this, &Gui_Controller::msg_produced);
     connect(save_, &gui_command::Save::saved,
@@ -92,14 +106,20 @@ namespace editor {
         save_, &gui_command::Save::set_filename);
     connect(this, &Controller::file_type_opened,
         save_, &gui_command::Save::set_file_type);
+  }
 
+  void Gui_Controller::connect_edit_action()
+  {
     connect(this, &Controller::item_tree_model_created,
         edit_, &gui_command::Edit::set_model);
     connect(edit_, SIGNAL(begin_transaction_requested(const QString&)),
         recorder_, SLOT(begin_transaction(const QString&)));
     connect(edit_, &gui_command::Edit::commit_requested,
         recorder_, &tree_model::Recorder::commit);
+  }
 
+  void Gui_Controller::connect_add_action()
+  {
     connect(this, &Controller::item_tree_model_created,
         add_, &gui_command::Add::set_model);
     //connect(add_, &gui_command::Add::begin_transaction_requested,
@@ -108,14 +128,20 @@ namespace editor {
         recorder_, SLOT(begin_transaction(const QString&)));
     connect(add_, &gui_command::Add::commit_requested,
         recorder_, &tree_model::Recorder::commit);
+  }
 
+  void Gui_Controller::connect_cliboard()
+  {
     connect(this, &Controller::item_tree_model_created,
         clipboard_copy_, &gui_command::Clipboard_Copy::set_model);
     connect(this, &Controller::item_tree_model_created,
         clipboard_cut_, &gui_command::Clipboard_Cut::set_model);
     connect(this, &Controller::item_tree_model_created,
         clipboard_paste_, &gui_command::Clipboard_Paste::set_model);
+  }
 
+  void Gui_Controller::connect_subtree_action()
+  {
     connect(this, &Controller::item_tree_model_created,
         display_subtree_, &gui_command::Display_Subtree::set_model);
     connect(this, &Gui_Controller::selection_model_changed,
@@ -128,6 +154,7 @@ namespace editor {
     connect(display_subtree_, &gui_command::Display_Subtree::redo_requested,
         this, &Controller::redo);
   }
+
   void Gui_Controller::open(const QString &filename)
   {
     open_->open(filename);
