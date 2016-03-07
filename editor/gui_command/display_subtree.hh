@@ -47,6 +47,8 @@ namespace editor {
 
       signals:
         void subtree_window_created(editor::Subtree_Window *w);
+        void undo_requested();
+        void redo_requested();
 
       protected:
         QWidget *parent_widget_ {nullptr};

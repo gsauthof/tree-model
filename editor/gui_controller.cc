@@ -119,6 +119,10 @@ namespace editor {
     connect(display_subtree_,
         &gui_command::Display_Subtree::subtree_window_created,
         this, &Gui_Controller::subtree_window_created);
+    connect(display_subtree_, &gui_command::Display_Subtree::undo_requested,
+        this, &Controller::undo);
+    connect(display_subtree_, &gui_command::Display_Subtree::redo_requested,
+        this, &Controller::redo);
   }
   void Gui_Controller::open(const QString &filename)
   {

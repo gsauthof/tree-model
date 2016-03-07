@@ -27,6 +27,7 @@
 #include <QSignalSpy>
 #include <QMainWindow>
 
+#include <editor/command/open_xml.hh>
 #include <editor/gui_command/display_subtree.hh>
 #include <editor/subtree_window.hh>
 #include <editor/tree_widget.hh>
@@ -80,3 +81,48 @@ TEST_CASE("basic display subtree", "[editor][qt][gui][subtree]")
 
 }
 
+TEST_CASE("subtree has undo redo", "[editor][gui][subtree]")
+{
+  std::string in(test::path::in() + "/tap_3_12_small.xml");
+
+  auto p = editor::command::open_xml(in.c_str());
+  REQUIRE(p.first);
+  unique_ptr<QAbstractItemModel> mm(p.first);
+  auto m = mm.get();
+
+  editor::gui_command::Display_Subtree ds;
+  QSignalSpy spy_undo(&ds, SIGNAL(undo_requested()));
+  QSignalSpy spy_redo(&ds, SIGNAL(redo_requested()));
+
+  ds.set_model(m);
+  auto sm = new QItemSelectionModel(m);
+  ds.set_selection_model(sm);
+  sm->select(m->index(0, 0), QItemSelectionModel::Select);
+
+  editor::Subtree_Window *w = nullptr;
+  QObject::connect(&ds,
+      &editor::gui_command::Display_Subtree::subtree_window_created,
+      [&w](auto x) { w = x; });
+
+  ds.display();
+  QTest::qWait(300);
+
+  REQUIRE(w);
+  w->show();
+  QTest::qWait(300);
+
+  auto tw = w->findChild<editor::Tree_Widget*>();
+  REQUIRE(tw);
+  auto tv = tw->findChild<editor::Tree_View*>();
+  REQUIRE(tv);
+
+  QTest::keyClick(tv, Qt::Key_Z,  Qt::ControlModifier, 10);
+  QTest::qWait(300);
+  CHECK(spy_undo.size() == 1);
+
+  QTest::keyClick(tv, Qt::Key_Z,  Qt::ShiftModifier | Qt::ControlModifier, 10);
+  QTest::qWait(300);
+
+  CHECK(spy_redo.size() == 1);
+
+}

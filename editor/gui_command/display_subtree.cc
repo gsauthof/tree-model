@@ -21,6 +21,7 @@
 #include "display_subtree.hh"
 
 #include <QItemSelectionModel>
+#include <QShortcut>
 #include <QDebug>
 
 #include <editor/subtree_window.hh>
@@ -67,6 +68,11 @@ namespace editor {
       auto title = QString("%1 %2").arg(model_->data(i0)
           .toString()).arg(model_->data(i, Qt::ToolTipRole).toString());
       w->setWindowTitle(title);
+
+      connect(new QShortcut(QKeySequence::Undo, w), &QShortcut::activated,
+          this, &Display_Subtree::undo_requested);
+      connect(new QShortcut(QKeySequence::Redo, w), &QShortcut::activated,
+          this, &Display_Subtree::redo_requested);
 
       auto &tv = w->tree_widget().tree_view();
       tv.set_model(model_);
