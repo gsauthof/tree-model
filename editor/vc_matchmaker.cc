@@ -27,13 +27,17 @@
 #include "tree_view.hh"
 #include "subtree_window.hh"
 
+#include <QUrl>
+
 namespace editor {
 
   static void connect_action_triggers(
       Main_Window &w, Gui_Controller &c)
   {
     w.connect(&w, &Main_Window::open_triggered,
-       &c, &Gui_Controller::select_open);
+        &c, &Gui_Controller::select_open);
+    w.connect(&w, &Main_Window::open_urls_requested,
+        &c, &Gui_Controller::open_urls);
     w.connect(&w, &Main_Window::save_triggered,
         &c, &Gui_Controller::save);
     w.connect(&w, &Main_Window::save_as_triggered,

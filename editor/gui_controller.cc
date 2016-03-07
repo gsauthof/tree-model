@@ -63,6 +63,10 @@ namespace editor {
             this, &Gui_Controller::file_type_opened);
     connect(open_, &gui_command::Open::msg_produced,
             this, &Gui_Controller::msg_produced);
+    connect(open_, &gui_command::Open::open_more_urls_requested,
+            this, &Gui_Controller::open_more_urls_requested);
+    connect(this, &Controller::model_changed,
+            open_, &gui_command::Open::set_modified);
 
     connect(select_open_,
         &gui_command::Select_Open::item_tree_model_created,
@@ -127,6 +131,10 @@ namespace editor {
   void Gui_Controller::open(const QString &filename)
   {
     open_->open(filename);
+  }
+  void Gui_Controller::open_urls(const QList<QUrl> &urls)
+  {
+    open_->open_urls(urls);
   }
 
   void Gui_Controller::select_open()

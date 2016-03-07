@@ -23,6 +23,8 @@
 
 #include <QAbstractItemModel>
 #include <QObject>
+#include <QList>
+#include <QUrl>
 
 #include <functional>
 
@@ -45,13 +47,22 @@ namespace editor {
 
       public slots:
         void open(const QString &filename);
+
+        void open_urls(const QList<QUrl> &urls);
+
         // we don't overload because we can't use the
         // new signal/slot syntax then ...
         void open_ft(const QString &filename, const File_Type &ft);
 
+        void set_modified(bool b);
+
+      signals:
+        void open_more_urls_requested(const QList<QUrl> &urls);
+
       protected:
         QWidget *parent_widget_{nullptr};
       private:
+        bool modified_ {false};
         void open_prime(const QString &filename, std::function<void()>);
     };
 

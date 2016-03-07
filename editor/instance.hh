@@ -22,6 +22,8 @@
 #define INSTANCE_HH
 
 #include <QObject>
+#include <QList>
+#include <QUrl>
 
 namespace editor {
   class Main_Window;
@@ -44,6 +46,7 @@ namespace editor {
     signals:
       void new_requested();
       void quit_requested();
+      void open_more_urls_requested(const QList<QUrl> &urls);
 
     private:
       Main_Window *main_window_ {nullptr};

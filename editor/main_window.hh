@@ -22,6 +22,8 @@
 #define MAIN_WINDOW_HH
 
 #include <QMainWindow>
+#include <QList>
+#include <QUrl>
 
 class QModelIndex;
 
@@ -59,10 +61,16 @@ namespace editor {
       void redo_triggered();
       void display_subtree_triggered();
       void quit_triggered();
+      void open_urls_requested(const QList<QUrl> &urls);
 
 
     protected:
       void closeEvent(QCloseEvent *event) override;
+
+      void dragEnterEvent(QDragEnterEvent *event) override;
+      //void dragLeaveEvent(QDragLeaveEvent *event) override;
+      void dragMoveEvent(QDragMoveEvent *event) override;
+      void dropEvent(QDropEvent *event) override;
     private slots:
     private:
       Ui::Main_Window *ui {nullptr};

@@ -42,6 +42,9 @@ namespace editor {
     connect(main_window_, &Main_Window::new_triggered,
         this, &Instance::new_requested);
     gui_controller_->request_empty_model();
+
+    connect(gui_controller_, &Gui_Controller::open_more_urls_requested,
+            this, &Instance::open_more_urls_requested);
   }
   void Instance::open(const QString &filename)
   {

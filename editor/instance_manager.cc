@@ -23,6 +23,8 @@
 #include "instance_manager.hh"
 #include "instance.hh"
 
+#include <QTimer>
+
 using namespace std;
 
 namespace editor {
@@ -42,6 +44,8 @@ namespace editor {
     connect(i, &Instance::quit_requested, this, &Instance_Manager::quit);
     connect(i, &Instance::new_requested,
         this, &Instance_Manager::create_instance);
+    connect(i, &Instance::open_more_urls_requested,
+        this, &Instance_Manager::open_urls_in_new_instances);
     i->show();
     return i;
   }
@@ -49,6 +53,17 @@ namespace editor {
   {
     create_instance();
   }
+
+  void Instance_Manager::open_urls_in_new_instances(const QList<QUrl> &urls)
+  {
+    QTimer::singleShot(0, [this, urls]() {
+        for (auto &url : urls) {
+          auto i = create_instance();
+          i->open(url.toLocalFile());
+        }
+        });
+  }
+
   void Instance_Manager::quit()
   {
     // variation: build a list of modified windows and

@@ -23,6 +23,8 @@
 
 #include <QAbstractItemModel>
 #include <QString>
+#include <QList>
+#include <QUrl>
 
 class QItemSelectionModel;
 
@@ -52,6 +54,7 @@ namespace editor {
 
     public slots:
       void open(const QString &filename);
+      void open_urls(const QList<QUrl> &urls);
       void select_open();
       void save();
       void select_save();
@@ -81,6 +84,7 @@ namespace editor {
     signals:
       void selection_model_changed(const QItemSelectionModel *smodel);
       void subtree_window_created(editor::Subtree_Window *w);;
+      void open_more_urls_requested(const QList<QUrl> &urls);
 
 
   };

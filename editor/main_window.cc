@@ -30,6 +30,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QSettings>
+#include <QMimeData>
 
 namespace editor {
 
@@ -52,6 +53,7 @@ namespace editor {
     setup_shortcuts();
     setup_icons();
     setWindowTitle(tr("unnamed[*]"));
+    setAcceptDrops(true);
 
     connect(ui->close_action, &QAction::triggered,
         this, &Main_Window::close);
@@ -258,6 +260,31 @@ namespace editor {
   void Main_Window::enable_redo(bool b)
   {
     ui->redo_action->setEnabled(b);
+  }
+
+
+  void Main_Window::dragEnterEvent(QDragEnterEvent *e)
+  {
+    if (e->mimeData()->hasUrls())
+      e->acceptProposedAction();
+  }
+  /*
+  void Main_Window::dragLeaveEvent(QDragLeaveEvent *e)
+  {
+  }
+  */
+  void Main_Window::dragMoveEvent(QDragMoveEvent *e)
+  {
+    if (e->mimeData()->hasUrls())
+      e->acceptProposedAction();
+  }
+  void Main_Window::dropEvent(QDropEvent *e)
+  {
+    QList<QUrl> urls;
+    for (auto &url : e->mimeData()->urls())
+      if (url.isLocalFile())
+        urls.push_back(url);
+    emit open_urls_requested(urls);
   }
 
 }

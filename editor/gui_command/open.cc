@@ -64,5 +64,23 @@ namespace editor {
           Async_Open::open_ft(filename, ft); });
     }
 
+    void Open::set_modified(bool b)
+    {
+      modified_ = b;
+    }
+
+    void Open::open_urls(const QList<QUrl> &urls_P)
+    {
+      if (urls_P.empty())
+        return;
+      auto urls = urls_P;
+      if (!modified_) {
+        auto u = urls.takeFirst();
+        open(u.toLocalFile());
+      }
+      if (!urls.empty())
+        emit open_more_urls_requested(urls);
+    }
+
   } // gui_command
 } // editor

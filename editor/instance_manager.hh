@@ -22,6 +22,9 @@
 #define INSTANCE_MANAGER_HH
 
 #include <QObject>
+#include <QList>
+#include <QUrl>
+
 #include <deque>
 
 namespace editor {
@@ -38,6 +41,8 @@ namespace editor {
     public slots:
       void do_create_instance();
       void quit();
+
+      void open_urls_in_new_instances(const QList<QUrl> &urls);
 
     signals:
       void first_open_requested(const QString &filename);
