@@ -18,8 +18,8 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#ifndef DEEP_MODEL_INDEX_HH
-#define DEEP_MODEL_INDEX_HH
+#ifndef TREE_MODEL_DEEP_MODEL_INDEX_HH
+#define TREE_MODEL_DEEP_MODEL_INDEX_HH
 
 #include <deque>
 
