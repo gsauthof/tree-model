@@ -209,6 +209,7 @@ add_executable(ut
   test/tree_model/recorder.cc
   test/tree_model/util.cc
   test/tree_model/df_qmi_traverser.cc
+  test/tree_model/qmi_proxy.cc
   test/qt_model.cc
 
   test/editor/command/remove.cc
