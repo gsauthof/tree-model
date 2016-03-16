@@ -86,6 +86,17 @@ namespace tree_model {
       }
     }
 
+    QModelIndex find_child(const QModelIndex &parent, const QString &name)
+    {
+      if (!parent.isValid())
+        return QModelIndex();
+      for (QModelIndex i = parent.child(0, 0); i.isValid();
+          i = i.sibling(i.row()+1, 0))
+        if (i.data().toString() == name)
+          return i;
+      return QModelIndex();
+    }
+
   } // util
 
 } // tree_model

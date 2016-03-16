@@ -61,6 +61,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/command/save.hh
   editor/command/async_save.hh
   editor/command/remove.hh
+  editor/command/write_aci.hh
   editor/gui_command/select_open.hh
   editor/gui_command/open.hh
   editor/gui_command/save.hh
@@ -115,6 +116,7 @@ set(EDITOR_CC
   editor/command/save_ber.cc
   editor/command/async_save.cc
   editor/command/remove.cc
+  editor/command/write_aci.cc
   editor/gui_command/open.cc
   editor/gui_command/select_open.cc
   editor/gui_command/save.cc
@@ -214,6 +216,7 @@ add_executable(ut
   test/editor/command/remove.cc
   test/editor/command/open.cc
   test/editor/command/save.cc
+  test/editor/command/write_aci.cc
   test/editor/traverser/qmi_proxy.cc
   editor/command/remove.cc
   editor/command/open.cc
@@ -221,10 +224,12 @@ add_executable(ut
   editor/command/open_ber.cc
   editor/command/save.cc
   editor/command/save_ber.cc
+  editor/command/write_aci.cc
   editor/file_type.cc
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_remove.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_open.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_save.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_write_aci.cpp
 
   ${TREE_MODEL_CC}
   ${TREE_MOC}

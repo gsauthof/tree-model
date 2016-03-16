@@ -23,6 +23,7 @@
 
 class QAbstractItemModel;
 class QModelIndex;
+class QString;
 
 #include <stddef.h>
 #include <functional>
@@ -36,6 +37,8 @@ namespace tree_model {
 
     void breadth_first(const QModelIndex &root, unsigned n,
         std::function<void(const QModelIndex &)> f);
+
+    QModelIndex find_child(const QModelIndex &parent, const QString &name);
 
   }
 
