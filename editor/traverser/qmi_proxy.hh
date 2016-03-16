@@ -31,7 +31,9 @@
 #include <utility>
 #include <string>
 
-namespace tree_model {
+namespace editor {
+
+  namespace traverser {
 
   class QMI_Proxy {
     private:
@@ -40,7 +42,7 @@ namespace tree_model {
       QMI_Proxy(const xfsx::Name_Translator &translator)
         : translator_(translator) {}
 
-      xfsx::Tag_Int tag(const DF_QMI_Traverser &t) const
+      xfsx::Tag_Int tag(const tree_model::DF_QMI_Traverser &t) const
       {
         const QModelIndex &i = *t;
         auto s = i.data().toString().toStdString();
@@ -48,23 +50,23 @@ namespace tree_model {
             std::make_pair(s.data(), s.data() + s.size()));
         return std::get<2>(shape_klasse_tag);
       }
-      uint32_t height(const DF_QMI_Traverser &t) const
+      uint32_t height(const tree_model::DF_QMI_Traverser &t) const
       {
         return t.height();
       }
-      void string(const DF_QMI_Traverser &t, std::string &s) const
+      void string(const tree_model::DF_QMI_Traverser &t, std::string &s) const
       {
         const QModelIndex &i = *t;
         s = i.sibling(i.row(), 1).data().toString().toStdString();
       }
-      uint64_t uint64(const DF_QMI_Traverser &t) const
+      uint64_t uint64(const tree_model::DF_QMI_Traverser &t) const
       {
         const QModelIndex &i = *t;
         auto s = i.sibling(i.row(), 1).data().toString().toStdString();
         return xfsx::integer::range_to_uint64(std::make_pair(s.data(),
               s.data() + s.size()));
       }
-      uint32_t uint32(const DF_QMI_Traverser &t) const
+      uint32_t uint32(const tree_model::DF_QMI_Traverser &t) const
       {
         const QModelIndex &i = *t;
         auto s = i.sibling(i.row(), 1).data().toString().toStdString();
@@ -72,12 +74,14 @@ namespace tree_model {
               s.data() + s.size()));
       }
 
-      void advance(DF_QMI_Traverser &t) { t.advance(); }
-      void skip_children(DF_QMI_Traverser &t) { t.skip_children(); }
-      bool eot(const DF_QMI_Traverser &t) const { return t.eot(); }
+      void advance(tree_model::DF_QMI_Traverser &t) { t.advance(); }
+      void skip_children(tree_model::DF_QMI_Traverser &t) { t.skip_children(); }
+      bool eot(const tree_model::DF_QMI_Traverser &t) const { return t.eot(); }
   };
 
-} // tree_model
+  } // traverser
+
+} // editor
 
 #endif
 
