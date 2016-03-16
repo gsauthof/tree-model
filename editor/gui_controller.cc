@@ -55,16 +55,16 @@ namespace editor {
       display_subtree_(new gui_command::Display_Subtree(parent_widget_)),
       write_aci_      (new gui_command::Write_ACI(parent_widget_))
   {
-    connect_open_action();
-    connect_select_open_action();
-    connect_save_action();
-    connect_edit_action();
-    connect_add_action();
+    connect_open_command();
+    connect_select_open_command();
+    connect_save_command();
+    connect_edit_command();
+    connect_add_command();
     connect_clipboard();
-    connect_subtree_action();
-    connect_write_aci_action();
+    connect_subtree_command();
+    connect_write_aci_command();
   }
-  void Gui_Controller::connect_open_action()
+  void Gui_Controller::connect_open_command()
   {
     connect(open_, &gui_command::Open::item_tree_model_created,
             this, &Gui_Controller::item_tree_model_created);
@@ -81,7 +81,7 @@ namespace editor {
     connect(this, &Controller::model_changed,
             open_, &gui_command::Open::set_modified);
   }
-  void Gui_Controller::connect_select_open_action()
+  void Gui_Controller::connect_select_open_command()
   {
     connect(select_open_,
         &gui_command::Select_Open::item_tree_model_created,
@@ -96,7 +96,7 @@ namespace editor {
     connect(select_open_, &gui_command::Select_Open::msg_produced,
             this, &Gui_Controller::msg_produced);
   }
-  void Gui_Controller::connect_save_action()
+  void Gui_Controller::connect_save_command()
   {
     connect(save_, &gui_command::Save::msg_produced,
             this, &Gui_Controller::msg_produced);
@@ -111,7 +111,7 @@ namespace editor {
         save_, &gui_command::Save::set_file_type);
   }
 
-  void Gui_Controller::connect_edit_action()
+  void Gui_Controller::connect_edit_command()
   {
     connect(this, &Controller::item_tree_model_created,
         edit_, &gui_command::Edit::set_model);
@@ -121,7 +121,7 @@ namespace editor {
         recorder_, &tree_model::Recorder::commit);
   }
 
-  void Gui_Controller::connect_add_action()
+  void Gui_Controller::connect_add_command()
   {
     connect(this, &Controller::item_tree_model_created,
         add_, &gui_command::Add::set_model);
@@ -143,7 +143,7 @@ namespace editor {
         clipboard_paste_, &gui_command::Clipboard_Paste::set_model);
   }
 
-  void Gui_Controller::connect_subtree_action()
+  void Gui_Controller::connect_subtree_command()
   {
     connect(this, &Controller::item_tree_model_created,
         display_subtree_, &gui_command::Display_Subtree::set_model);
@@ -158,7 +158,7 @@ namespace editor {
         this, &Controller::redo);
   }
 
-  void Gui_Controller::connect_write_aci_action()
+  void Gui_Controller::connect_write_aci_command()
   {
     connect(this, &Controller::item_tree_model_created,
         write_aci_, &gui_command::Write_ACI::set_model);

@@ -89,14 +89,14 @@ namespace editor {
       gui_command::Display_Subtree      *display_subtree_      {nullptr};
       gui_command::Write_ACI            *write_aci_            {nullptr};
 
-      void connect_open_action();
-      void connect_select_open_action();
-      void connect_save_action();
-      void connect_edit_action();
-      void connect_add_action();
+      void connect_open_command();
+      void connect_select_open_command();
+      void connect_save_command();
+      void connect_edit_command();
+      void connect_add_command();
       void connect_clipboard();
-      void connect_subtree_action();
-      void connect_write_aci_action();
+      void connect_subtree_command();
+      void connect_write_aci_command();
 
   };
 
