@@ -22,6 +22,7 @@
 #define EDITOR_COMMAND_WRITE_ACI_HH
 
 #include <QObject>
+#include <QString>
 
 #include <editor/file_type.hh>
 
@@ -56,6 +57,7 @@ namespace editor {
       signals:
         void begin_transaction_requested(const QString &name);
         void commit_requested();
+        void msg_produced(const QString &msg);
 
       private:
         QAbstractItemModel *model_ {nullptr};
@@ -64,7 +66,7 @@ namespace editor {
       protected:
         unsigned delay_ {0};
         std::function<bool()> cancel_fn_;
-        unsigned epoche_ {10000};
+        unsigned epoche_ {500};
 
     };
 

@@ -68,7 +68,11 @@ namespace editor {
       if (!model_)
         return;
 
-
+      // XXX Optimizaton possibility:
+      // get the XML document (from the tree_model::Base) and
+      // traverser that
+      // advantage: temporary QVariant/string objects can be
+      // avoided
       tree_model::DF_QMI_Traverser t(model_->index(0, 0));
       xfsx::xml::Pretty_Writer_Arguments pargs(file_type_.asn_filenames());
       editor::traverser::QMI_Proxy p(pargs.name_translator);
@@ -104,6 +108,7 @@ namespace editor {
       model_->dropMimeData(&md, Qt::CopyAction, -1, -1, model_->index(0, 0));
 
       emit commit_requested();
+      emit msg_produced(tr("Computed and wrote Audit Control Info"));
     }
 
   } // namespace command

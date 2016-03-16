@@ -168,6 +168,8 @@ namespace editor {
         recorder_, SLOT(begin_transaction(const QString&)));
     connect(write_aci_, &gui_command::Write_ACI::commit_requested,
         recorder_, &tree_model::Recorder::commit);
+    connect(write_aci_, &gui_command::Write_ACI::msg_produced,
+            this, &Gui_Controller::msg_produced);
   }
 
   void Gui_Controller::open(const QString &filename)
