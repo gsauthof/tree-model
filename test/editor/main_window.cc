@@ -39,6 +39,8 @@
 #include <editor/tree_widget.hh>
 #include <editor/tree_view.hh>
 
+#include <tree_model/util.hh>
+
 using namespace std;
 
 TEST_CASE("copy action", "[editor][qt][gui][mainwindow][clipboard]")
@@ -807,3 +809,47 @@ TEST_CASE("mw state", "[editor][gui][mainwindow][state]")
   s.setValue("main_window/window_state", QByteArray());
 }
 
+
+TEST_CASE("mw write aci", "[editor][qt][gui][mainwindow][add]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+  c.open(in.c_str());
+  QTest::qWait(300);
+
+  w.show();
+  QTest::qWait(100);
+
+  auto a = c.item_tree_model();
+
+  {
+    auto root = a->index(0, 0);
+    auto aci = tree_model::util::find_child(root, "AuditControlInfo");
+    REQUIRE(aci.isValid());
+    auto total_charge = tree_model::util::find_child(aci, "TotalCharge");
+    REQUIRE(total_charge.isValid());
+
+    CHECK(total_charge.sibling(total_charge.row(), 1).data()
+        .toString().toStdString() == "2300");
+  }
+
+  // write aci shortcut
+  QTest::keyClick(&w, Qt::Key_F9,    Qt::NoModifier, 10);
+  QTest::qWait(100);
+
+  {
+    auto root = a->index(0, 0);
+    auto aci = tree_model::util::find_child(root, "AuditControlInfo");
+    REQUIRE(aci.isValid());
+    auto total_charge = tree_model::util::find_child(aci, "TotalCharge");
+    REQUIRE(total_charge.isValid());
+
+    CHECK(total_charge.sibling(total_charge.row(), 1).data()
+        .toString().toStdString() == "71200");
+  }
+
+}

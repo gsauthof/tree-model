@@ -25,6 +25,8 @@
 
 #include <editor/file_type.hh>
 
+#include <functional>
+
 namespace tree_model {
   class Base;
 }
@@ -42,7 +44,9 @@ namespace editor {
       public:
         using QObject::QObject;
 
-        void set_delay(unsigned delay);
+        void set_delay(unsigned d);
+        void set_cancel_function(std::function<bool()> cancel_fn);
+        void set_epoche(unsigned epoche);
       public slots:
         void set_model(QAbstractItemModel *model);
         void set_file_type(const File_Type &ft);
@@ -56,7 +60,11 @@ namespace editor {
       private:
         QAbstractItemModel *model_ {nullptr};
         File_Type file_type_;
-        unsigned delay_{0};
+
+      protected:
+        unsigned delay_ {0};
+        std::function<bool()> cancel_fn_;
+        unsigned epoche_ {10000};
 
     };
 

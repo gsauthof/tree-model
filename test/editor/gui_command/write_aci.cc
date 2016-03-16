@@ -22,32 +22,30 @@
 #include <test/test.hh>
 
 #include <editor/command/open_xml.hh>
-#include <editor/command/write_aci.hh>
-#include <editor/file_type.hh>
+#include <editor/gui_command/write_aci.hh>
 
-#include <tree_model/util.hh>
 
-#include <memory>
-#include <string>
-#include <deque>
-
+#include <QtTest/QtTest>
 #include <QSignalSpy>
 #include <QAbstractItemModel>
+#include <QMainWindow>
+#include <QProgressDialog>
+#include <QTimer>
 
 using namespace std;
 
-TEST_CASE("writeaci basic", "[editor][write-aci]")
+TEST_CASE("writeaci gui basic", "[editor][gui][write-aci]")
 {
+  QMainWindow w;
+  w.show();
+
   string in {test::path::in() + "/tap_3_12_small.xml"};
   auto r = editor::command::open_xml(in.c_str());
   unique_ptr<QAbstractItemModel> m(r.first);
 
-  editor::command::Write_ACI waci;
+  editor::gui_command::Write_ACI waci(&w);
+  QSignalSpy spy_cancel(&waci, SIGNAL(was_canceled()));
 
-  QSignalSpy spy_begin(&waci,
-      SIGNAL(begin_transaction_requested(const QString&)));
-  QSignalSpy spy_commit(&waci,
-      SIGNAL(commit_requested()));
 
   waci.set_model(m.get());
   editor::File_Type ft(editor::File_Type::XML);
@@ -55,23 +53,22 @@ TEST_CASE("writeaci basic", "[editor][write-aci]")
       + "/../../libgrammar/test/in/asn1/tap_3_12_strip.asn1"  };
   ft.set_asn_filenames(std::move(asn_filenames));
   waci.set_file_type(ft);
+  waci.set_epoche(2);
+  waci.set_delay(3500);
+  QTimer::singleShot(1500, [&w]{
+      auto v = w.findChild<QProgressDialog*>();
+      REQUIRE(v);
+      v->setValue(5);
+      });
+  QTimer::singleShot(3000, [&w]{
+      auto v = w.findChild<QProgressDialog*>();
+      REQUIRE(v);
+      v->cancel();
+      //QTest::keyClick(v, Qt::Key_Escape, Qt::NoModifier, 10);
+      });
 
   waci.write();
 
-  CHECK(spy_begin.size() == 1);
-  CHECK(spy_commit.size() == 1);
-
-  auto root = m->index(0, 0);
-  auto aci = tree_model::util::find_child(root, "AuditControlInfo");
-  REQUIRE(aci.isValid());
-
-  CHECK(aci.row() + 1 == m->rowCount(root));
-
-  auto total_charge = tree_model::util::find_child(aci, "TotalCharge");
-
-  REQUIRE(total_charge.isValid());
-
-  CHECK(total_charge.sibling(total_charge.row(), 1).data()
-      .toString().toStdString() == "71200");
+  CHECK(spy_cancel.size() == 1);
 
 }

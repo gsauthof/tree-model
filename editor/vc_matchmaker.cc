@@ -50,6 +50,8 @@ namespace editor {
         &c, &Controller::redo);
     w.connect(&w, &Main_Window::display_subtree_triggered,
         &c, &Gui_Controller::display_subtree);
+    w.connect(&w, &Main_Window::write_aci_triggered,
+        &c, &Gui_Controller::write_aci);
   }
 
   static void connect_enable_signals(

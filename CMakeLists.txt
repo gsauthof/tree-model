@@ -71,6 +71,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/gui_command/clipboard_cut.hh
   editor/gui_command/clipboard_paste.hh
   editor/gui_command/display_subtree.hh
+  editor/gui_command/write_aci.hh
   editor/controller.hh
   editor/gui_controller.hh
   editor/arguments.hh
@@ -126,6 +127,7 @@ set(EDITOR_CC
   editor/gui_command/clipboard_cut.cc
   editor/gui_command/clipboard_paste.cc
   editor/gui_command/display_subtree.cc
+  editor/gui_command/write_aci.cc
   editor/arguments.cc
   editor/preview_file_dialog.cc
   editor/preview.cc
@@ -319,6 +321,7 @@ add_executable(ut_gui
   test/editor/gui_command/clipboard_cut.cc
   test/editor/gui_command/clipboard_paste.cc
   test/editor/gui_command/display_subtree.cc
+  test/editor/gui_command/write_aci.cc
   test/editor/recent_menu.cc
   test/editor/main_window.cc
   test/editor/slider_bar.cc

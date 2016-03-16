@@ -33,6 +33,7 @@
 #include <editor/gui_command/clipboard_cut.hh>
 #include <editor/gui_command/clipboard_paste.hh>
 #include <editor/gui_command/display_subtree.hh>
+#include <editor/gui_command/write_aci.hh>
 #include <editor/subtree_window.hh>
 #include <tree_model/base.hh>
 #include <tree_model/recorder.hh>
@@ -51,15 +52,17 @@ namespace editor {
       clipboard_copy_ (new gui_command::Clipboard_Copy(this)),
       clipboard_cut_  (new gui_command::Clipboard_Cut(this)),
       clipboard_paste_(new gui_command::Clipboard_Paste(this)),
-      display_subtree_(new gui_command::Display_Subtree(parent_widget_))
+      display_subtree_(new gui_command::Display_Subtree(parent_widget_)),
+      write_aci_      (new gui_command::Write_ACI(parent_widget_))
   {
     connect_open_action();
     connect_select_open_action();
     connect_save_action();
     connect_edit_action();
     connect_add_action();
-    connect_cliboard();
+    connect_clipboard();
     connect_subtree_action();
+    connect_write_aci_action();
   }
   void Gui_Controller::connect_open_action()
   {
@@ -130,7 +133,7 @@ namespace editor {
         recorder_, &tree_model::Recorder::commit);
   }
 
-  void Gui_Controller::connect_cliboard()
+  void Gui_Controller::connect_clipboard()
   {
     connect(this, &Controller::item_tree_model_created,
         clipboard_copy_, &gui_command::Clipboard_Copy::set_model);
@@ -153,6 +156,18 @@ namespace editor {
         this, &Controller::undo);
     connect(display_subtree_, &gui_command::Display_Subtree::redo_requested,
         this, &Controller::redo);
+  }
+
+  void Gui_Controller::connect_write_aci_action()
+  {
+    connect(this, &Controller::item_tree_model_created,
+        write_aci_, &gui_command::Write_ACI::set_model);
+    connect(this, &Controller::file_type_opened,
+        write_aci_, &gui_command::Write_ACI::set_file_type);
+    connect(write_aci_, SIGNAL(begin_transaction_requested(const QString&)),
+        recorder_, SLOT(begin_transaction(const QString&)));
+    connect(write_aci_, &gui_command::Write_ACI::commit_requested,
+        recorder_, &tree_model::Recorder::commit);
   }
 
   void Gui_Controller::open(const QString &filename)
@@ -211,6 +226,10 @@ namespace editor {
   void Gui_Controller::edit(const QModelIndex &i)
   {
     edit_->edit(i);
+  }
+  void Gui_Controller::write_aci()
+  {
+    write_aci_->write();
   }
 
 }

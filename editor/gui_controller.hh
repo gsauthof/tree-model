@@ -44,6 +44,7 @@ namespace editor {
     class Clipboard_Cut;
     class Clipboard_Paste;
     class Display_Subtree;
+    class Write_ACI;
   }
 
   class Gui_Controller : public Controller {
@@ -67,6 +68,7 @@ namespace editor {
       void add_child(const QModelIndex &i);
       void add_sibling(const QModelIndex &i);
       void edit(const QModelIndex &i);
+      void write_aci();
 
     signals:
       void selection_model_changed(const QItemSelectionModel *smodel);
@@ -85,14 +87,16 @@ namespace editor {
       gui_command::Clipboard_Cut        *clipboard_cut_        {nullptr};
       gui_command::Clipboard_Paste      *clipboard_paste_      {nullptr};
       gui_command::Display_Subtree      *display_subtree_      {nullptr};
+      gui_command::Write_ACI            *write_aci_            {nullptr};
 
       void connect_open_action();
       void connect_select_open_action();
       void connect_save_action();
       void connect_edit_action();
       void connect_add_action();
-      void connect_cliboard();
+      void connect_clipboard();
       void connect_subtree_action();
+      void connect_write_aci_action();
 
   };
 
