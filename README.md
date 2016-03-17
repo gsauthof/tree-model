@@ -173,7 +173,7 @@ and
 
 and the `Tree_View` constructor for details what is necessary to
 implement and customize drag-and-drop (supporting copy and move
-actions) for hierachical models.
+actions) for hierarchical models.
 
 ### UI
 
@@ -183,15 +183,131 @@ graphical editor like the UI component of Qt-Creator is a help.
 Challenges still occur, e.g. if you want to use namespaces. It is
 possible, but the support in Qt Creator is limited (as of 2015).
 
+### File Open Preview
+
+Everybody likes file previews in file open dialogs.
+Unfortunately, the Qt File Dialog doesn't provide an API for
+adding preview widgets.  Thus, one has two alternatives: either
+implement a file open dialog with preview from scratch or modify
+the existing one.
+
+The class `editor::Preview_Dialog` is an example how the existing
+`QFileDialog` can be extended to include a preview widget. For
+that, it accesses the internals of the dialog, i.e. it gets and
+modifies the geometry manager of the file dialog.
+
+It also deals with one pitfall with that approach: depending
+on the platform, Qt uses the native file dialog by default. Thus,
+the extended dialog changes that default such that a modifiable
+Qt file dialog is used.
+
+### Multiple Windows
+
+The editor supports multiple windows, i.e. for editing multiple
+files side by side or opening subtrees in extra windows.
+
+The 'challenges' arise from having to manage the different open
+files. The editor thus implements a `editor::Instance_Manager`
+that creates and 'manages' instances of MVC tuples. For example,
+it quits the application in an orderly fashion - i.e. when
+multiple windows have unsaved changes the user is given the
+opportunity to save them.
+
+### Blocking UI
+
+The human eye is very good in noticing visual glitches - and a UI
+that blocks - even only for short amounts of time - is one of
+them. Blocking the UI results from functions running long enough
+in the main thread (i.e. the GUI thread) such that UI relevant
+events queue up to wait to be processed.
+
+There are basically two approaches to deal with that:
+
+1. Starting a worker thread for the long running function such
+   that the GUI thread can execute its event loop without
+   hindrance. When the worker thread is finished the GUI is
+   notified via a thread safe (i.e. queued) connection.
+   The open and save commands (cf.
+   `editor/command/async_{open,save}*` and
+   `editor/gui_command/{open,save}*`) are examples for that.
+2. Calling a process-events function from time to time in the
+   long running function thus such the work is interleaved
+   with GUI event processing.
+   See also `editor::gui_command::Write_ACI` for an example.
+
+Multi threading may introduce the usual complications. For
+example, the long running function may work on the model that is
+also used by the view and is not thread safe, in general. Or, a
+cancellation of the long running function, triggered by a user
+action, must be delivered to the other thread.
+
+Besides that, the `QThread` class can be used in two modes:
+
+1. Extending it and overwriting its `run` method (which is executed
+   in the new thread). The thread doesn't have an event loop then.
+2. Using the default `QThread::run()` method that starts an event
+   loop (it calls `exec()` and move the worker object with the
+   long running function to that thread.
+
+QObjects have the concept of thread affinity. By default an
+object is affine to the thread where it was created. But it
+can be moved to another thread. Unless it has a parent. Also,
+the move-to operation must be executed by the current affine
+thread.
+
+The thread affinity implicates a few things:
+
+1. The object must be destroyed in the thread where it is affine
+   to. This can be easily achieved via connecting `deleteLater`.
+2. Signals that are emitted in a thread that is not affine to the
+   receiving object are queued by default (cf. queued
+   connection). They are thus thread safe.
+3. The `QThread` object itself is affine to the creating thread.
+   Thus, any connection where it is involved in are direct
+   connections. That means that `QThread` slots are also executed
+   in the creating thread.
+
+Some pitfalls with `QThread`:
+
+- a `QThread` must not be deleted when its event loop
+  is still running because the destructor doesn't
+  gracefully shutdown the event loop. It is only save to delete a
+  `QThread` that is `finished`. Thus, in most cases, it is not
+  advisable to create a `QThread` with the parent attribute set.
+- same goes for a `QThread` with a custom run method (i.e.
+  without event loop) - it is finished when it has returned from
+  the `run()` method
+- Objects directly created in the overwritten `run()` method must
+  not use `this` as parent because then the parent has a
+  different thread affinity than the child - which is not
+  allowed. (The `QThread` object itself is affine to the creating
+  thread where the objects created in `run()` are affine to the
+  newly created thread, i.e. the thread that is 'represented' and
+  wrapped by the `QThread` object.
+- Objects created in the (overwritten) constructor of a `QThread`
+  (extended) class are affine to the creating thread.
+
+The editor only moves objects to `QThread` objects. It doesn't
+extend `QThread`.
+
+Interleaving the work function with processing GUI events (the
+approach) is an alternative to multi-threading but adds some
+complexities on its own. For one, existing worker functions
+usually don't provide callbacks where control can be yielded to
+event processing. Also, the process-events function shouldn't be
+called to often (too much overhead) - but if it is not called
+often enough than the UI is blocking again.
+
+
 ## Architecture
 
 Qt provides some classes to implement data models and views. This
 is similar to the [MVC][mvc] architecture - but without the
-seperation of the controller. Thus, the Qt documentation
+separation of the controller. Thus, the Qt documentation
 consequently calls its variation just [model/view][mv]
 architecture and argues that combining the view and the
 controller would simplify the framework. This might be the case -
-but it also doesn't help with simiplifying the structure of the
+but it also doesn't help with simplifying the structure of the
 application.
 
 Thus, the challenge in writing a graphical Qt application is to
