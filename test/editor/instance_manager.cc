@@ -50,8 +50,14 @@ TEST_CASE("instance manager basic", "[editor][qt][gui][instance][manager]")
   QTest::qWait(300);
 
   w = QApplication::focusWindow();
-  CHECK(!w);
 
+  bool is_closed = w == nullptr;
+  // with Xvfb and xfwm4 the window is still focused, where
+  // with Xnest and xfmw4 most of the time it is not
+  if (w)
+    is_closed = !w->isVisible();
+
+  CHECK(is_closed);
 }
 
 TEST_CASE("instance manager two", "[editor][qt][gui][instance][manager]")
