@@ -162,6 +162,8 @@ namespace editor {
   {
     connect(this, &Controller::item_tree_model_created,
         write_aci_, &gui_command::Write_ACI::set_model);
+    connect(this, &Controller::tree_model_created,
+        write_aci_, &gui_command::Write_ACI::set_tree_model);
     connect(this, &Controller::file_type_opened,
         write_aci_, &gui_command::Write_ACI::set_file_type);
     connect(write_aci_, SIGNAL(begin_transaction_requested(const QString&)),

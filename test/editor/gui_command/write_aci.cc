@@ -48,6 +48,7 @@ TEST_CASE("writeaci gui basic", "[editor][gui][write-aci]")
 
 
   waci.set_model(m.get());
+  waci.set_tree_model(r.second);
   editor::File_Type ft(editor::File_Type::XML);
   deque<string> asn_filenames = { test::path::in()
       + "/../../libgrammar/test/in/asn1/tap_3_12_strip.asn1"  };

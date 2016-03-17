@@ -45,6 +45,17 @@ namespace editor {
     void Write_ACI::write()
     {
       unsigned cnt = 0;
+      // We use a QProgressDialog here -  and not a worker thread -
+      // because the command traverses and changes the model.
+      // The model is also used by the view and is not thread safe.
+      // Even only doing the traverse part in a worker thread would not
+      // be safe because read-only model access may also change the
+      // internal cache data structures of the model.
+      // Alternative:
+      // - directly traverse over the XML tree in a worker thread
+      // - while doing so put the model into read-only mode
+      // - transfer the newly computed ACI info to the GUI-thread
+      // - do the rewrite of the ACI in the GUI-thread
       QProgressDialog pd(tr("Computing Audit Control Info..."), tr("&Cancel"),
           0, 100, parent_widget_);
       // Application modality is the default with QProgressDialog

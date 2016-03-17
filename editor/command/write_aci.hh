@@ -50,6 +50,7 @@ namespace editor {
         void set_epoche(unsigned epoche);
       public slots:
         void set_model(QAbstractItemModel *model);
+        void set_tree_model(const tree_model::Base *tree_model);
         void set_file_type(const File_Type &ft);
 
         void write();
@@ -61,6 +62,7 @@ namespace editor {
 
       private:
         QAbstractItemModel *model_ {nullptr};
+        const tree_model::Base *tree_model_ {nullptr};
         File_Type file_type_;
 
       protected:

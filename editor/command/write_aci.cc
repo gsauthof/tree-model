@@ -34,7 +34,12 @@
 #include <editor/traverser/qmi_proxy.hh>
 #include <editor/traverser/check_cancel.hh>
 
+#include <xxxml/util.hh>
+#include <xfsx/traverser/lxml.hh>
+
 #include <tree_model/util.hh>
+#include <tree_model/item_adaptor.hh>
+#include <tree_model/xml.hh>
 
 using namespace std;
 
@@ -58,6 +63,10 @@ namespace editor {
     {
       model_ = model;
     }
+    void Write_ACI::set_tree_model(const tree_model::Base *tree_model)
+    {
+      tree_model_ = tree_model;
+    }
     void Write_ACI::set_file_type(const File_Type &ft)
     {
       file_type_ = ft;
@@ -67,15 +76,25 @@ namespace editor {
     {
       if (!model_)
         return;
+      if (!tree_model_)
+        return;
 
-      // XXX Optimizaton possibility:
+      xfsx::xml::Pretty_Writer_Arguments pargs(file_type_.asn_filenames());
+
+#if 0
+      tree_model::DF_QMI_Traverser t(model_->index(0, 0));
+      editor::traverser::QMI_Proxy p(pargs.name_translator);
+#else
+      // Optimizaton:
       // get the XML document (from the tree_model::Base) and
-      // traverser that
+      // traverse that
       // advantage: temporary QVariant/string objects can be
       // avoided
-      tree_model::DF_QMI_Traverser t(model_->index(0, 0));
-      xfsx::xml::Pretty_Writer_Arguments pargs(file_type_.asn_filenames());
-      editor::traverser::QMI_Proxy p(pargs.name_translator);
+      auto tree_model = dynamic_cast<const tree_model::XML*>(tree_model_);
+      const xxxml::doc::Ptr &doc = tree_model->doc();
+      xxxml::util::DF_Traverser t(doc);
+      xfsx::traverser::LXML_Proxy p(pargs.name_translator);
+#endif
 
       xfsx::tap::traverser::Audit_Control_Info aci;
       editor::traverser::Check_Cancel check_cancel;

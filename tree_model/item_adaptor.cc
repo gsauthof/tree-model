@@ -578,6 +578,11 @@ namespace tree_model {
     return model_->can_drop_mime_data(data, action, p.first, p.second);
   }
 
+  const Base *Item_Adaptor::model() const
+  {
+    return model_;
+  }
+
 }
 
 

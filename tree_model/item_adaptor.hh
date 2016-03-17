@@ -77,6 +77,7 @@ namespace tree_model {
       Qt::DropActions supportedDropActions() const override;
       bool canDropMimeData(const QMimeData *data, Qt::DropAction action,
           int row, int column, const QModelIndex &parent) const override;
+      const Base *model() const;
 
     signals:
       void dataAboutToBeChanged(const QModelIndex &topLeft,
