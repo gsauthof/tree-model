@@ -1,0 +1,19 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - ./ci/travis/before_install.sh
+
+install:
+  - ./ci/travis/install.sh
+
+before_script:
+  - ./ci/travis/before_script.sh
+
+script:
+  - ./ci/travis/script.sh
+
+after_script:
+  - ./ci/travis/after_script.sh
