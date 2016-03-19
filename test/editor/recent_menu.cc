@@ -130,7 +130,11 @@ TEST_CASE("recent persistence", "[editor][qt][recent]")
   editor::Recent_Menu m;
   m.set_size(3);
 
-  CHECK(m.actions().size() == 3);
+  // if this assertion fails then QSettings had trouble
+  // to make the settings persistent - e.g. to write them into
+  // the user's config directory, e.g. because the environment
+  // variable HOME is not set
+  REQUIRE(m.actions().size() == 3);
 
   auto l = m.actions();
 
