@@ -9,7 +9,6 @@ language: python
 python: 3.5
 
 before_install:
-  - sudo apt-get install -qq bash
   - ./ci/travis/before_install.sh
 
 install:
