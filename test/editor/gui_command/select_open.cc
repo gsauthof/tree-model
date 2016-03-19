@@ -52,7 +52,7 @@ namespace test {
         ::editor::gui_command::Select_Open so(&w);
         QSignalSpy spy_finished(&so, SIGNAL(finished()));
         QSignalSpy spy_opened(&so, SIGNAL(file_opened(QString)));
-        QTimer::singleShot(200, [&w]{
+        QTimer::singleShot(400, [&w]{
             QTest::keyClick(w.focusWidget(), Qt::Key_Escape, Qt::NoModifier, 100);
             });
         so.open();
@@ -70,7 +70,7 @@ namespace test {
         QSignalSpy spy_model(&so,
             SIGNAL(item_tree_model_created(QAbstractItemModel*)));
         QSignalSpy spy_opened(&so, SIGNAL(file_opened(QString)));
-        QTimer::singleShot(200, [&w]{
+        QTimer::singleShot(400, [&w]{
             QTest::keyClicks(w.focusWidget(), "small.xml", Qt::NoModifier, 100);
             QTest::keyClick(w.focusWidget(), Qt::Key_Return, Qt::NoModifier, 500);
             });
