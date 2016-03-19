@@ -3,7 +3,13 @@ sudo: required
 services:
   - docker
 
+# default is ruby, we set python in case we need to do some
+# advanced scripting in our setup of the C++ tests
+language: python
+python: 3.5
+
 before_install:
+  - sudo apt-get install -qq bash
   - ./ci/travis/before_install.sh
 
 install:
