@@ -15,6 +15,7 @@ how the different APIs are intended to be used.
 
 2016, Georg Sauthoff <mail@georg.so>
 
+[![Build Status](https://travis-ci.org/gsauthof/tree-model.svg?branch=master)](https://travis-ci.org/gsauthof/tree-model)
 
 ## Challenges
 
