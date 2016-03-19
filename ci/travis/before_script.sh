@@ -2,7 +2,7 @@
 
 set -eux
 
-build=/var/tmp/build
+build="$HOME"/build/tree-model
 src="$PWD"/..
 
 docker stop cxx-devel

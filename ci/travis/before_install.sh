@@ -2,10 +2,15 @@
 
 set -eux
 
-build=/var/tmp/build
+build="$HOME"/build/tree-model
 src="$PWD"/..
 
 mkdir -p $build
+chmod 770 "$HOME"/build
+# The compile-user inside the docker image has uid 1000, where ubuntu,
+# by default uses 1001 - thus, we have to make it world-readable.
+# Because of that it is put into a 770 parent
+chmod 777 "$build"
 
 # Travis' Ubuntu probably doesn't come with SELinux enabled, but
 # shouldn't hurt
