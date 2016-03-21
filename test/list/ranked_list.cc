@@ -370,7 +370,8 @@ static void check_expected_cost(const list::ranked::List<int> &l)
   for (int i = 0; i < n; ++i)
     l.node_prime(i, counter);
   CHECK(double(counter.n)/n < 2 * log2(n));
-  CHECK(fabs(double(counter.n)/n - 30) < 3.15);
+  //CHECK(fabs(double(counter.n)/n - 30) < 3.15);
+  CHECK(fabs(double(counter.n)/n - 30) < 3.31);
 }
 
 TEST_CASE("expected cost", "[list][ranked]" )
