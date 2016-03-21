@@ -51,6 +51,8 @@ int main(int argc, char **argv)
 
   editor::Arguments args(argc, argv);
 
+  editor::setup_asn1_path();
+
   editor::Instance_Manager im;
 
   args.connect(&args, &editor::Arguments::open_triggered,

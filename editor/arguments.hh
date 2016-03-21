@@ -27,24 +27,26 @@
 
 namespace editor {
 
-class Arguments : public QObject
-{
+  class Arguments : public QObject
+  {
     Q_OBJECT
-  public:
-    explicit Arguments(QObject *parent = nullptr);
-    Arguments(int argc, char **argv, QObject *parent = nullptr);
+    public:
+      explicit Arguments(QObject *parent = nullptr);
+      Arguments(int argc, char **argv, QObject *parent = nullptr);
 
-    std::deque<QString> positionals;
-    QString input_filename;
-  signals:
-    void open_triggered(const QString &filename);
+      std::deque<QString> positionals;
+      QString input_filename;
+    signals:
+      void open_triggered(const QString &filename);
 
-  public slots:
-    void parse();
-  private:
-    int argc_ {0};
-    char **argv_ {nullptr};
-};
+    public slots:
+        void parse();
+    private:
+      int argc_ {0};
+      char **argv_ {nullptr};
+  };
+
+  void setup_asn1_path();
 
 } // namespace editor
 
