@@ -23,8 +23,7 @@ r=0
 ./ut && true
 : $((r+=$?))
 
-# current work around
-export ASN1_PATH="$src_dir"/libgrammar/test/in/asn1
+export ASN1_PATH="$src_dir"/libgrammar/test/in/asn1:"$src_dir"/libxfsx/config
 
 export DISPLAY=:1
 # there are some false positives

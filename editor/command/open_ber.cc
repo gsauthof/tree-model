@@ -42,8 +42,10 @@ namespace editor {
     {
       ixxx::util::Mapped_File in(filename.toStdString());
       deque<string> asn_filenames;
-      // XXX
-      asn_filenames.push_back(ixxx::ansi::getenv("ASN1_PATH")
+      // XXX replace with auto-detection
+      string first (ixxx::ansi::getenv("ASN1_PATH"));
+      first = first.substr(0, first.find(":"));
+      asn_filenames.push_back(first
           + string("/tap_3_12.asn1"));
       xfsx::xml::Pretty_Writer_Arguments pretty_args(asn_filenames);
       pretty_args.dump_indefinite = true;

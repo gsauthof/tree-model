@@ -18,30 +18,18 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#include <QWidget>
 
-#include <functional>
+#ifndef EDITOR_COMMAND_PREVIEW_HH
+#define EDITOR_COMMAND_PREVIEW_HH
 
-class QTextEdit;
+#include <QString>
+
 namespace editor {
+  namespace command {
 
-  class Preview : public QWidget {
-    Q_OBJECT
-    public:
-      Preview(QWidget *parent = nullptr);
+    QString preview(const QString &filename);
 
-      void set_delegate(std::function<QString(const QString &filename)> fn);
+  } // command
+} // editor
 
-      // only for unittesting
-      const QTextEdit &text_edit() const;
-
-    public slots:
-      void show_preview(const QString &filename);
-
-    private:
-      QTextEdit *text_edit_ {nullptr};
-
-      std::function<QString(const QString &filename)> delegate_;
-  };
-
-};
+#endif // EDITOR_COMMAND_PREVIEW_HH

@@ -24,6 +24,15 @@
 #include <QTextEdit>
 #include <QFile>
 
+#include <boost/filesystem.hpp>
+
+static bool looks_like_text(const QByteArray &array)
+{
+  return std::all_of(array.begin(), array.end(), [](auto b){
+      return (b > 31 && b != 127) || b == '\t' || b == '\n' || b == '\r';
+      });
+}
+
 namespace editor {
 
   Preview::Preview(QWidget *parent)
@@ -48,13 +57,39 @@ namespace editor {
     setLayout(layout);
   }
 
+  const QTextEdit &Preview::text_edit() const
+  {
+    return *text_edit_;
+  }
+
+  void Preview::set_delegate(std::function<QString(const QString &filename)> fn)
+  {
+    delegate_ = fn;
+  }
+
   void Preview::show_preview(const QString &filename)
   {
+    if (!boost::filesystem::is_regular_file(filename.toStdString())) {
+      text_edit_->clear();
+      return;
+    }
+
+    if (delegate_) {
+      auto text = delegate_(filename);
+      if (!text.isEmpty()) {
+        text_edit_->setPlainText(std::move(text));
+        return;
+      }
+    }
+
     text_edit_->setEnabled(true);
     QFile file(filename);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
       auto array = file.read(4 * 1024);
-      text_edit_->setPlainText(QString(array));
+      if (looks_like_text(array))
+        text_edit_->setPlainText(QString(array));
+      else
+        text_edit_->clear();
       //text_edit_->setHtml();
     } else {
       text_edit_->clear();

@@ -118,6 +118,7 @@ set(EDITOR_CC
   editor/command/async_save.cc
   editor/command/remove.cc
   editor/command/write_aci.cc
+  editor/command/preview.cc
   editor/gui_command/open.cc
   editor/gui_command/select_open.cc
   editor/gui_command/save.cc
@@ -219,6 +220,7 @@ add_executable(ut
   test/editor/command/open.cc
   test/editor/command/save.cc
   test/editor/command/write_aci.cc
+  test/editor/command/preview.cc
   test/editor/traverser/qmi_proxy.cc
   editor/command/remove.cc
   editor/command/open.cc
@@ -227,6 +229,7 @@ add_executable(ut
   editor/command/save.cc
   editor/command/save_ber.cc
   editor/command/write_aci.cc
+  editor/command/preview.cc
   editor/file_type.cc
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_remove.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_open.cpp
@@ -328,6 +331,7 @@ add_executable(ut_gui
   test/editor/instance.cc
   test/editor/instance_manager.cc
   test/editor/tree_view.cc
+  test/editor/preview.cc
 
   ${TREE_MODEL_CC}
   ${EDITOR_CC}

@@ -35,6 +35,8 @@
 #include <tree_model/base.hh>
 #include <editor/file_type.hh>
 
+#include <editor/command/preview.hh>
+
 #include <map>
 
 using namespace std;
@@ -73,7 +75,10 @@ namespace editor {
       //      QSizePolicy::Expanding));
       // Otherwise, it is not optimally displayed in the dialog.
 
-      Preview_File_Dialog d(new Preview,
+      // assuming that it is reparented by addWidget()
+      auto preview = new Preview;
+      preview->set_delegate(editor::command::preview);
+      Preview_File_Dialog d(preview,
           parent_widget_, tr("Select file to open"));
       d.setFileMode(QFileDialog::ExistingFile);
       d.setNameFilters(map_to_list(filter_to_type_map_));

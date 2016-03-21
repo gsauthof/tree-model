@@ -18,30 +18,18 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#include <QWidget>
 
-#include <functional>
+#include <catch.hpp>
+#include <test/test.hh>
 
-class QTextEdit;
-namespace editor {
+#include <editor/command/preview.hh>
 
-  class Preview : public QWidget {
-    Q_OBJECT
-    public:
-      Preview(QWidget *parent = nullptr);
+TEST_CASE("preview command", "[editor][preview]")
+{
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
 
-      void set_delegate(std::function<QString(const QString &filename)> fn);
+  auto s = editor::command::preview(in.c_str());
 
-      // only for unittesting
-      const QTextEdit &text_edit() const;
-
-    public slots:
-      void show_preview(const QString &filename);
-
-    private:
-      QTextEdit *text_edit_ {nullptr};
-
-      std::function<QString(const QString &filename)> delegate_;
-  };
-
-};
+  CHECK(s.startsWith("<TransferBatch>"));
+}
