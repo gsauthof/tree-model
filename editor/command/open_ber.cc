@@ -29,6 +29,7 @@
 
 #include <xfsx/ber2lxml.hh>
 #include <xfsx/xml_writer_arguments.hh>
+#include <xfsx/detector.hh>
 
 #include <deque>
 
@@ -40,16 +41,18 @@ namespace editor {
     std::tuple<QAbstractItemModel *, tree_model::Base*, std::deque<string> >
       open_ber(const QString &filename)
     {
-      ixxx::util::Mapped_File in(filename.toStdString());
-      deque<string> asn_filenames;
-      // XXX replace with auto-detection
-      string first (ixxx::ansi::getenv("ASN1_PATH"));
-      first = first.substr(0, first.find(":"));
-      asn_filenames.push_back(first
-          + string("/tap_3_12.asn1"));
+      string in_filename(filename.toStdString());
+      // empty values -> defaults are used
+      string asn_config_filename;
+      deque<string> asn_search_path;
+
+      auto r = xfsx::detector::detect_ber(in_filename,
+          asn_config_filename, asn_search_path);
+      deque<string> asn_filenames(r.asn_filenames);
       xfsx::xml::Pretty_Writer_Arguments pretty_args(asn_filenames);
       pretty_args.dump_indefinite = true;
 
+      ixxx::util::Mapped_File in(in_filename);
       xxxml::doc::Ptr doc = xfsx::xml::l2::generate_tree(in.begin(), in.end(),
           pretty_args);
 
