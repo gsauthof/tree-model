@@ -20,10 +20,10 @@ export TEST_IN="$src_dir"/test/in
 
 r=0
 
+export ASN1_PATH="$src_dir"/libgrammar/test/in/asn1:"$src_dir"/libxfsx/config
+
 ./ut && true
 : $((r+=$?))
-
-export ASN1_PATH="$src_dir"/libgrammar/test/in/asn1:"$src_dir"/libxfsx/config
 
 export DISPLAY=:1
 # there are some false positives
