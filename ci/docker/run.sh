@@ -35,6 +35,11 @@ export DESKTOP_SESSION=gnome
 
 timeout 5m ./ut_select_open && true
 : $((r+=$?))
+
+# add `--durations yes` to ut_gui command when the timeout is
+# increased to > 10 minutes
+# (because Travis terminates jobs that don't produce any output
+# within 10 minutes)
 timeout 5m ./ut_gui && true
 : $((r+=$?))
 
