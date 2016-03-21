@@ -69,6 +69,9 @@ namespace editor {
 
   void Preview::show_preview(const QString &filename)
   {
+    text_edit_->clear();
+    text_edit_->setEnabled(false);
+
     if (!boost::filesystem::is_regular_file(filename.toStdString())) {
       text_edit_->clear();
       return;
@@ -77,22 +80,20 @@ namespace editor {
     if (delegate_) {
       auto text = delegate_(filename);
       if (!text.isEmpty()) {
+        text_edit_->setEnabled(true);
         text_edit_->setPlainText(std::move(text));
+        //text_edit_->setHtml();
         return;
       }
     }
 
-    text_edit_->setEnabled(true);
     QFile file(filename);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
       auto array = file.read(4 * 1024);
-      if (looks_like_text(array))
+      if (looks_like_text(array)) {
+        text_edit_->setEnabled(true);
         text_edit_->setPlainText(QString(array));
-      else
-        text_edit_->clear();
-      //text_edit_->setHtml();
-    } else {
-      text_edit_->clear();
+      }
     }
   }
 
