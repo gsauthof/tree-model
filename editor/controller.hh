@@ -29,6 +29,9 @@ namespace tree_model {
   class Base;
   class Recorder;
 }
+namespace grammar {
+  class Grammar;
+}
 namespace editor {
 
   class File_Type;
@@ -37,6 +40,7 @@ namespace editor {
     class Async_Open;
     class Async_Save;
     class Remove;
+    class Read_Grammar;
   }
 
   class Controller : public QObject {
@@ -59,19 +63,21 @@ namespace editor {
       void set_tree_model(tree_model::Base *model);
 
     private:
-      command::New         *new_             {nullptr};
-      command::Async_Open  *open_            {nullptr};
-      command::Async_Save  *save_            {nullptr};
-      command::Remove      *remove_          {nullptr};
+      command::New          *new_             {nullptr};
+      command::Async_Open   *open_            {nullptr};
+      command::Async_Save   *save_            {nullptr};
+      command::Remove       *remove_          {nullptr};
+      command::Read_Grammar *read_grammar_    {nullptr};
 
-      QAbstractItemModel   *item_tree_model_ {nullptr};
-      tree_model::Base     *tree_model_      {nullptr};
+      QAbstractItemModel    *item_tree_model_ {nullptr};
+      tree_model::Base      *tree_model_      {nullptr};
     protected:
-      tree_model::Recorder *recorder_        {nullptr};
+      tree_model::Recorder  *recorder_        {nullptr};
 
     signals:
       void file_opened(const QString &filename);
       void file_type_opened(const File_Type &file_type);
+      void grammar_read(const grammar::Grammar *grammar);
       void saved(const QString &filename);
       void item_tree_model_created(QAbstractItemModel *model);
       void tree_model_created(tree_model::Base *model);

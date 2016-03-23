@@ -26,19 +26,22 @@
 #include <editor/command/async_open.hh>
 #include <editor/command/async_save.hh>
 #include <editor/command/remove.hh>
+#include <editor/command/read_grammar.hh>
 #include <tree_model/base.hh>
 #include <tree_model/recorder.hh>
+#include <grammar/grammar.hh>
 
 namespace editor {
 
   Controller::Controller(QObject *parent)
     :
       QObject(parent),
-      new_     (new command::New(this)),
-      open_    (new command::Async_Open(this)),
-      save_    (new command::Async_Save(this)),
-      remove_  (new command::Remove(this)),
-      recorder_(new tree_model::Recorder(this))
+      new_         (new command::New(this)),
+      open_        (new command::Async_Open(this)),
+      save_        (new command::Async_Save(this)),
+      remove_      (new command::Remove(this)),
+      read_grammar_(new command::Read_Grammar(this)),
+      recorder_    (new tree_model::Recorder(this))
   {
     connect(new_, &command::New::item_tree_model_created,
             this, &Controller::item_tree_model_created);
@@ -54,6 +57,11 @@ namespace editor {
             this, &Controller::file_opened);
     connect(open_, &command::Async_Open::file_type_opened,
             this, &Controller::file_type_opened);
+
+    connect(this, &Controller::file_type_opened,
+        read_grammar_, &command::Read_Grammar::set_file_type);
+    connect(read_grammar_, &command::Read_Grammar::grammar_read,
+        this, &Controller::grammar_read);
 
     connect(open_, &command::Async_Open::msg_produced,
         this, &Controller::msg_produced);

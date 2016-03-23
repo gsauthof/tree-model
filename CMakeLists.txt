@@ -62,6 +62,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/command/async_save.hh
   editor/command/remove.hh
   editor/command/write_aci.hh
+  editor/command/read_grammar.hh
   editor/gui_command/select_open.hh
   editor/gui_command/open.hh
   editor/gui_command/save.hh
@@ -82,6 +83,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/recent_menu.hh
   editor/instance.hh
   editor/instance_manager.hh
+  editor/delegate/tag.hh
   )
 qt5_wrap_cpp(TREE_MOC
   tree_model/item_adaptor.hh
@@ -119,6 +121,7 @@ set(EDITOR_CC
   editor/command/remove.cc
   editor/command/write_aci.cc
   editor/command/preview.cc
+  editor/command/read_grammar.cc
   editor/gui_command/open.cc
   editor/gui_command/select_open.cc
   editor/gui_command/save.cc
@@ -138,6 +141,7 @@ set(EDITOR_CC
   editor/instance.cc
   editor/instance_manager.cc
   editor/file_type.cc
+  editor/delegate/tag.cc
   )
 set(TREE_MODEL_CC
   tree_model/index.cc
@@ -332,6 +336,7 @@ add_executable(ut_gui
   test/editor/instance_manager.cc
   test/editor/tree_view.cc
   test/editor/preview.cc
+  test/editor/delegate/tag.cc
 
   ${TREE_MODEL_CC}
   ${EDITOR_CC}

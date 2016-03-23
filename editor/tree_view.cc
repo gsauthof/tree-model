@@ -31,6 +31,8 @@
 
 #include <deque>
 
+#include "delegate/tag.hh"
+
 
 using namespace std;
 
@@ -47,6 +49,11 @@ namespace editor {
     setDragEnabled(true);
     setAcceptDrops(true);
     setDropIndicatorShown(true);
+    // We don't need to delete the default delegate because it
+    // has a parent.
+    // The new delegate is NOT automatically adopted.
+    setItemDelegateForColumn(0, new delegate::Tag(this));
+    // cf. setItemDelegate()
 
     // when added to a main window these action are replaced
     // with the menu ones
@@ -304,6 +311,15 @@ namespace editor {
     auto root = m->index(0, 0);
     tree_model::util::breadth_first(root, n, [this](const QModelIndex &p) {
         collapse(p); });
+  }
+
+  void Tree_View::apply_grammar(const grammar::Grammar *g)
+  {
+    //auto d = dynamic_cast<delegate::Tag*>(itemDelegate());
+    auto d = dynamic_cast<delegate::Tag*>(itemDelegateForColumn(0));
+    if (!d)
+      return;
+    d->apply_grammar(g);
   }
 
 } // namespace editor

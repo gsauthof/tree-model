@@ -853,3 +853,42 @@ TEST_CASE("mw write aci", "[editor][qt][gui][mainwindow][add]")
   }
 
 }
+
+TEST_CASE("mw tag complete", "[editor][gui][mainwindow][delegate]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+  c.open(in.c_str());
+  QTest::qWait(300);
+
+  w.show();
+  QTest::qWait(300);
+
+  //auto v = &w;
+  auto v = QApplication::focusWindow();
+
+  auto a = c.item_tree_model();
+
+  CHECK(a->index(0, 0).child(0, 0).child(0, 0).data().toString().toStdString()
+      == "Sender");
+
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  //QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+
+  QTest::keyClick(v, Qt::Key_F2,    Qt::NoModifier, 10);
+
+  QTest::keyClicks(nullptr, "Reci", Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+
+  CHECK(a->index(0, 0).child(0, 0).child(0, 0).data().toString().toStdString()
+      == "Recipient");
+
+}

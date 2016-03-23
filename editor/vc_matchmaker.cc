@@ -26,6 +26,7 @@
 #include "tree_widget.hh"
 #include "tree_view.hh"
 #include "subtree_window.hh"
+#include <grammar/grammar.hh>
 
 #include <QUrl>
 
@@ -96,6 +97,8 @@ namespace editor {
   {
     c.connect(&c, &Gui_Controller::item_tree_model_created,
         &tv, &Tree_View::set_model);
+    c.connect(&c, &Gui_Controller::grammar_read,
+        &tv, &Tree_View::apply_grammar);
 
     tv.connect(&tv, &editor::Tree_View::remove_triggered,
         &c, &Controller::remove);

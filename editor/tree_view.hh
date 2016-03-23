@@ -24,79 +24,84 @@
 #include <QTreeView>
 class QAction;
 
+namespace grammar {
+  class Grammar;
+}
 namespace editor {
 
-class Tree_View : public QTreeView
-{
-  Q_OBJECT
-  public:
-    Tree_View(QWidget *parent = nullptr);
+  class Tree_View : public QTreeView
+  {
+    Q_OBJECT
+    public:
+      Tree_View(QWidget *parent = nullptr);
 
-    void contextMenuEvent(QContextMenuEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
+      void contextMenuEvent(QContextMenuEvent *event) override;
+      void keyPressEvent(QKeyEvent *event) override;
 
-    void set_remove_action(QAction *a);
-    void set_edit_action(QAction *a);
-    void set_add_child_action(QAction *a);
-    void set_add_sibling_action(QAction *a);
-    void set_cut_action(QAction *a);
-    void set_copy_action(QAction *a);
-    void set_paste_action(QAction *a);
-    void set_paste_as_child_action(QAction *a);
+      void set_remove_action(QAction *a);
+      void set_edit_action(QAction *a);
+      void set_add_child_action(QAction *a);
+      void set_add_sibling_action(QAction *a);
+      void set_cut_action(QAction *a);
+      void set_copy_action(QAction *a);
+      void set_paste_action(QAction *a);
+      void set_paste_as_child_action(QAction *a);
 
-    void breadth_first_expand(unsigned n);
-    void breadth_first_collapse(unsigned n);
+      void breadth_first_expand(unsigned n);
+      void breadth_first_collapse(unsigned n);
 
-  signals:
-    void remove_triggered(const QModelIndexList &selected_indexes);
-    void edit_triggered  (const QModelIndex &);
-    void add_child_triggered  (const QModelIndex &);
-    void add_sibling_triggered(const QModelIndex &);
-    void cut_triggered(const QModelIndexList &selected_indexes);
-    void copy_triggered(const QModelIndexList &selected_indexes);
-    void paste_triggered(const QModelIndexList &selected_indexes);
-    void paste_as_child_triggered(const QModelIndexList &selected_indexes);
+    signals:
+      void remove_triggered(const QModelIndexList &selected_indexes);
+      void edit_triggered  (const QModelIndex &);
+      void add_child_triggered  (const QModelIndex &);
+      void add_sibling_triggered(const QModelIndex &);
+      void cut_triggered(const QModelIndexList &selected_indexes);
+      void copy_triggered(const QModelIndexList &selected_indexes);
+      void paste_triggered(const QModelIndexList &selected_indexes);
+      void paste_as_child_triggered(const QModelIndexList &selected_indexes);
 
-    void selection_model_changed(const QItemSelectionModel *smodel);
-    void selection_changed(const QItemSelection &selected,
-        const QItemSelection &deselected);
-    void something_selected(bool b);
+      void selection_model_changed(const QItemSelectionModel *smodel);
+      void selection_changed(const QItemSelection &selected,
+          const QItemSelection &deselected);
+      void something_selected(bool b);
 
-    void current_changed(const QModelIndex &current,
-        const QModelIndex &previous);
+      void current_changed(const QModelIndex &current,
+          const QModelIndex &previous);
 
-  public slots:
-    void set_model(QAbstractItemModel *model);
-  private slots:
-    void trigger_edit();
-    void trigger_add_child();
-    void trigger_add_sibling();
-    void trigger_remove();
-    void trigger_cut();
-    void trigger_copy();
-    void trigger_paste();
-    void trigger_paste_as_child();
+    public slots:
+      void set_model(QAbstractItemModel *model);
+      void apply_grammar(const grammar::Grammar *g);
 
-  protected slots:
-    void selectionChanged(const QItemSelection &selected,
-        const QItemSelection &deselected) override;
-    void currentChanged(const QModelIndex &current,
-        const QModelIndex &previous) override;
+    private slots:
+      void trigger_edit();
+      void trigger_add_child();
+      void trigger_add_sibling();
+      void trigger_remove();
+      void trigger_cut();
+      void trigger_copy();
+      void trigger_paste();
+      void trigger_paste_as_child();
 
-  private:
-    QModelIndex context_index_;
-    QAction *add_child_action_   {nullptr};
-    QAction *add_sibling_action_ {nullptr};
-    QAction *edit_action_        {nullptr};
-    QAction *remove_action_      {nullptr};
-    QAction *cut_action_         {nullptr};
-    QAction *copy_action_        {nullptr};
-    QAction *paste_action_       {nullptr};
-    QAction *paste_as_child_action_{nullptr};
-    bool context_menu_visible_   {false};
+    protected slots:
+      void selectionChanged(const QItemSelection &selected,
+          const QItemSelection &deselected) override;
+      void currentChanged(const QModelIndex &current,
+          const QModelIndex &previous) override;
 
-    QModelIndex index_for_update();
-};
+    private:
+      QModelIndex context_index_;
+      QAction *add_child_action_   {nullptr};
+      QAction *add_sibling_action_ {nullptr};
+      QAction *edit_action_        {nullptr};
+      QAction *remove_action_      {nullptr};
+      QAction *cut_action_         {nullptr};
+      QAction *copy_action_        {nullptr};
+      QAction *paste_action_       {nullptr};
+      QAction *paste_as_child_action_{nullptr};
+      bool context_menu_visible_   {false};
+
+      QModelIndex index_for_update();
+  };
 
 } // namespace editor
 
