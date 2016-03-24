@@ -43,11 +43,28 @@ namespace editor {
       read_grammar_(new command::Read_Grammar(this)),
       recorder_    (new tree_model::Recorder(this))
   {
+    connect(this, &Controller::item_tree_model_created,
+            this, &Controller::set_item_tree_model);
+    connect(this, &Controller::tree_model_created,
+            this, &Controller::set_tree_model);
+
+    connect_new_command();
+    connect_async_open_command();
+    connect_read_grammar_command();
+    connect_async_save_command();
+    connect_remove_command();
+    connect_recorder();
+  }
+
+  void Controller::connect_new_command()
+  {
     connect(new_, &command::New::item_tree_model_created,
             this, &Controller::item_tree_model_created);
     connect(new_, &command::New::tree_model_created,
             this, &Controller::tree_model_created);
-
+  }
+  void Controller::connect_async_open_command()
+  {
     connect(open_, &command::Async_Open::item_tree_model_created,
             this, &Controller::item_tree_model_created);
     connect(open_, &command::Async_Open::tree_model_created,
@@ -57,24 +74,22 @@ namespace editor {
             this, &Controller::file_opened);
     connect(open_, &command::Async_Open::file_type_opened,
             this, &Controller::file_type_opened);
-
+    connect(open_, &command::Async_Open::msg_produced,
+        this, &Controller::msg_produced);
+  }
+  void Controller::connect_read_grammar_command()
+  {
     connect(this, &Controller::file_type_opened,
         read_grammar_, &command::Read_Grammar::set_file_type);
     connect(read_grammar_, &command::Read_Grammar::grammar_read,
         this, &Controller::grammar_read);
-
-    connect(open_, &command::Async_Open::msg_produced,
-        this, &Controller::msg_produced);
-
+  }
+  void Controller::connect_async_save_command()
+  {
     connect(save_, &command::Async_Save::msg_produced,
         this, &Controller::msg_produced);
     connect(save_, &command::Async_Save::saved,
         this, &Controller::saved);
-
-    connect(this, &Controller::item_tree_model_created,
-            this, &Controller::set_item_tree_model);
-    connect(this, &Controller::tree_model_created,
-            this, &Controller::set_tree_model);
 
     connect(this, &Controller::tree_model_created,
             save_, &command::Async_Save::set_tree_model);
@@ -83,9 +98,14 @@ namespace editor {
     connect(this, &Controller::file_type_opened,
         save_, &command::Async_Save::set_file_type);
 
+  }
+  void Controller::connect_remove_command()
+  {
     connect(this, &Controller::item_tree_model_created,
         remove_, &command::Remove::set_model);
-
+  }
+  void Controller::connect_recorder()
+  {
     connect(this, &Controller::item_tree_model_created,
         recorder_, &tree_model::Recorder::set_model);
     // we use old signal/slot syntax because we ignore signal argument

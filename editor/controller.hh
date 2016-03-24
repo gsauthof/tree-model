@@ -71,6 +71,13 @@ namespace editor {
 
       QAbstractItemModel    *item_tree_model_ {nullptr};
       tree_model::Base      *tree_model_      {nullptr};
+
+      void connect_new_command();
+      void connect_async_open_command();
+      void connect_read_grammar_command();
+      void connect_async_save_command();
+      void connect_remove_command();
+      void connect_recorder();
     protected:
       tree_model::Recorder  *recorder_        {nullptr};
 
