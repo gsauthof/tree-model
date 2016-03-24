@@ -25,6 +25,8 @@
 #include <xfsx/tap.hh>
 #include <grammar/grammar.hh>
 
+#include <QtDebug>
+
 using namespace std;
 
 namespace editor {
@@ -34,11 +36,15 @@ namespace editor {
 
       void Read_Grammar::set_file_type(const File_Type &ft)
       {
-        if (ft.asn_filenames().empty()) {
-          grammar_.reset();
-        } else {
-          grammar_ = make_unique<grammar::Grammar>(
-              xfsx::tap::read_asn_grammar(ft.asn_filenames()));
+        grammar_.reset();
+        if (!ft.asn_filenames().empty()) {
+          try {
+            grammar_ = make_unique<grammar::Grammar>(
+                xfsx::tap::read_asn_grammar(ft.asn_filenames()));
+          } catch (const exception &e) {
+            // this should only happen as part of a logic error
+            qCritical() << tr("Couldn't read ASN.1 grammar: %1").arg(e.what());
+          }
         }
         emit grammar_read(grammar_.get());
       }

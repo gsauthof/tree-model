@@ -23,6 +23,7 @@
 #define EDITOR_COMMAND_READ_GRAMMAR_HH
 
 #include <QObject>
+#include <QString>
 
 #include <memory>
 
