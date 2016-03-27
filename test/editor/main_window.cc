@@ -892,3 +892,46 @@ TEST_CASE("mw tag complete", "[editor][gui][mainwindow][delegate]")
       == "Recipient");
 
 }
+
+TEST_CASE("mw tag validate", "[editor][gui][mainwindow][delegate]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+  c.open(in.c_str());
+  QTest::qWait(300);
+
+  w.show();
+  QTest::qWait(300);
+
+  //auto v = &w;
+  auto v = QApplication::focusWindow();
+
+  auto a = c.item_tree_model();
+
+  CHECK(a->index(0, 0).child(0, 0).child(0, 0).data().toString().toStdString()
+      == "Sender");
+
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  //QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+
+  QTest::keyClick(v, Qt::Key_F2,    Qt::NoModifier, 10);
+
+  // Ex should be ambiguous (ExchangeRate/Code) and thus
+  // not able to fixup, meaning that validator rejects that input
+  QTest::keyClicks(nullptr, "Ex", Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+  // at this point the edit line should be still in the state of being
+  // edited because the input is not valid
+
+  CHECK(a->index(0, 0).child(0, 0).child(0, 0).data().toString().toStdString()
+      == "Sender");
+
+}
+

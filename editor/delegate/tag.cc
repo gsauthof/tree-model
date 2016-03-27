@@ -21,6 +21,8 @@
 
 #include "tag.hh"
 
+#include "model_validator.hh"
+
 #include <grammar/grammar.hh>
 
 #include <QDebug>
@@ -46,19 +48,18 @@ namespace editor {
           completer->setModel(names_model_);
           completer->setModelSorting(QCompleter::CaseSensitivelySortedModel);
           line_edit->setCompleter(completer);
-          // XXX set validator
+          auto validator = new Model_Validator(*names_model_, line_edit);
+          line_edit->setValidator(validator);
         }
         return r;
       }
 
       void Tag::apply_grammar(const grammar::Grammar *gg)
       {
-        if (!gg) {
-          names_.clear();
-          return;
-        }
-        const grammar::Grammar &g = *gg;
         names_.clear();
+        if (!gg)
+          return;
+        const grammar::Grammar &g = *gg;
         for (auto &ntp : g.nts()) {
           auto &nt = *ntp;
           // we don't consider nt.coord().klasse() here
