@@ -157,6 +157,7 @@ set(TREE_MODEL_CC
   tree_model/operation/remove_rows.cc
   tree_model/util.cc
   tree_model/df_qmi_traverser.cc
+  tree_model/qmi_iterator.cc
   )
 
 set(QT_AWESOME_CC
@@ -218,6 +219,7 @@ add_executable(ut
   test/tree_model/recorder.cc
   test/tree_model/util.cc
   test/tree_model/df_qmi_traverser.cc
+  test/tree_model/qmi_iterator.cc
   test/qt_model.cc
 
   test/editor/command/remove.cc
