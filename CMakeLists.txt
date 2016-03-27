@@ -142,6 +142,7 @@ set(EDITOR_CC
   editor/instance_manager.cc
   editor/file_type.cc
   editor/delegate/tag.cc
+  editor/delegate/model_validator.cc
   )
 set(TREE_MODEL_CC
   tree_model/index.cc
@@ -339,6 +340,7 @@ add_executable(ut_gui
   test/editor/tree_view.cc
   test/editor/preview.cc
   test/editor/delegate/tag.cc
+  test/editor/delegate/model_validator.cc
 
   ${TREE_MODEL_CC}
   ${EDITOR_CC}
