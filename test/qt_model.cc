@@ -46,6 +46,33 @@ TEST_CASE("qt parent child back", "[qtmodel]" )
   //REQUIRE(model.hasChildren(child) == true);
 }
 
+TEST_CASE("qt parent of docroot has no model", "[qt][qtmodel]")
+{
+  QStringListModel model;
+  QStringList list;
+  list << "a" << "b" << "c";
+  model.setStringList(list);
+
+  auto doc_root = model.index(0, 0);
+  auto root = doc_root.parent();
+  auto child = root.child(0, 0);
+  CHECK(child == QModelIndex());
+  CHECK(root.model() == nullptr);
+  CHECK(root.model() == child.model());
+}
+
+TEST_CASE("qt stringlist multiple doc roots", "[qt][qtmodel]")
+{
+  QStringListModel model;
+  QStringList list;
+  list << "a" << "b" << "c";
+  model.setStringList(list);
+
+  CHECK(model.index(0, 0).data().toString().toStdString() == "a");
+  CHECK(model.index(1, 0).data().toString().toStdString() == "b");
+  CHECK(model.index(2, 0).data().toString().toStdString() == "c");
+}
+
 TEST_CASE("qt remove invalid", "[qtmodel]")
 {
   QStringListModel model;
