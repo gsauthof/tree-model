@@ -26,6 +26,7 @@
 
 #include <editor/tree_view.hh>
 #include <editor/command/open_xml.hh>
+#include <editor/command/open_ber.hh>
 
 using namespace std;
 
@@ -80,3 +81,42 @@ TEST_CASE("tv also provides own cut shortcut", "[editor][gui][tree_view]")
   CHECK(qvariant_cast<QModelIndexList>(spy_cut.front().front()).size() == 1);
 
 }
+
+
+TEST_CASE("tv localtime in date time edit", "[editor][gui][tree_view][delegate]")
+{
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+
+  auto p = editor::command::open_ber(in.c_str());
+  REQUIRE(std::get<0>(p));
+  unique_ptr<QAbstractItemModel> mm(std::get<0>(p));
+  auto m = mm.get();
+  editor::Tree_View tv;
+  tv.set_model(m);
+  tv.resize(QSize(600, 400));
+  tv.show();
+  QTest::qWait(300);
+
+  CHECK(m->index(0, 0).child(0, 0).child(3, 0).child(0, 1).data().toString().toStdString() == "20050405090547");
+
+  tv.expand(m->index(0, 0).child(0, 0).child(3, 0));
+  tv.setCurrentIndex(m->index(0, 0).child(0, 0).child(3, 0).child(0, 1));
+
+  QTest::qWait(300);
+
+  QTest::keyClick(&tv, Qt::Key_F2,  Qt::NoModifier, 10);
+
+  auto v = static_cast<QWidget*>(nullptr);
+  QTest::keyClick(v, Qt::Key_Up,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Up,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Up,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,  Qt::NoModifier, 10);
+  QTest::qWait(300);
+
+  CHECK(m->index(0, 0).child(0, 0).child(3, 0).child(0, 1).data().toString().toStdString() == "20080405090547");
+
+  QTest::qWait(300);
+}
+
+

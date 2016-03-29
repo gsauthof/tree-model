@@ -24,6 +24,8 @@
 #include <tree_model/item_adaptor.hh>
 #include <tree_model/xml.hh>
 
+#include <editor/typed_model.hh>
+
 #include <ixxx/util.hh>
 #include <ixxx/ixxx.h>
 
@@ -56,7 +58,9 @@ namespace editor {
       xxxml::doc::Ptr doc = xfsx::xml::l2::generate_tree(in.begin(), in.end(),
           pretty_args);
 
-      tree_model::Base   *m = new tree_model::XML(std::move(doc));
+      //tree_model::Base   *m = new tree_model::XML(std::move(doc));
+      auto m = new editor::Typed_Model(std::move(doc));
+      m->set_asn_filenames(asn_filenames);
       QAbstractItemModel *a = new tree_model::Item_Adaptor(m);
       return std::make_tuple(a, m, std::move(asn_filenames));
     }

@@ -84,6 +84,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/instance.hh
   editor/instance_manager.hh
   editor/delegate/tag.hh
+  editor/delegate/editor/local_time.hh
   )
 qt5_wrap_cpp(TREE_MOC
   tree_model/item_adaptor.hh
@@ -143,6 +144,11 @@ set(EDITOR_CC
   editor/file_type.cc
   editor/delegate/tag.cc
   editor/delegate/model_validator.cc
+  editor/typed_model.cc
+  editor/delegate/value/local_time.cc
+  editor/delegate/editor/local_time.cc
+  editor/delegate/factory.cc
+  editor/setup.cc
   )
 set(TREE_MODEL_CC
   tree_model/index.cc

@@ -21,7 +21,7 @@
 #define CATCH_CONFIG_RUNNER
 #include <catch.hpp>
 
-#include <editor/file_type.hh>
+#include <editor/setup.hh>
 
 #include <QApplication>
 
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
   // in each test case yields segfaults ...
   QApplication app(qtest_argv.first, qtest_argv.second.get());
   app.setAttribute(Qt::AA_Use96Dpi, true);
-  editor::File_Type::register_meta_type();
+  editor::Setup setup;
   int result = Catch::Session().run(catch_argv.first, catch_argv.second.get());
   return result;
 }
