@@ -300,6 +300,60 @@ called to often (too much overhead) - but if it is not called
 often enough than the UI is blocking again.
 
 
+### Delegate Editing
+
+Data returned from the model is wrapped in a `QVariant`. Thus, it
+can be returned as one of several types that is supported by
+`QVariant`.  Since data requests contain a role argument, one can
+return different types (and different content) depending on - say
+- whether the data is needed for display or edit purposes.
+
+When a value is accessed for editing, different types yield
+different edit widgets. For example, a `QString` is by default
+edited inside a `QLineEdit`, where a `QDateTime` value is edited
+inside a `QDateTimeEdit` widget. Which type is edited by what
+editor is configured in an editor factory class. A default
+factory class is set up, but it can be replaced with user defined
+one (cf. `QItemEditorFactory`, `QStandardItemEditorCreate{Base,}`).
+
+By default, `QVariant` only supports some of Qt's types. But,
+user defined types can be made known to it, as well - via Qt's
+meta type system (cf. `Q_DECLARE_METATYPE` and `QMetaType`).
+Since Qt 5.2, the meta type system also supports registering
+comparison and conversion function for user defined types. See
+for example `editor/delegate/value/local_time.cc` for a type
+where a string conversion member function is registered. With
+that `QVariant::toString()` works as expected (useful e.g. when
+existing code assumes string convertibility).
+
+For widgets that use `QAbstractItemModel`s, Qt provides another
+orthogonal mechanism: item delegates (cf.
+`Q{Abstract,Item,Styled}ItemDelegate`). Each model using widget
+has a default delegate that can be replaced with a user defined
+one. Such delegates can also be set for certain columns (cf.
+`QTreeView`).
+
+The motivation for customizing the editing of model data is
+that there are domain specific requirements such as validation
+of edited data (cf. `QValidator`) and completion during
+editing (cf. `QCompleter`). Also, specialized widgets like
+a calendar popup can simplify the editing process.
+
+The editor application contains examples for both delegating
+mechanism - see for example `editor/delegate/tag.*` for an
+delegate class that installs a domain specific completer and
+validator on certain widgets. Under `editor/delegate` there
+are also classes that declare custom types to the meta type
+system and register editor widgets.
+
+Whether to use the meta type system and register an editor at the
+factory or install explicit delegates on a widgets depends on the
+use case. For example, the state that is needed for creating the
+editor widget must fit into the value class when an editor
+factory should be used. A - say - small context dependent
+database for completing strings thus makes an explicit delegate
+class necessary.
+
 ## Architecture
 
 Qt provides some classes to implement data models and views. This
