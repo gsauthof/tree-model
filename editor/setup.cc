@@ -27,6 +27,10 @@
 #include <editor/delegate/factory.hh>
 #include "qt_awesome.hh"
 
+#include <QApplication>
+#include <QStyle>
+#include <QDebug>
+
 #include <stdexcept>
 
 using namespace std;
@@ -36,6 +40,8 @@ namespace editor {
   class Setup::Private {
     public:
       Private();
+
+      void workaround_gtk_plus_style_transparency_bug();
     private:
       unique_ptr<QtAwesome> fai;
   };
@@ -44,14 +50,33 @@ namespace editor {
     :
       fai(editor::fa_instance())
   {
+    workaround_gtk_plus_style_transparency_bug();
+  }
+
+  // See also:
+  // http://stackoverflow.com/questions/19549740/how-to-clear-background-in-qtreeview-during-item-edit
+  // https://bugreports.qt.io/browse/QTBUG-31509
+  void Setup::Private::workaround_gtk_plus_style_transparency_bug()
+  {
+    if (QApplication::style()
+        && QApplication::style()->objectName() == "gtk+"
+        && qApp->styleSheet().isEmpty()) {
+      qApp->setStyleSheet(
+          "QLineEdit, QAbstractSpinBox { background-color: white; }");
+    }
   }
 
   Setup::Setup()
+    :
+      d_(std::make_unique<Setup::Private>())
   {
     static unsigned cnt = 0;
     if (cnt)
       throw logic_error("Setup should only exist once, ideally in main()");
     ++cnt;
+    if (!QApplication::instance())
+      throw logic_error("QApplication must be allocated"
+          " before constructing the Setup object");
 
     editor::File_Type::register_meta_type();
     editor::delegate::value::Local_Time::register_meta_type();

@@ -24,6 +24,7 @@
 
 #include <QApplication>
 #include <QTimer>
+#include <QDebug>
 
 #include <memory>
 
