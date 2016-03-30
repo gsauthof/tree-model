@@ -244,6 +244,8 @@ add_executable(ut
   editor/command/write_aci.cc
   editor/command/preview.cc
   editor/file_type.cc
+  editor/typed_model.cc
+  editor/delegate/value/local_time.cc
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_remove.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_open.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_save.cpp
