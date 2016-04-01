@@ -99,6 +99,8 @@ namespace editor {
         &tv, &Tree_View::set_model);
     c.connect(&c, &Gui_Controller::grammar_read,
         &tv, &Tree_View::apply_grammar);
+    c.connect(&c, &Gui_Controller::file_type_opened,
+        &tv, &Tree_View::apply_file_type);
 
     tv.connect(&tv, &editor::Tree_View::remove_triggered,
         &c, &Controller::remove);

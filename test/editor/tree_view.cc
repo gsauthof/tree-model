@@ -27,6 +27,7 @@
 #include <editor/tree_view.hh>
 #include <editor/command/open_xml.hh>
 #include <editor/command/open_ber.hh>
+#include <editor/file_type.hh>
 
 using namespace std;
 
@@ -120,3 +121,41 @@ TEST_CASE("tv localtime in date time edit", "[editor][gui][tree_view][delegate]"
 }
 
 
+TEST_CASE("tv complete sender", "[editor][gui][tree_view][delegate]")
+{
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+
+  editor::File_Type ft;
+  auto p = editor::command::open_ber(in.c_str(), ft);
+  REQUIRE(std::get<0>(p));
+  unique_ptr<QAbstractItemModel> mm(std::get<0>(p));
+  auto m = mm.get();
+  editor::Tree_View tv;
+  tv.set_model(m);
+  tv.apply_file_type(ft);
+  tv.resize(QSize(600, 400));
+  tv.show();
+  QTest::qWait(300);
+
+  CHECK(m->index(0, 0).child(0, 0).child(1, 1).data().toString().toStdString() == "XLKJE");
+
+  tv.setCurrentIndex(m->index(0, 0).child(0, 0).child(1, 1));
+
+  QTest::qWait(300);
+
+  QTest::keyClick(&tv, Qt::Key_F2,  Qt::NoModifier, 10);
+
+  auto v = static_cast<QWidget*>(nullptr);
+  QTest::keyClicks(v, "USA");
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,  Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Enter,  Qt::NoModifier, 10);
+
+  CHECK(m->index(0, 0).child(0, 0).child(1, 1).data().toString().toStdString() == "USAAT");
+
+  QTest::qWait(300);
+}

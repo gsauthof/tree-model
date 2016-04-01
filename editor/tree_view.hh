@@ -28,6 +28,7 @@ namespace grammar {
   class Grammar;
 }
 namespace editor {
+  class File_Type;
 
   class Tree_View : public QTreeView
   {
@@ -71,6 +72,7 @@ namespace editor {
     public slots:
       void set_model(QAbstractItemModel *model);
       void apply_grammar(const grammar::Grammar *g);
+      void apply_file_type(const File_Type &ft);
 
     private slots:
       void trigger_edit();

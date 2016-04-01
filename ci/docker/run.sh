@@ -20,7 +20,7 @@ export TEST_IN="$src_dir"/test/in
 
 r=0
 
-export ASN1_PATH="$src_dir"/libgrammar/test/in/asn1:"$src_dir"/libxfsx/config
+export ASN1_PATH="$src_dir"/libgrammar/test/in/asn1:"$src_dir"/libgrammar/grammar/xml:"$src_dir"/libxfsx/config
 
 ./ut && true
 : $((r+=$?))

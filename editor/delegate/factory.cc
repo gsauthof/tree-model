@@ -63,6 +63,7 @@ namespace editor {
           return a;
         if (default_qt_factory_)
           return default_qt_factory_->createEditor(userType, parent);
+        return nullptr;
       }
 
       void setup()

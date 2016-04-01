@@ -84,6 +84,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/instance.hh
   editor/instance_manager.hh
   editor/delegate/tag.hh
+  editor/delegate/value.hh
   editor/delegate/editor/local_time.hh
   )
 qt5_wrap_cpp(TREE_MOC
@@ -143,7 +144,9 @@ set(EDITOR_CC
   editor/instance_manager.cc
   editor/file_type.cc
   editor/delegate/tag.cc
+  editor/delegate/value.cc
   editor/delegate/model_validator.cc
+  editor/delegate/int64_validator.cc
   editor/typed_model.cc
   editor/delegate/value/local_time.cc
   editor/delegate/editor/local_time.cc
@@ -348,6 +351,7 @@ add_executable(ut_gui
   test/editor/tree_view.cc
   test/editor/preview.cc
   test/editor/delegate/tag.cc
+  test/editor/delegate/value.cc
   test/editor/delegate/model_validator.cc
 
   ${TREE_MODEL_CC}

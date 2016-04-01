@@ -64,8 +64,7 @@ namespace editor {
             }
             break;
           case File_Type::BER:
-            std::tie(a, m, asn_filenames) = open_ber(filename);
-            ft.set_asn_filenames(std::move(asn_filenames));
+            std::tie(a, m) = open_ber(filename, ft);
             break;
           default:
             throw std::logic_error("File Type not implemented yet");

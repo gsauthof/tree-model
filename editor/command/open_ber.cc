@@ -19,11 +19,12 @@
 
 }}} */
 
-#include "open_xml.hh"
+#include "open_ber.hh"
 
 #include <tree_model/item_adaptor.hh>
 #include <tree_model/xml.hh>
 
+#include <editor/file_type.hh>
 #include <editor/typed_model.hh>
 
 #include <ixxx/util.hh>
@@ -42,6 +43,15 @@ namespace editor {
 
     std::tuple<QAbstractItemModel *, tree_model::Base*, std::deque<string> >
       open_ber(const QString &filename)
+    {
+      File_Type ft;
+      return tuple_cat(open_ber(filename, ft),
+          make_tuple(ft.asn_filenames()));
+    }
+
+
+    std::tuple<QAbstractItemModel *, tree_model::Base*>
+      open_ber(const QString &filename, File_Type &ft)
     {
       string in_filename(filename.toStdString());
       // empty values -> defaults are used
@@ -62,7 +72,10 @@ namespace editor {
       auto m = new editor::Typed_Model(std::move(doc));
       m->set_asn_filenames(asn_filenames);
       QAbstractItemModel *a = new tree_model::Item_Adaptor(m);
-      return std::make_tuple(a, m, std::move(asn_filenames));
+
+      ft.set_asn_filenames(std::move(asn_filenames));
+      ft.set_constraint_filenames(std::move(r.constraint_filenames));
+      return std::make_tuple(a, m);
     }
 
   }

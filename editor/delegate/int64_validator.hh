@@ -19,33 +19,29 @@
 
 }}} */
 
-#ifndef EDITOR_COMMAND_OPEN_BER_HH
-#define EDITOR_COMMAND_OPEN_BER_HH
+#ifndef EDITOR_DELEGATE_INT64_VALIDATOR_HH
+#define EDITOR_DELEGATE_INT64_VALIDATOR_HH
 
-#include <tuple>
-#include <deque>
-#include <string>
+#include <QValidator>
 
-class QAbstractItemModel;
-class QString;
-
-namespace tree_model {
-  class Base;
-}
+#include <utility>
+#include <stdint.h>
 
 namespace editor {
-  class File_Type;
-  namespace command {
+  namespace delegate {
+
+    class Int64_Validator : public QValidator {
+      public:
+        Int64_Validator(int64_t min, int64_t max, QObject *parent = nullptr);
+
+        State validate(QString &input, int &pos) const override;
 
 
-    std::tuple<QAbstractItemModel *, tree_model::Base*,
-      std::deque<std::string> >
-        open_ber(const QString &filename);
+      private:
+        std::pair<int64_t, int64_t> range_;
+    };
 
-    std::tuple<QAbstractItemModel *, tree_model::Base*>
-      open_ber(const QString &filename, File_Type &ft);
+  } // delegate
+} // editor
 
-  }
-}
-
-#endif
+#endif // EDITOR_DELEGATE_INT64_VALIDATOR_HH

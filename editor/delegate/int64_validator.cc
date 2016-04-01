@@ -19,33 +19,35 @@
 
 }}} */
 
-#ifndef EDITOR_COMMAND_OPEN_BER_HH
-#define EDITOR_COMMAND_OPEN_BER_HH
 
-#include <tuple>
-#include <deque>
-#include <string>
-
-class QAbstractItemModel;
-class QString;
-
-namespace tree_model {
-  class Base;
-}
+#include "int64_validator.hh"
 
 namespace editor {
-  class File_Type;
-  namespace command {
+  namespace delegate {
 
+    // we don't use QIntValidator because:
+    // - it doesn't support long ints
+    // - it allows leading zeros
+    // - it allows grouping characters, by default
 
-    std::tuple<QAbstractItemModel *, tree_model::Base*,
-      std::deque<std::string> >
-        open_ber(const QString &filename);
+    Int64_Validator::Int64_Validator(int64_t min, int64_t max, QObject *parent)
+      :
+        range_(min, max)
+    {
+    }
 
-    std::tuple<QAbstractItemModel *, tree_model::Base*>
-      open_ber(const QString &filename, File_Type &ft);
+    QValidator::State Int64_Validator::validate(QString &input, int &pos) const
+    {
+      bool ok = false;
+      auto x = input.toLongLong(&ok);
+      static_assert(sizeof(x) == 8, "should be 64 bit");
+      if (!ok)
+        return Invalid;
+      auto s = QString::number(x);
+      if (input != s)
+        return Invalid;
+      return x >= range_.first && x <= range_.second ? Acceptable : Invalid;
+    }
 
-  }
-}
-
-#endif
+  } // delegate
+} // editor

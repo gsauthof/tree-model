@@ -38,6 +38,14 @@ namespace editor {
   {
     asn_filenames_ = std::move(asn_filenames);
   }
+  const std::deque<std::string> &File_Type::constraint_filenames() const
+  {
+    return constraint_filenames_;
+  }
+  void File_Type::set_constraint_filenames(std::deque<std::string> &&constraint_filenames)
+  {
+    constraint_filenames_ = std::move(constraint_filenames);
+  }
 
   void File_Type::register_meta_type()
   {

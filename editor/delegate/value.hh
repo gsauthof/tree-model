@@ -19,33 +19,43 @@
 
 }}} */
 
-#ifndef EDITOR_COMMAND_OPEN_BER_HH
-#define EDITOR_COMMAND_OPEN_BER_HH
+#ifndef EDITOR_DELEGATE_VALUE_HH
+#define EDITOR_DELEGATE_VALUE_HH
 
-#include <tuple>
-#include <deque>
+#include <QStyledItemDelegate>
+
+#include <memory>
 #include <string>
-
-class QAbstractItemModel;
-class QString;
-
-namespace tree_model {
-  class Base;
-}
+#include <deque>
 
 namespace editor {
+
   class File_Type;
-  namespace command {
 
+  namespace delegate {
 
-    std::tuple<QAbstractItemModel *, tree_model::Base*,
-      std::deque<std::string> >
-        open_ber(const QString &filename);
+    class Value : public QStyledItemDelegate {
+      Q_OBJECT
+      public:
 
-    std::tuple<QAbstractItemModel *, tree_model::Base*>
-      open_ber(const QString &filename, File_Type &ft);
+        Value(QObject *parent = nullptr);
+        ~Value();
 
-  }
-}
+        QWidget *createEditor(QWidget *parent,
+            const QStyleOptionViewItem &option, const QModelIndex &index)
+          const override;
+      public slots:
+        void read_constraints(const std::deque<std::string> &filenames);
+        void apply_file_type(const File_Type &ft);
 
-#endif
+      private:
+        class Private;
+        std::unique_ptr<Private> priv_;
+
+        
+    };
+
+  } // delegate
+} //editor
+
+#endif // EDITOR_DELEGATE_VALUE_HH

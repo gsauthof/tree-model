@@ -51,6 +51,8 @@ namespace editor {
       Minor minor() const;
       const std::deque<std::string> &asn_filenames() const;
       void set_asn_filenames(std::deque<std::string> &&asn_filenames);
+      const std::deque<std::string> &constraint_filenames() const;
+      void set_constraint_filenames(std::deque<std::string> &&constraint_filenames);
 
       // call this if signals having File_Type arguments
       // should be able to be queued
@@ -60,6 +62,7 @@ namespace editor {
       Major major_ {ANY};
       Minor minor_ {ANY_MINOR};
       std::deque<std::string> asn_filenames_;
+      std::deque<std::string> constraint_filenames_;
 
   };
 

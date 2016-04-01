@@ -32,6 +32,7 @@
 #include <deque>
 
 #include "delegate/tag.hh"
+#include "delegate/value.hh"
 
 
 using namespace std;
@@ -53,6 +54,7 @@ namespace editor {
     // has a parent.
     // The new delegate is NOT automatically adopted.
     setItemDelegateForColumn(0, new delegate::Tag(this));
+    setItemDelegateForColumn(1, new delegate::Value(this));
     // cf. setItemDelegate()
 
     // when added to a main window these action are replaced
@@ -320,6 +322,14 @@ namespace editor {
     if (!d)
       return;
     d->apply_grammar(g);
+  }
+
+  void Tree_View::apply_file_type(const File_Type &ft)
+  {
+    auto d = dynamic_cast<delegate::Value*>(itemDelegateForColumn(1));
+    if (!d)
+      return;
+    d->apply_file_type(ft);
   }
 
 } // namespace editor
