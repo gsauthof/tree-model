@@ -371,7 +371,12 @@ static void check_expected_cost(const list::ranked::List<int> &l)
     l.node_prime(i, counter);
   CHECK(double(counter.n)/n < 2 * log2(n));
   //CHECK(fabs(double(counter.n)/n - 30) < 3.15);
+  //
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+  CHECK(fabs(double(counter.n)/n - 30) < 4);
+#else
   CHECK(fabs(double(counter.n)/n - 30) < 3.31);
+#endif
 }
 
 TEST_CASE("expected cost", "[list][ranked]" )
