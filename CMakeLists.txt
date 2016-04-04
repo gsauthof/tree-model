@@ -297,6 +297,7 @@ add_executable(ut_select_open
 
   ${UT_SELECT_OPEN_MOC}
   ${EDITOR_MOC}
+  ${EDITOR_UI}
   ${TREE_MOC}
 
   ${QT_AWESOME_CC}

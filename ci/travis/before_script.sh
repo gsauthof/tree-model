@@ -10,7 +10,7 @@ docker stop cxx-devel
 docker create --name cxx-runtime \
   -v "$src":/srv/src:ro,Z \
   -v "$build":/srv/build:Z \
-  gsauthof/fedora-cxx-runtime:23
+  "$docker_img_b"
 
 docker start cxx-runtime
 

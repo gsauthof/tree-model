@@ -17,7 +17,7 @@ chmod 777 "$build"
 docker create --name cxx-devel \
   -v "$src":/srv/src:ro,Z \
   -v "$build":/srv/build:Z \
-  gsauthof/fedora-cxx-devel:23
+  "$docker_img_a"
 
 docker start cxx-devel
 
