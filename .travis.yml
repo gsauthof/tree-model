@@ -26,3 +26,17 @@ script:
 
 after_script:
   - ./ci/travis/after_script.sh
+
+before_deploy:
+  - ./ci/travis/before_deploy.sh
+
+deploy:
+  provider: bintray
+  file: "$HOME/deploy/bintray_w64.json"
+  user: "gsauthof"
+  key:
+    secure: "BRURI1Qa9Cm0LJdYHCbS9j7Sme8218hghp13mClCUz5ECr6mOe8lQiqNJhOC3ifXGiIhW4G6QdpAqyYlfXqAxloxcnpJG+uvBx9kK4J4Fexzbf+XcSZlrOuP+z4ZxOiXcRf0CysqyQ7h8/h9knpsv2j5nDA+Ug3yI0319VEKToixpTKLpQUQA6HfK+BTD4RHW2+TmRi2KW5VbIA0pbvH/nbHkf9bCrDINAw4RgnzEX8CEa3k50Jky/jlw1AWIH7k0gzTlmkW1Y3SPzUNczpEqEYg4kxO3bIUiyTx8K2XqKIRT44hm81P/WfH+tzJ6WNEyP2KjSJpYYbxRQ5d2IplvE3jJ5PdCTUa+RWTchHJpn5YRQalYXw/PHTVo7CIFfHdxEQGNNWinGZg3MHNH55t1KakahlnFHsI5vBmsa/51KsOomQymYK92jfA1U3VtOMEGs/DMU70WHUv/xxmEwFnde+L3rfFkgoPZElIMo16mpfbAhmM129rnRBiFyIk5uMT2pJrmWfrZRT+KskTip5ccF8NZH7zVNNChvM/JU182yg3E5gRijiW2WVJ5Q1T2cFJgug33weh7aXt3QLGYZ/890DarBPF/0xYxZNCjGWKAGNYogooGnVp0nebyb8cmPcpSjhsAaBM9G/ES69uHqMuEcsTQE/jp1F3YoXRbx1osag="
+
+#after_deply:
+
+#after_script:
