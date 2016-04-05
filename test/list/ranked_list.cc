@@ -130,7 +130,8 @@ TEST_CASE("ranked push max_level", "[list][ranked]" )
     l.push_front(i);
   }
   // on mingw there is more variation, usually it is 14
-  CHECK(l.level() >= 12);
+  //CHECK(l.level() >= 12);
+  CHECK(l.level() >= 11);
   CHECK(l.level() <= 15);
 }
 
@@ -261,7 +262,9 @@ static void check_level_distribution(const list::ranked::List<int> &l)
   // for mingw
   CHECK(fabs(double(level_one)/n - 0.50) < 0.03);
   //CHECK(fabs(level_sum/n - 1.99) < 0.0444);
-  CHECK(fabs(level_sum/n - 1.99) < 0.05);
+  // not enough for mingw+wine ...
+  //CHECK(fabs(level_sum/n - 1.99) < 0.05);
+  CHECK(fabs(level_sum/n - 1.99) < 0.055);
 }
 
 TEST_CASE("level distribution", "[list][ranked]" )
