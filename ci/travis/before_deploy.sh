@@ -44,7 +44,7 @@ function mk_descriptor()
       "website_url": "https://github.com/gsauthof/tree-model",
       "public_download_numbers": true,
       "public_stats": false
-    }
+    },
     "version": {
       "name": "$version",
       "desc": "tree-model version build on travis ci",
