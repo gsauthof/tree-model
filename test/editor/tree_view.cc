@@ -151,7 +151,7 @@ TEST_CASE("tv complete sender", "[editor][gui][tree_view][delegate]")
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
-  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 300);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 900);
   QTest::keyClick(v, Qt::Key_Enter,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Enter,  Qt::NoModifier, 10);
 
