@@ -13,7 +13,8 @@ set -u
 src_dir="$1"
 build_dir="$2"
 
-mkdir -p "$build_dir"
+# already created by before_install.sh
+#mkdir -p "$build_dir"
 cd "$build_dir"
 
 
