@@ -2,7 +2,7 @@
 
 set -eux
 
-build="$HOME"/build/tree-model
+build="$HOME"/build/build/tree-model
 work_dir="$HOME"/deploy
 : ${run_tag:=""}
 
