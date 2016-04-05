@@ -2,7 +2,7 @@
 
 set -eux
 
-build="$HOME"/build/tree-model
+build="$HOME"/build/tree-model/..
 src="$PWD"/..
 
 mkdir -p $build
