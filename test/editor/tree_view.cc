@@ -149,20 +149,23 @@ TEST_CASE("tv complete sender", "[editor][gui][tree_view][delegate]")
   auto v = static_cast<QWidget*>(nullptr);
   QTest::keyClicks(v, "USA");
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
-  QTest::qWait(50);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
-  QTest::qWait(50);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
-  QTest::qWait(50);
-  // just 3 down clicks because of CI fragility ...
-  //QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 900);
-  QTest::keyClick(v, Qt::Key_Enter,  Qt::NoModifier, 10);
-  QTest::qWait(50);
-  QTest::keyClick(v, Qt::Key_Enter,  Qt::NoModifier, 10);
-  QTest::qWait(50);
+  QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 900);
 
-  //CHECK(m->index(0, 0).child(0, 0).child(1, 1).data().toString().toStdString() == "USAAT");
-  CHECK(m->index(0, 0).child(0, 0).child(1, 1).data().toString().toStdString() == "USA31");
+  // Work-around keyClick() fragility in CI environment
+  // keyClick() internally calls Press/Release - and aparently,
+  // sub-widget gets destroyed in between ...
+  QTest::keyPress(v, Qt::Key_Enter,  Qt::NoModifier, 10);
+  QTest::qWait(300);
+  QTest::keyRelease(v, Qt::Key_Enter,  Qt::NoModifier, 10);
+  QTest::qWait(300);
+  QTest::keyPress(v, Qt::Key_Enter,  Qt::NoModifier, 10);
+  QTest::qWait(300);
+  QTest::keyRelease(v, Qt::Key_Enter,  Qt::NoModifier, 10);
+
+  CHECK(m->index(0, 0).child(0, 0).child(1, 1).data().toString().toStdString() == "USAAT");
+  //CHECK(m->index(0, 0).child(0, 0).child(1, 1).data().toString().toStdString() == "USA31");
 
   QTest::qWait(300);
 }
