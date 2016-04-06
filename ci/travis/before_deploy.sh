@@ -36,7 +36,7 @@ function mk_descriptor()
   cat > "$1" <<EOF
   {
     "package": {
-      "name": "edtior",
+      "name": "editor",
       "repo": "tree-model-w64",
       "subject": "gsauthof",
       "licenses": ["LGPL-3.0"],
