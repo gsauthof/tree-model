@@ -32,6 +32,8 @@ before_deploy:
 
 deploy:
   provider: bintray
+  on:
+    condition: $run_tag = _mingw
   file: "$HOME/deploy/bintray_w64.json"
   user: "gsauthof"
   key:
