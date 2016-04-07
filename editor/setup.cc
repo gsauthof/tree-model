@@ -31,6 +31,8 @@
 #include <QStyle>
 #include <QDebug>
 
+#include <libxml/parser.h>
+
 #include <stdexcept>
 
 using namespace std;
@@ -74,6 +76,13 @@ namespace editor {
     if (cnt)
       throw logic_error("Setup should only exist once, ideally in main()");
     ++cnt;
+
+    // cf. http://www.xmlsoft.org/threads.html
+    LIBXML_TEST_VERSION
+    // LIBXML_TEST_VERSION already calls xmlInitParser()
+    // xmlInitParser();
+
+
     if (!QApplication::instance())
       throw logic_error("QApplication must be allocated"
           " before constructing the Setup object");
@@ -85,6 +94,11 @@ namespace editor {
     editor::setup_asn1_path();
   }
 
-  Setup::~Setup() =default;
+  Setup::~Setup()
+  {
+    // perhaps necessary if leaks show up in the leak detector
+    // xmlCleanupParser();
+    // xmlSchemaCleanupTypes();
+  }
 
 }
