@@ -214,6 +214,7 @@ namespace tree_model {
     }
   }
 
+#ifdef USE_TREE_MODEL_DESCEN
   std::deque<void*> Item_Adaptor::ancestors(const Index &x,
       bool include_self) const
   {
@@ -227,6 +228,7 @@ namespace tree_model {
     } while (i.is_valid());
     return r;
   }
+#endif
 
   list::ranked::List<void*> &Item_Adaptor::cached_children(
       const Index &p) const
@@ -234,14 +236,18 @@ namespace tree_model {
     auto that = const_cast<Item_Adaptor*>(this);
     auto x = that->index_to_children_map_.find(p.internal_pointer());
     if (x == that->index_to_children_map_.end()) {
+#ifdef USE_TREE_MODEL_DESCEN
       auto ancestors = this->ancestors(p, true);
+#endif
       list::ranked::List<void*> l;
       for (Index i = model_->last_child(p); i.is_valid();
           i = model_->prev_sibling(i)) {
         l.push_front(i.internal_pointer());
         that->index_to_node_map_[i.internal_pointer()] = &l.node(0);
+#ifdef USE_TREE_MODEL_DESCEN
         for (auto a : ancestors)
           that->index_to_descendants_map_[a].insert(i.internal_pointer());
+#endif
       }
       auto r = that->index_to_children_map_.insert(
           std::make_pair(p.internal_pointer(),
@@ -452,13 +458,17 @@ namespace tree_model {
 
 #ifndef USE_SLOW_TREE_MODEL
     if (index.is_valid()) {
+#ifdef USE_TREE_MODEL_DESCEN
       auto ancestors = this->ancestors(index);
+#endif
       index_to_children_map_.erase(index.internal_pointer());
       auto &children = cached_children(index.parent());
       children.remove(remove_row_);
       index_to_node_map_.erase(index.internal_pointer());
+#ifdef USE_TREE_MODEL_DESCEN
       for (auto a : ancestors)
         index_to_descendants_map_[a].erase(index.internal_pointer());
+#endif
     }
 #endif
   }
@@ -526,9 +536,11 @@ namespace tree_model {
       auto &children = cached_children(i.parent());
       auto &node = children.insert(insert_row_++, i.internal_pointer());
       index_to_node_map_[i.internal_pointer()] = &node;
+#ifdef USE_TREE_MODEL_DESCEN
       auto ancestors = this->ancestors(i);
       for (auto a : ancestors)
         index_to_descendants_map_[a].insert(i.internal_pointer());
+#endif
     }
 #endif
     endInsertRows();

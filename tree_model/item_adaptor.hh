@@ -109,15 +109,19 @@ namespace tree_model {
         index_to_node_map_;
       std::unordered_map<void*, list::ranked::List<void*> >
         index_to_children_map_;
+#ifdef USE_TREE_MODEL_DESCEN
       std::unordered_map<void*, std::unordered_set<void*> >
         index_to_descendants_map_;
+#endif
 
       size_t insert_row_ {0};
       size_t remove_row_ {0};
 
       list::ranked::List<void*> &cached_children(const Index &p) const;
+#ifdef USE_TREE_MODEL_DESCEN
       std::deque<void*> ancestors(const Index &x, bool include_self = true)
         const;
+#endif
 
       std::pair<Index, int> drop_location(int row, int column,
           const QModelIndex &parent) const;
