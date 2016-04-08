@@ -300,7 +300,9 @@ namespace editor {
     auto m = model();
     if (!m)
       return;
-    auto root = m->index(0, 0);
+    auto root = rootIndex();
+    if (!root.isValid())
+      root = m->index(0, 0);
     tree_model::util::breadth_first(root, n, [this](const QModelIndex &p) {
         expand(p); });
   }

@@ -77,8 +77,7 @@ namespace editor {
       auto &tv = w->tree_widget().tree_view();
       tv.set_model(model_);
       tv.setRootIndex(i0);
-      if (tree_model::util::descendents_less_than(*model_, i0, 30))
-        tv.expandAll();
+      tv.breadth_first_expand(50);
 
       emit subtree_window_created(w);
 
