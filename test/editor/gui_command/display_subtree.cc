@@ -28,6 +28,7 @@
 #include <QMainWindow>
 
 #include <editor/command/open_xml.hh>
+#include <editor/command/open_ber.hh>
 #include <editor/gui_command/display_subtree.hh>
 #include <editor/subtree_window.hh>
 #include <editor/tree_widget.hh>
@@ -73,6 +74,53 @@ TEST_CASE("basic display subtree", "[editor][qt][gui][subtree]")
     CHECK(tv->isExpanded(tv->rootIndex().child(0, 0).child(0, 0)) == true);
     CHECK(tv->isExpanded(tv->rootIndex().child(1, 0)) == true);
     CHECK(tv->isExpanded(tv->rootIndex().child(1, 0).child(0,0)) == true);
+    });
+
+  QEventLoop e;
+  QTimer::singleShot(1000, [&e]{ e.quit(); });
+  e.exec();
+
+}
+
+TEST_CASE("display larger subtree", "[editor][qt][gui][subtree]")
+{
+  auto p = editor::command::open_ber(
+      (test::path::in() + "/tap_3_12_larger_cdr.ber").c_str());
+  unique_ptr<QAbstractItemModel> aa(get<0>(p));
+  QAbstractItemModel &a = *aa.get();
+
+  QMainWindow w;
+  editor::gui_command::Display_Subtree ds(&w);
+
+  qRegisterMetaType<editor::Subtree_Window*>();
+  QSignalSpy spy_created(&ds,
+      SIGNAL(subtree_window_created(editor::Subtree_Window*)));
+
+  ds.set_model(&a);
+  auto sm = new QItemSelectionModel(&a);
+  ds.set_selection_model(sm);
+  sm->select(a.index(0, 0).child(3, 0).child(4, 0),
+    QItemSelectionModel::Select);
+
+  ds.display();
+
+  QTimer::singleShot(300, [&w, &spy_created, &a]{
+    auto v = QApplication::focusWindow();
+    REQUIRE(v != nullptr);
+    CHECK(v->title().toStdString() == "GprsCall #5");
+
+    REQUIRE(spy_created.empty() == false);
+    auto x = qvariant_cast<editor::Subtree_Window*>(
+        spy_created.front().front());
+    REQUIRE(x != nullptr);
+    auto tv = &x->tree_widget().tree_view();
+    CHECK(tv->rootIndex() == a.index(0, 0).child(3, 0).child(4, 0));
+    CHECK(tv->isExpanded(tv->rootIndex().child(0, 0)) == true);
+    CHECK(tv->isExpanded(tv->rootIndex().child(0, 0).child(0, 0)) == true);
+    CHECK(tv->isExpanded(tv->rootIndex().child(1, 0)) == true);
+    CHECK(tv->isExpanded(tv->rootIndex().child(1, 0).child(0,0)) == true);
+    CHECK(tv->isExpanded(tv->rootIndex().child(2, 0)) == true);
+    CHECK(tv->isExpanded(tv->rootIndex().child(2, 0).child(0,0)) == true);
     });
 
   QEventLoop e;
