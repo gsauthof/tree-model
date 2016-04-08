@@ -76,3 +76,30 @@ TEST_CASE("writeaci basic", "[editor][write-aci]")
       .toString().toStdString() == "71200");
 
 }
+
+TEST_CASE("write aci without existing one", "[editor][write-aci]")
+{
+  string in {test::path::in() + "/tap_3_12_small.xml"};
+  auto r = editor::command::open_xml(in.c_str());
+  unique_ptr<QAbstractItemModel> m(r.first);
+
+  CHECK(m->index(0, 0).child(4, 0).child(0, 0).child(0, 1).data().toString()
+      .toStdString() == "20050404162453");
+
+  CHECK(m->removeRow(4, m->index(0, 0)) == true);
+
+  editor::command::Write_ACI waci;
+
+  waci.set_model(m.get());
+  waci.set_tree_model(r.second);
+  editor::File_Type ft(editor::File_Type::XML);
+  deque<string> asn_filenames = { test::path::in()
+      + "/../../libgrammar/test/in/asn1/tap_3_12_strip.asn1"  };
+  ft.set_asn_filenames(std::move(asn_filenames));
+  waci.set_file_type(ft);
+  waci.write();
+
+  CHECK(m->index(0, 0).child(4, 0).child(0, 0).child(0, 1).data().toString()
+      .toStdString() == "20140301140342");
+
+}
