@@ -192,6 +192,16 @@ add_executable(main
   ${QT_AWESOME_MOC}
   ${EDITOR_RES}
   )
+# WIN32 also true on win64 ...
+if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Release")
+  # By default, cmake built executables show a console window on windows
+  # setting that property to true disables that console window.
+  # Should be equivalent to add_executable(main WIN32 ...)
+  # If we want to unconditionally set it for all build types we can
+  # just add WIN32 to the above add_executable() call, since
+  # it only has an effect when compiling on windows.
+  set_property(TARGET main PROPERTY WIN32_EXECUTABLE true)
+endif()
 set_property(TARGET main PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/libxxxml
