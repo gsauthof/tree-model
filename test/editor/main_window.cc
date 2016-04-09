@@ -545,13 +545,7 @@ TEST_CASE("mw tree view add sibling", "[editor][qt][gui][mainwindow]")
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
 
-  QTimer::singleShot(300, [&v]{
-      auto v = QApplication::focusWindow();
-      REQUIRE(v);
-      QTest::keyClick(v, Qt::Key_S, Qt::AltModifier, 10);
-      });
-
-  QTimer::singleShot(600, [&w]{
+  QTimer::singleShot(300, [&w]{
       auto v = QApplication::modalWindow();
       REQUIRE(v);
       CHECK(v->title().toStdString() == "Add sibling");
@@ -559,11 +553,13 @@ TEST_CASE("mw tree view add sibling", "[editor][qt][gui][mainwindow]")
       QTest::keyClicks(QApplication::focusWidget(), "blah", Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_Tab, Qt::NoModifier, 10);
       QTest::keyClicks(QApplication::focusWidget(), "23", Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Return, Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_O, Qt::AltModifier, 10);
       });
 
   QTest::keyClick(v, Qt::Key_E, Qt::AltModifier, 10);
-  QTest::qWait(1000);
+  QTest::keyClick(v, Qt::Key_S, Qt::NoModifier, 10);
+  QTest::qWait(700);
 
   int new_rowcount = a->rowCount(a->index(0, 0));
   CHECK(old_rowcount + 1 == new_rowcount);
