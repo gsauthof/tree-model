@@ -37,6 +37,7 @@
 #include <editor/subtree_window.hh>
 #include <tree_model/base.hh>
 #include <tree_model/recorder.hh>
+#include <grammar/grammar.hh>
 
 namespace editor {
 
@@ -115,6 +116,10 @@ namespace editor {
   {
     connect(this, &Controller::item_tree_model_created,
         edit_, &gui_command::Edit::set_model);
+    connect(this, &Controller::file_type_opened,
+        edit_, &gui_command::Edit::apply_file_type);
+    connect(this, &Controller::grammar_read,
+        edit_, &gui_command::Edit::apply_grammar);
     connect(edit_, SIGNAL(begin_transaction_requested(const QString&)),
         recorder_, SLOT(begin_transaction(const QString&)));
     connect(edit_, &gui_command::Edit::commit_requested,

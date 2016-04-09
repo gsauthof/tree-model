@@ -30,6 +30,8 @@
 #include <QSettings>
 #include <QToolBar>
 #include <QAction>
+#include <QLineEdit>
+#include <QCompleter>
 #include <string>
 
 #include <editor/gui_controller.hh>
@@ -935,3 +937,49 @@ TEST_CASE("mw tag validate", "[editor][gui][mainwindow][delegate]")
 
 }
 
+TEST_CASE("mw edit tag complete", "[editor][gui][mainwindow][delegate][edit]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+  c.open(in.c_str());
+  QTest::qWait(300);
+
+  w.show();
+  QTest::qWait(300);
+
+  auto v = QApplication::focusWindow();
+
+  auto a = c.item_tree_model();
+
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  //QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+
+  QTimer::singleShot(300, []() {
+    auto v = QApplication::focusWidget();
+    CHECK(v);
+    auto e = dynamic_cast<QLineEdit*>(v);
+    REQUIRE(e);
+    CHECK(e->validator());
+    auto c = e->completer();
+    REQUIRE(c);
+    c->setCompletionPrefix("Re");
+    REQUIRE(c->setCurrentRow(0));
+    CHECK(c->currentCompletion().toStdString() == "RecEntityCode");
+    QWidget *w = nullptr;
+    QTest::keyClick(w, Qt::Key_Escape,    Qt::NoModifier, 10);
+    });
+
+  QTest::keyClick(v, Qt::Key_E,    Qt::AltModifier, 10);
+  // Alt+E -> open edit menu => Alt+I triggers edit action only with
+  // gnome shell, elsewhere, the second Alt closes the menu again
+  // => just 'I' triggers the action in a portable fashion ...
+  QTest::keyClick(v, Qt::Key_I,    Qt::NoModifier, 10);
+
+  QTest::qWait(2000);
+
+}

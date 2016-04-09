@@ -51,6 +51,7 @@ namespace editor {
   void Child_Dialog::enable_value(bool b)
   {
     ui->value_edit->setEnabled(b);
+    ui->label->setEnabled(b);
   }
 
   QLineEdit &Child_Dialog::key_line()
@@ -60,6 +61,49 @@ namespace editor {
   QLineEdit &Child_Dialog::value_line()
   {
     return *ui->value_edit;
+  }
+
+  void Child_Dialog::install_widget(QWidget *widget, unsigned column)
+  {
+    if (!widget)
+      return;
+
+    // should be re-parented again when replacing it in the
+    // layout
+    widget->setParent(this);
+    if (auto e = dynamic_cast<QLineEdit*>(widget)) {
+      e->setFrame(ui->key_edit->hasFrame());
+      // the default Qt item delegate returns the sub-classed
+      // QLineEdit, QExpandingLineEdit, that has automatic
+      // resizing which is suboptimal for dialogs, thus, we
+      // disable it
+      // cf.
+      // qtbase/src/widgets/itemviews/qitemeditorfactory.cpp
+      disconnect(e, SIGNAL(textChanged(QString)),
+          e, SLOT(resizeToContents()));
+    }
+
+    QWidget *from = column ? ui->value_edit : ui->key_edit;
+
+    auto buddy = ui->label->buddy() == from ? ui->label : ui->label_2;
+    auto a = ui->formLayout->replaceWidget(from, widget);
+    if (!a)
+      return;
+    buddy->setBuddy(widget);
+    buddy->setEnabled(widget->isEnabled());
+
+    // deleting the widget would make the line edit getter return
+    // a freed reference
+    if (a) {
+      a->widget()->hide();
+      a->widget()->setParent(this);
+    }
+    // the destructor automatically hides the widget:
+    // delete a->widget();
+    delete a;
+
+    if (!column)
+      widget->setFocus();
   }
 
 } // namespace editor

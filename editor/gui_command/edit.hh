@@ -27,8 +27,17 @@
 class QWidget;
 class QAbstractItemModel;
 class QModelIndex;
+class QAbstractItemDelegate;
 
+namespace grammar {
+  class Grammar;
+}
 namespace editor {
+  class File_Type;
+  namespace delegate {
+    class Tag;
+    class Value;
+  }
   namespace gui_command {
 
     class Edit : public QObject {
@@ -39,14 +48,21 @@ namespace editor {
       public slots:
         void edit(const QModelIndex &index);
         void set_model(QAbstractItemModel *model);
+        void apply_grammar(const grammar::Grammar *g);
+        void apply_file_type(const File_Type &ft);
       signals:
         void begin_transaction_requested(const QString &name);
         void commit_requested();
 
       protected:
-        QWidget *parent_widget_    {nullptr};
+        QWidget            *parent_widget_  {nullptr};
       private:
-        QAbstractItemModel *model_ {nullptr};
+        QAbstractItemModel *model_          {nullptr};
+        delegate::Tag      *key_delegate_   {nullptr};
+        delegate::Value    *value_delegate_ {nullptr};
+
+      QWidget *create_editor(QAbstractItemDelegate *delegate,
+          const QModelIndex &index);
     };
 
   } // namespace gui_command

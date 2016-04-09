@@ -51,7 +51,8 @@ TEST_CASE("edit dialog", "[editor][qt][gui][edit]")
   REQUIRE(model != nullptr);
 
   QTimer::singleShot(300, [&w]{
-      QTest::keyClick(w.focusWidget(), Qt::Key_Home, Qt::ShiftModifier, 100);
+      // now has explicit focus (everything is selected)
+      //QTest::keyClick(w.focusWidget(), Qt::Key_Home, Qt::ShiftModifier, 100);
       QTest::keyClicks(w.focusWidget(), "blah", Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Tab, Qt::NoModifier, 100);
       QTest::keyClicks(w.focusWidget(), "23", Qt::NoModifier, 10);
@@ -90,7 +91,7 @@ TEST_CASE("edit dialog with children", "[editor][qt][gui][edit]")
   REQUIRE(model != nullptr);
 
   QTimer::singleShot(300, [&w]{
-      QTest::keyClick(w.focusWidget(), Qt::Key_Home, Qt::ShiftModifier, 100);
+      //QTest::keyClick(w.focusWidget(), Qt::Key_Home, Qt::ShiftModifier, 100);
       QTest::keyClicks(w.focusWidget(), "void", Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Tab, Qt::NoModifier, 100);
       QTest::keyClick(w.focusWidget(), Qt::Key_Tab, Qt::NoModifier, 100);

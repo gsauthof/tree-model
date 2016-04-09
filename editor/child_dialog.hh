@@ -47,6 +47,8 @@ namespace editor {
       QLineEdit &key_line();
       QLineEdit &value_line();
 
+      void install_widget(QWidget *widget, unsigned column);
+
     private:
       Ui::Child_Dialog *ui;
   };
