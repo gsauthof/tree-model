@@ -53,4 +53,13 @@ namespace editor {
     ui->value_edit->setEnabled(b);
   }
 
+  QLineEdit &Child_Dialog::key_line()
+  {
+    return *ui->key_edit;
+  }
+  QLineEdit &Child_Dialog::value_line()
+  {
+    return *ui->value_edit;
+  }
+
 } // namespace editor

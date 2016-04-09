@@ -22,6 +22,7 @@
 #define EDITOR_CHILD_DIALOG_HH
 
 #include <QDialog>
+#include <QLineEdit>
 
 namespace editor {
 
@@ -42,6 +43,9 @@ namespace editor {
       QString key() const;
       QString value() const;
       void enable_value(bool b);
+
+      QLineEdit &key_line();
+      QLineEdit &value_line();
 
     private:
       Ui::Child_Dialog *ui;

@@ -23,6 +23,7 @@
 #include <editor/child_dialog.hh>
 
 #include <QAbstractItemModel>
+#include <QDataWidgetMapper>
 
 namespace editor {
   namespace gui_command {
@@ -40,22 +41,28 @@ namespace editor {
       if (!index.isValid())
         return;
 
-      QModelIndex key(model_->index(index.row(), 0, index.parent()));
-      QModelIndex value(model_->index(index.row(), 1, index.parent()));
-      bool has_children = model_->hasChildren(key);
-      QString v;
-      if (!has_children)
-        v = model_->data(value, Qt::EditRole).toString();
-
       editor::Child_Dialog d(parent_widget_);
       d.setWindowTitle(tr("Edit node"));
-      d.set_data(model_->data(key, Qt::EditRole).toString(), v);
-      d.enable_value(!has_children);
+
+      bool has_children = model_->hasChildren(
+          model_->index(index.row(), 0, index.parent()));
+      // the mapper doesn't do the disabling for us, i.e.
+      // it doesn't query
+      // QAbstractItemModel::flags & Qt::ItemIsEditable
+      // apparently
+      d.value_line().setEnabled(!has_children);
+
+      QDataWidgetMapper mapper;
+      mapper.setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+      mapper.setModel(model_);
+      mapper.setRootIndex(index.parent());
+      mapper.addMapping(&d.key_line(), 0);
+      mapper.addMapping(&d.value_line(), 1);
+      mapper.setCurrentIndex(index.row());
+
       if (d.exec()) {
         emit begin_transaction_requested(tr("edit node"));
-        model_->setData(key, d.key());
-        if (!has_children)
-          model_->setData(value, d.value());
+        mapper.submit();
         emit commit_requested();
       }
     }
