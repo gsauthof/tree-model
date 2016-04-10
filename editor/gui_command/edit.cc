@@ -78,11 +78,20 @@ namespace editor {
       d.install_widget(value_widget, 1);
 
       if (d.exec()) {
-        emit begin_transaction_requested(tr("edit node"));
-        key_delegate_->setModelData(key_widget, model_, key_index);
-        if (value_widget && value_widget->isEnabled())
-          value_delegate_->setModelData(value_widget, model_, value_index);
-        emit commit_requested();
+        // we use Qt's meta object system to access that
+        // property, because widgets like QLineEdit/QAbstractSpinBox have it,
+        // but the QWidget base class hasn't
+        if (key_widget->property("acceptableInput").toBool()
+            && (!value_widget
+              || !value_widget->isEnabled()
+              || value_widget->property("acceptableInput").toBool()
+              )) {
+          emit begin_transaction_requested(tr("edit node"));
+          key_delegate_->setModelData(key_widget, model_, key_index);
+          if (value_widget && value_widget->isEnabled())
+            value_delegate_->setModelData(value_widget, model_, value_index);
+          emit commit_requested();
+        }
       }
     }
     void Edit::set_model(QAbstractItemModel *model)

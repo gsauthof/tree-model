@@ -976,6 +976,56 @@ TEST_CASE("mw edit tag complete", "[editor][gui][mainwindow][delegate][edit]")
   // => just 'I' triggers the action in a portable fashion ...
   QTest::keyClick(v, Qt::Key_I,    Qt::NoModifier, 10);
 
-  QTest::qWait(2000);
+  // dialog window blocks so we don't have to wait here
+  // QTest::qWait(2000);
+}
+
+TEST_CASE("mw edit invalid tag reject", "[editor][gui][mainwindow][delegate][edit]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+  c.open(in.c_str());
+  QTest::qWait(300);
+
+  w.show();
+  QTest::qWait(300);
+
+  auto v = QApplication::focusWindow();
+
+  auto a = c.item_tree_model();
+
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  //QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
+  //
+  CHECK(a->index(0, 0).child(0, 0).child(0, 0).data().toString().toStdString()
+      == "Sender");
+
+  QTimer::singleShot(300, []() {
+    auto v = QApplication::focusWindow();
+    CHECK(v);
+
+    QWidget *w = nullptr;
+    QTest::keyClicks(w, "S",    Qt::NoModifier, 10);
+    QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+    QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+    QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+    });
+
+  QTest::keyClick(v, Qt::Key_E,    Qt::AltModifier, 10);
+  // Alt+E -> open edit menu => Alt+I triggers edit action only with
+  // gnome shell, elsewhere, the second Alt closes the menu again
+  // => just 'I' triggers the action in a portable fashion ...
+  QTest::keyClick(v, Qt::Key_I,    Qt::NoModifier, 10);
+
+  // dialog window blocks so we don't have to wait here
+  //QTest::qWait(2000);
+
+  CHECK(a->index(0, 0).child(0, 0).child(0, 0).data().toString().toStdString()
+      == "Sender");
 
 }
