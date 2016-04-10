@@ -880,14 +880,14 @@ TEST_CASE("mw tag complete", "[editor][gui][mainwindow][delegate]")
 
   QTest::keyClick(v, Qt::Key_F2,    Qt::NoModifier, 10);
 
-  QTest::keyClicks(nullptr, "Reci", Qt::NoModifier, 10);
+  QTest::keyClicks(nullptr, "Rec", Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
-  QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Down,    Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Enter,    Qt::NoModifier, 10);
 
   CHECK(a->index(0, 0).child(0, 0).child(0, 0).data().toString().toStdString()
-      == "Recipient");
+      == "RecEntityCodeList");
 
 }
 
