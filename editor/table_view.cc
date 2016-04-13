@@ -19,32 +19,23 @@
 
 }}} */
 
-#ifndef EDITOR_SUBTREE_WINDOW_HH
-#define EDITOR_SUBTREE_WINDOW_HH
+#include "table_view.hh"
 
-#include <QDialog>
+#include <QHeaderView>
 
 namespace editor {
 
-  class Tree_Widget;
-
-  namespace Ui {
-    class Subtree_Window;
+  void Table_View::currentChanged(const QModelIndex &current,
+      const QModelIndex &previous)
+  {
+    QTableView::currentChanged(current, previous);
+    emit current_changed(current, previous);
+  }
+  void Table_View::setModel(QAbstractItemModel *model)
+  {
+    QTableView::setModel(model);
+    resizeColumnsToContents();
+    horizontalHeader()->setStretchLastSection(true);
   }
 
-  class Subtree_Window : public QDialog
-  {
-    Q_OBJECT
-
-    public:
-      explicit Subtree_Window(QWidget *parent = 0);
-      ~Subtree_Window();
-
-      Tree_Widget &tree_widget();
-    private:
-      Ui::Subtree_Window *ui;
-  };
-
-
-} // namespace editor
-#endif // EDITOR_SUBTREE_WINDOW_HH
+} // editor

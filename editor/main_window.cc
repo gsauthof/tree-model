@@ -128,6 +128,8 @@ namespace editor {
         this, &Main_Window::display_subtree_triggered);
     connect(ui->write_aci_action, &QAction::triggered,
         this, &Main_Window::write_aci_triggered);
+    connect(ui->find_action, &QAction::triggered,
+        this, &Main_Window::find_triggered);
     connect(ui->quit_action, &QAction::triggered,
         this, &Main_Window::quit_triggered);
   }

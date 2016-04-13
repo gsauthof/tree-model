@@ -18,7 +18,20 @@
     along with tree-model.  If not, see <http://www.gnu.org/licenses/>.
 
 }}} */
-#define CATCH_CONFIG_MAIN
+
+//#define CATCH_CONFIG_MAIN
+
+#define CATCH_CONFIG_RUNNER
+
 #include <catch.hpp>
 
+#include <QCoreApplication>
 
+int main(int argc, char **argv)
+{
+  // we need an application object for running event loops, e.g.
+  // QEventLoop or QTest::qWait()
+  QCoreApplication app(argc, argv);
+  int result = Catch::Session().run(argc, argv);
+  return result;
+}

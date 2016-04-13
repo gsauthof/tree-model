@@ -55,6 +55,13 @@ namespace editor {
     if (value < 1)
       return;
     auto i = ui->tree_view->currentIndex().sibling(value-1, 0);
+    jump_to_index(i);
+  }
+
+  void Tree_Widget::jump_to_index(const QModelIndex &i)
+  {
+    if (!i.isValid())
+      return;
     // also selects:
     ui->tree_view->setCurrentIndex(i);
     // does not set the current index:

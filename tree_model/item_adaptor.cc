@@ -257,6 +257,30 @@ namespace tree_model {
     return x->second;
   }
 
+  QModelIndex Item_Adaptor::index(void *x, const QModelIndex &parent) const
+  {
+    Index p(create_index(parent));
+    if (p.column())
+      return QModelIndex();
+#ifdef USE_SLOW_TREE_MODEL
+    for (Index i = model_->first_child(p); i.is_valid();
+        i = i.next_sibling()) {
+      if (i.internal_pointer() == x)
+        return createIndex(i);
+    }
+#else
+    auto &c = cached_children(p);
+    if (!c.empty()) {
+      auto i = index_to_node_map_.find(x);
+      if (i != index_to_node_map_.end()) {
+        auto row = c.rank(*i->second);
+        return createIndex(row, 0, x);
+      }
+    }
+#endif
+    return QModelIndex();
+  }
+
   QModelIndex Item_Adaptor::index(int row, int column,
       const QModelIndex &parent) const
   {

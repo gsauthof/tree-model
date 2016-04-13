@@ -44,6 +44,8 @@ namespace tree_model {
 
       QModelIndex index(int row, int column,
           const QModelIndex &parent = QModelIndex()) const override;
+      QModelIndex index(void *x, const QModelIndex &parent) const;
+
       QModelIndex sibling(int row, int column, const QModelIndex & index)
         const override;
 

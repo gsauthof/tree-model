@@ -45,6 +45,7 @@ namespace editor {
     class Clipboard_Paste;
     class Display_Subtree;
     class Write_ACI;
+    class Search;
   }
 
   class Gui_Controller : public Controller {
@@ -69,11 +70,13 @@ namespace editor {
       void add_sibling(const QModelIndex &i);
       void edit(const QModelIndex &i);
       void write_aci();
+      void find();
 
     signals:
       void selection_model_changed(const QItemSelectionModel *smodel);
       void subtree_window_created(editor::Subtree_Window *w);;
       void open_more_urls_requested(const QList<QUrl> &urls);
+      void index_focused(const QModelIndex &i);
 
     private:
       QWidget                           *parent_widget_        {nullptr};
@@ -88,6 +91,7 @@ namespace editor {
       gui_command::Clipboard_Paste      *clipboard_paste_      {nullptr};
       gui_command::Display_Subtree      *display_subtree_      {nullptr};
       gui_command::Write_ACI            *write_aci_            {nullptr};
+      gui_command::Search               *search_               {nullptr};
 
       void connect_open_command();
       void connect_select_open_command();
@@ -97,6 +101,7 @@ namespace editor {
       void connect_clipboard();
       void connect_subtree_command();
       void connect_write_aci_command();
+      void connect_search_command();
 
   };
 

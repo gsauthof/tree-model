@@ -47,6 +47,7 @@ qt5_wrap_ui(EDITOR_UI
   editor/tree_widget.ui
   editor/slider_bar.ui
   editor/child_dialog.ui
+  editor/result_window.ui
   )
 
 qt5_wrap_cpp(EDITOR_MOC
@@ -63,6 +64,8 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/command/remove.hh
   editor/command/write_aci.hh
   editor/command/read_grammar.hh
+  editor/command/search.hh
+  editor/command/async_search.hh
   editor/gui_command/select_open.hh
   editor/gui_command/open.hh
   editor/gui_command/save.hh
@@ -73,6 +76,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/gui_command/clipboard_paste.hh
   editor/gui_command/display_subtree.hh
   editor/gui_command/write_aci.hh
+  editor/gui_command/search.hh
   editor/controller.hh
   editor/gui_controller.hh
   editor/arguments.hh
@@ -86,6 +90,7 @@ qt5_wrap_cpp(EDITOR_MOC
   editor/delegate/tag.hh
   editor/delegate/value.hh
   editor/delegate/editor/local_time.hh
+  editor/table_view.hh
   )
 qt5_wrap_cpp(TREE_MOC
   tree_model/item_adaptor.hh
@@ -124,6 +129,8 @@ set(EDITOR_CC
   editor/command/write_aci.cc
   editor/command/preview.cc
   editor/command/read_grammar.cc
+  editor/command/search.cc
+  editor/command/async_search.cc
   editor/gui_command/open.cc
   editor/gui_command/select_open.cc
   editor/gui_command/save.cc
@@ -134,6 +141,7 @@ set(EDITOR_CC
   editor/gui_command/clipboard_paste.cc
   editor/gui_command/display_subtree.cc
   editor/gui_command/write_aci.cc
+  editor/gui_command/search.cc
   editor/arguments.cc
   editor/preview_file_dialog.cc
   editor/preview.cc
@@ -152,6 +160,8 @@ set(EDITOR_CC
   editor/delegate/editor/local_time.cc
   editor/delegate/factory.cc
   editor/setup.cc
+  editor/result_window.cc
+  editor/table_view.cc
   )
 set(TREE_MODEL_CC
   tree_model/index.cc
@@ -168,6 +178,8 @@ set(TREE_MODEL_CC
   tree_model/util.cc
   tree_model/df_qmi_traverser.cc
   tree_model/qmi_iterator.cc
+  tree_model/protected_item_model_impl.cc
+  tree_model/qpmi_vector_model.cc
   )
 
 set(QT_AWESOME_CC
@@ -240,6 +252,8 @@ add_executable(ut
   test/tree_model/util.cc
   test/tree_model/df_qmi_traverser.cc
   test/tree_model/qmi_iterator.cc
+  test/tree_model/protected_item_model.cc
+  test/tree_model/qpmi_vector_model.cc
   test/qt_model.cc
 
   test/editor/command/remove.cc
@@ -247,6 +261,8 @@ add_executable(ut
   test/editor/command/save.cc
   test/editor/command/write_aci.cc
   test/editor/command/preview.cc
+  test/editor/command/search.cc
+  test/editor/command/async_search.cc
   test/editor/traverser/qmi_proxy.cc
   editor/command/remove.cc
   editor/command/open.cc
@@ -256,6 +272,8 @@ add_executable(ut
   editor/command/save_ber.cc
   editor/command/write_aci.cc
   editor/command/preview.cc
+  editor/command/search.cc
+  editor/command/async_search.cc
   editor/file_type.cc
   editor/typed_model.cc
   editor/delegate/value/local_time.cc
@@ -263,6 +281,8 @@ add_executable(ut
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_open.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_save.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_write_aci.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_search.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/editor/command/moc_async_search.cpp
 
   ${TREE_MODEL_CC}
   ${TREE_MOC}
@@ -354,6 +374,7 @@ add_executable(ut_gui
   test/editor/gui_command/clipboard_paste.cc
   test/editor/gui_command/display_subtree.cc
   test/editor/gui_command/write_aci.cc
+  test/editor/gui_command/search.cc
   test/editor/recent_menu.cc
   test/editor/main_window.cc
   test/editor/slider_bar.cc

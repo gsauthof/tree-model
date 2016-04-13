@@ -19,32 +19,31 @@
 
 }}} */
 
-#ifndef EDITOR_SUBTREE_WINDOW_HH
-#define EDITOR_SUBTREE_WINDOW_HH
+#ifndef EDITOR_TABLE_VIEW_HH
+#define EDITOR_TABLE_VIEW_HH
 
-#include <QDialog>
+#include <QTableView>
 
 namespace editor {
 
-  class Tree_Widget;
-
-  namespace Ui {
-    class Subtree_Window;
-  }
-
-  class Subtree_Window : public QDialog
+  class Table_View : public QTableView
   {
     Q_OBJECT
-
     public:
-      explicit Subtree_Window(QWidget *parent = 0);
-      ~Subtree_Window();
+      using QTableView::QTableView;
 
-      Tree_Widget &tree_widget();
+      void setModel(QAbstractItemModel *model) override;
+    signals:
+      void current_changed(const QModelIndex &current,
+          const QModelIndex &previous);
+
+    protected slots:
+      void currentChanged(const QModelIndex &current,
+          const QModelIndex &previous) override;
+
     private:
-      Ui::Subtree_Window *ui;
   };
 
+} // editor
 
-} // namespace editor
-#endif // EDITOR_SUBTREE_WINDOW_HH
+#endif // EDITOR_TABLE_VIEW_HH

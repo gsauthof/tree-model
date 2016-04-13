@@ -40,10 +40,16 @@ namespace editor {
       ~Tree_Widget();
       Tree_View &tree_view();
 
+    public slots:
+      void jump_to_index(const QModelIndex &i);
+
+
     private:
       Ui::Tree_Widget *ui {nullptr};
 
       void init_slider_bar(const QModelIndex &current);
+
+    private slots:
       void jump_to_rank(int value);
 
     signals:

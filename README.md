@@ -354,6 +354,40 @@ factory should be used. A - say - small context dependent
 database for completing strings thus makes an explicit delegate
 class necessary.
 
+### Searching
+
+The editor implements fast searching while maintaining a
+responsive GUI via directly traversing the tree data
+structure in a worker thread (cf.
+`editor/command/{async_,}search.cc` and
+`editor/gui_command/search.cc`).
+
+It is tempting to use the libxml2 XPath module for searching the
+tree. Unfortunately, even a simple XPath expression like
+`//Imsi[. = '123']` yields very huge temporary nodesets. Thus,
+it is unusable for large documents (think thousands of nodes,
+think 100 MiB BER files). Apparently, the library doesn't optimize
+the expression much (e.g. lifting the test).
+
+For smaller documents, not using XPath also improves on constant
+factors, of course.
+
+Using a worker thread, a few synchronisation implications lead to
+following implementation choices:
+
+- the abortion of an ongoing search is signaled via an atomic
+  integer
+- the transfer of the result list from to the worker to the GUI
+  thread is done via `std::move()` and is protected with a mutex
+- during the search the adaptor model is switched read-only to
+  avoid invalidating the traverser
+- the search directly traverses the tree data structure for
+  performance reasons (i.e. elimination of temporary QModelIndex
+  and QVariant objects), but also because the adaptor model
+  maintains some data structures for caching that are not thread
+  safe
+
+
 ## Architecture
 
 Qt provides some classes to implement data models and views. This

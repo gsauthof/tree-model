@@ -62,6 +62,12 @@
     <addaction name="separator"/>
     <addaction name="remove_action"/>
    </widget>
+   <widget class="QMenu" name="menu_Search">
+    <property name="title">
+     <string>&amp;Search</string>
+    </property>
+    <addaction name="find_action"/>
+   </widget>
    <widget class="QMenu" name="menu_Tools">
     <property name="title">
      <string>&amp;Tools</string>
@@ -87,6 +93,7 @@
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
+   <addaction name="menu_Search"/>
    <addaction name="menu_Tools"/>
    <addaction name="menu_View"/>
    <addaction name="menu_Help"/>
@@ -249,6 +256,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+Z</string>
+   </property>
+  </action>
+  <action name="find_action">
+   <property name="text">
+    <string>&amp;Find...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
   <action name="write_aci_action">

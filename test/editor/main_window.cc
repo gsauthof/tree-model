@@ -40,6 +40,8 @@
 #include <editor/subtree_window.hh>
 #include <editor/tree_widget.hh>
 #include <editor/tree_view.hh>
+#include <editor/result_window.hh>
+#include <editor/table_view.hh>
 
 #include <tree_model/util.hh>
 
@@ -1028,4 +1030,41 @@ TEST_CASE("mw edit invalid tag reject", "[editor][gui][mainwindow][delegate][edi
   CHECK(a->index(0, 0).child(0, 0).child(0, 0).data().toString().toStdString()
       == "Sender");
 
+}
+
+TEST_CASE("mw search", "[editor][search][mainwindow]")
+{
+  editor::Main_Window w;
+  editor::Gui_Controller c(&w);
+  editor::connect_view_controller(w, c);
+
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+  c.open(in.c_str());
+
+  w.show();
+  QTest::qWait(300);
+
+  auto v = QApplication::focusWindow();
+
+  QTimer::singleShot(300, []() {
+    auto v = QApplication::focusWindow();
+    CHECK(v);
+    QWidget *w = nullptr;
+
+    QTest::keyClicks(w, "Imsi",  Qt::NoModifier, 10);
+    QTest::keyClick(w, Qt::Key_Return,  Qt::NoModifier, 10);
+    });
+
+  QTest::keyClick(v, Qt::Key_F, Qt::ControlModifier, 10);
+
+  auto rw = w.findChild<editor::Result_Window*>();
+  REQUIRE(rw);
+  auto tv = rw->findChild<editor::Table_View*>();
+  REQUIRE(tv);
+  auto tm = tv->model();
+  REQUIRE(tm);
+  CHECK(tm->rowCount() == 4);
+
+  rw->close();
 }

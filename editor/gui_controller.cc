@@ -34,6 +34,7 @@
 #include <editor/gui_command/clipboard_paste.hh>
 #include <editor/gui_command/display_subtree.hh>
 #include <editor/gui_command/write_aci.hh>
+#include <editor/gui_command/search.hh>
 #include <editor/subtree_window.hh>
 #include <tree_model/base.hh>
 #include <tree_model/recorder.hh>
@@ -54,7 +55,8 @@ namespace editor {
       clipboard_cut_  (new gui_command::Clipboard_Cut(this)),
       clipboard_paste_(new gui_command::Clipboard_Paste(this)),
       display_subtree_(new gui_command::Display_Subtree(parent_widget_)),
-      write_aci_      (new gui_command::Write_ACI(parent_widget_))
+      write_aci_      (new gui_command::Write_ACI(parent_widget_)),
+      search_         (new gui_command::Search(parent_widget_))
   {
     connect_open_command();
     connect_select_open_command();
@@ -64,6 +66,7 @@ namespace editor {
     connect_clipboard();
     connect_subtree_command();
     connect_write_aci_command();
+    connect_search_command();
   }
   void Gui_Controller::connect_open_command()
   {
@@ -178,6 +181,19 @@ namespace editor {
     connect(write_aci_, &gui_command::Write_ACI::msg_produced,
             this, &Gui_Controller::msg_produced);
   }
+  void Gui_Controller::connect_search_command()
+  {
+    connect(this, &Controller::item_tree_model_created,
+        search_, &gui_command::Search::set_model);
+    connect(this, &Controller::tree_model_created,
+        search_, &gui_command::Search::set_tree_model);
+    connect(search_, &gui_command::Search::current_changed,
+        [this](const QModelIndex &i, const QModelIndex &) {
+        emit index_focused(i);
+        });
+    connect(search_, &gui_command::Search::msg_produced,
+            this, &Gui_Controller::msg_produced);
+  }
 
   void Gui_Controller::open(const QString &filename)
   {
@@ -239,6 +255,10 @@ namespace editor {
   void Gui_Controller::write_aci()
   {
     write_aci_->write();
+  }
+  void Gui_Controller::find()
+  {
+    search_->display();
   }
 
 }

@@ -62,6 +62,7 @@ namespace editor {
       void display_subtree_triggered();
       void quit_triggered();
       void write_aci_triggered();
+      void find_triggered();
 
       void open_urls_requested(const QList<QUrl> &urls);
 

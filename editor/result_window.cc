@@ -19,32 +19,26 @@
 
 }}} */
 
-#ifndef EDITOR_SUBTREE_WINDOW_HH
-#define EDITOR_SUBTREE_WINDOW_HH
-
-#include <QDialog>
+#include "result_window.hh"
+#include "ui_result_window.h"
 
 namespace editor {
 
-  class Tree_Widget;
-
-  namespace Ui {
-    class Subtree_Window;
+  Result_Window::Result_Window(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::Result_Window)
+  {
+    ui->setupUi(this);
   }
 
-  class Subtree_Window : public QDialog
+  Table_View &Result_Window::table_view()
   {
-    Q_OBJECT
+    return *ui->widget;
+  }
 
-    public:
-      explicit Subtree_Window(QWidget *parent = 0);
-      ~Subtree_Window();
-
-      Tree_Widget &tree_widget();
-    private:
-      Ui::Subtree_Window *ui;
-  };
-
+  Result_Window::~Result_Window()
+  {
+    delete ui;
+  }
 
 } // namespace editor
-#endif // EDITOR_SUBTREE_WINDOW_HH

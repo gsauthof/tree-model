@@ -23,6 +23,7 @@
 
 #include <tree_model/item_adaptor.hh>
 #include <tree_model/xml.hh>
+#include <tree_model/protected_item_model.hh>
 
 namespace editor {
   namespace command {
@@ -37,7 +38,8 @@ namespace editor {
       // getting adopted by a, and moveThread() works
       // recursively.
       //m->moveToThread(QApplication::instance()->thread());
-      QAbstractItemModel *a = new tree_model::Item_Adaptor(m);
+      QAbstractItemModel *a =
+        new tree_model::Protected_Item_Model<tree_model::Item_Adaptor>(m);
       return std::make_pair(a, m);
     }
 

@@ -53,6 +53,8 @@ namespace editor {
         &c, &Gui_Controller::display_subtree);
     w.connect(&w, &Main_Window::write_aci_triggered,
         &c, &Gui_Controller::write_aci);
+    w.connect(&w, &Main_Window::find_triggered,
+        &c, &Gui_Controller::find);
   }
 
   static void connect_enable_signals(
@@ -118,14 +120,18 @@ namespace editor {
         &c, &Gui_Controller::clipboard_paste);
     tv.connect(&tv, &editor::Tree_View::paste_as_child_triggered,
         &c, &Gui_Controller::clipboard_paste_as_child);
+
+    tv.connect(&tv, &editor::Tree_View::selection_model_changed,
+        &c, &Gui_Controller::selection_model_changed);
   }
 
   static void connect_tree_widget(Tree_Widget &w, Gui_Controller &c)
   {
     Tree_View &tv = w.tree_view();
     connect_tree_view(tv, c);
-    tv.connect(&tv, &editor::Tree_View::selection_model_changed,
-        &c, &Gui_Controller::selection_model_changed);
+
+    c.connect(&c, &Gui_Controller::index_focused,
+        &w, &editor::Tree_Widget::jump_to_index);
   }
 
   static void connect_sub_tree_widgets(Gui_Controller &c)

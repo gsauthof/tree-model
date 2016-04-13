@@ -23,6 +23,7 @@
 
 #include <tree_model/item_adaptor.hh>
 #include <tree_model/xml.hh>
+#include <tree_model/protected_item_model.hh>
 
 #include <editor/file_type.hh>
 #include <editor/typed_model.hh>
@@ -71,7 +72,8 @@ namespace editor {
       //tree_model::Base   *m = new tree_model::XML(std::move(doc));
       auto m = new editor::Typed_Model(std::move(doc));
       m->set_asn_filenames(asn_filenames);
-      QAbstractItemModel *a = new tree_model::Item_Adaptor(m);
+      QAbstractItemModel *a =
+        new tree_model::Protected_Item_Model<tree_model::Item_Adaptor>(m);
 
       ft.set_asn_filenames(std::move(asn_filenames));
       ft.set_constraint_filenames(std::move(r.constraint_filenames));

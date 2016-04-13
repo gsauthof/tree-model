@@ -23,6 +23,8 @@
 #include <tree_model/item_adaptor.hh>
 #include <tree_model/xml.hh>
 
+#include <xxxml/util.hh>
+
 #include <QSignalSpy>
 #include <QMimeData>
 #include <string>
@@ -837,3 +839,29 @@ TEST_CASE("ignore setting the same value", "[adaptor][xml][tree-model]" )
   CHECK(spy_about.empty());
   CHECK(spy_change.empty());
 }
+
+
+TEST_CASE("pointer to index", "[adaptor][xml][tree-model]" )
+{
+  xxxml::doc::Ptr doc = xxxml::read_memory(
+      "<root><foo>Hello</foo><a><b><c>23</c></b></a><bar>World</bar></root>");
+
+  tree_model::XML *m = new tree_model::XML(std::move(doc));
+  tree_model::Item_Adaptor a(m);
+
+  auto i = a.index(0, 0).child(1, 0).child(0, 0).child(0, 0);
+  CHECK(i.data().toString().toStdString() == "c");
+
+  auto node = static_cast<xmlNode*>(i.internalPointer());
+  auto p = xxxml::util::path(node);
+  REQUIRE(p.size() == 4);
+
+  QModelIndex last;
+  QModelIndex j;
+  for (auto &q : p) {
+    j = a.index(q, last);
+    last = j;
+  }
+  CHECK(j == i);
+}
+

@@ -19,32 +19,11 @@
 
 }}} */
 
-#ifndef EDITOR_SUBTREE_WINDOW_HH
-#define EDITOR_SUBTREE_WINDOW_HH
+#include "protected_item_model_impl.hh"
+#include "item_adaptor.hh"
 
-#include <QDialog>
+namespace tree_model {
 
-namespace editor {
+  template class Protected_Item_Model<Item_Adaptor>;
 
-  class Tree_Widget;
-
-  namespace Ui {
-    class Subtree_Window;
-  }
-
-  class Subtree_Window : public QDialog
-  {
-    Q_OBJECT
-
-    public:
-      explicit Subtree_Window(QWidget *parent = 0);
-      ~Subtree_Window();
-
-      Tree_Widget &tree_widget();
-    private:
-      Ui::Subtree_Window *ui;
-  };
-
-
-} // namespace editor
-#endif // EDITOR_SUBTREE_WINDOW_HH
+} // tree_model
