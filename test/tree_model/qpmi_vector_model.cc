@@ -43,19 +43,16 @@ TEST_CASE("qpmi vector model basic", "[qpmiv][xml][tree-model]" )
   tree_model::QPMI_Vector_Model q(std::move(v));
 
   CHECK(q.rowCount() == 2);
-  CHECK(q.columnCount() == 3);
+  CHECK(q.columnCount() == 2);
 
-  CHECK(q.index(0, 0).data().toInt() == 1);
-  CHECK(q.index(1, 0).data().toInt() == 2);
-  
-  CHECK(q.index(0, 1).data().toString().toStdString() == "foo");
-  CHECK(q.index(1, 1).data().toString().toStdString() == "bar");
+  CHECK(q.index(0, 0).data().toString().toStdString() == "foo");
+  CHECK(q.index(1, 0).data().toString().toStdString() == "bar");
 
-  CHECK(q.index(0, 2).data().toString().toStdString() == "Hello");
-  CHECK(q.index(1, 2).data().toString().toStdString() == "World");
+  CHECK(q.index(0, 1).data().toString().toStdString() == "Hello");
+  CHECK(q.index(1, 1).data().toString().toStdString() == "World");
 
-  CHECK(q.index(0, 1).data(Qt::UserRole) == a.index(0, 0).child(0, 0));
-  CHECK(q.index(1, 1).data(Qt::UserRole) == a.index(0, 0).child(2, 0));
-  CHECK(q.index(0, 2).data(Qt::UserRole) == a.index(0, 0).child(0, 1));
-  CHECK(q.index(1, 2).data(Qt::UserRole) == a.index(0, 0).child(2, 1));
+  CHECK(q.index(0, 0).data(Qt::UserRole) == a.index(0, 0).child(0, 0));
+  CHECK(q.index(1, 0).data(Qt::UserRole) == a.index(0, 0).child(2, 0));
+  CHECK(q.index(0, 1).data(Qt::UserRole) == a.index(0, 0).child(0, 1));
+  CHECK(q.index(1, 1).data(Qt::UserRole) == a.index(0, 0).child(2, 1));
 }
