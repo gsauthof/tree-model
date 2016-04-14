@@ -38,8 +38,6 @@ namespace editor {
 
       connect(thread_, &QThread::finished,
           save_, &QObject::deleteLater);
-      connect(thread_, &QThread::finished,
-          thread_, &QObject::deleteLater);
 
       connect(this, &Async_Save::save_requested,
           save_, &Save::save);
