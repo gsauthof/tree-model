@@ -35,6 +35,9 @@
 #include <QRegularExpressionValidator>
 #include <QStringListModel>
 
+#include <limits>
+
+using namespace std;
 
 // XXX query qsettings if validation should be enabled
 // XXX make it configurable via menu 'Settings'
@@ -91,7 +94,10 @@ namespace editor {
       }
       QValidator *operator()(const grammar::Constraint::Domain &b) const
       {
-        auto validator = new Int64_Validator(b.min(), b.max(), parent_);
+        auto validator = new Int64_Validator(
+            b.has_min() ? b.min() : numeric_limits<int64_t>::min(),
+            b.has_max() ? b.max() : numeric_limits<int64_t>::max(),
+            parent_);
         return validator;
       }
       QValidator *operator()(const grammar::Constraint::Pattern &b) const

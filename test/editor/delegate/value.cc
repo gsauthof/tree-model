@@ -206,3 +206,35 @@ TEST_CASE("validate value enum", "[editor][gui][complete][delegate]")
   CHECK(v->validate(s, i) == QValidator::Invalid);
 }
 
+TEST_CASE("validate half specified domain", "[editor][gui][complete][delegate]")
+{
+  auto a = make_unique<tree_model::Item_Adaptor>(
+      new tree_model::XML(xxxml::new_doc()));
+
+  a->insertRows(0, 1);
+  a->setData(a->index(0, 0), "CallEventDetailsCount");
+  a->setData(a->index(0, 1), "4");
+
+  editor::delegate::Value vd;
+  vd.read_constraints({test::path::in()
+      + "/../../libgrammar/grammar/xml/tap_3_12_constraints.zsv"});
+
+  auto edit = vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1));
+  REQUIRE(edit);
+  auto line_edit = dynamic_cast<QLineEdit*>(edit);
+  REQUIRE(line_edit);
+  auto v = line_edit->validator();
+  REQUIRE(v);
+  int i = 0;
+  QString s = "0";
+  CHECK(v->validate(s, i) == QValidator::Invalid);
+  s = "1";
+  CHECK(v->validate(s, i) == QValidator::Acceptable);
+  s = "10";
+  CHECK(v->validate(s, i) == QValidator::Acceptable);
+  s = "-1";
+  CHECK(v->validate(s, i) == QValidator::Invalid);
+  s = "9223372036854775807";
+  CHECK(v->validate(s, i) == QValidator::Acceptable);
+}
+
