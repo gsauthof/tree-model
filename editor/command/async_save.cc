@@ -85,6 +85,7 @@ namespace editor {
     }
     void Async_Save::set_file_type(const File_Type &file_type)
     {
+      file_type_ = file_type;
       save_->set_file_type(file_type);
     }
     const QString &Async_Save::filename() const

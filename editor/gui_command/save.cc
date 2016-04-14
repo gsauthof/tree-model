@@ -73,9 +73,9 @@ namespace editor {
     QString Save::select_filename(const QString &caption)
     {
       QString filename;
-      QFileDialog file_dialog(parent_widget_, caption,
-            QString(),
-            tr("XML (*.xml)"));
+      QFileDialog file_dialog(parent_widget_, caption);
+      file_dialog.setNameFilters(all_name_filters());
+      file_dialog.selectNameFilter(file_type_.default_name_filter());
       // for consistency with the open dialog ...
       file_dialog.setOption(QFileDialog::DontUseNativeDialog);
       file_dialog.setAcceptMode(QFileDialog::AcceptSave);
@@ -96,11 +96,15 @@ namespace editor {
     void Save::select_save()
     {
       QString filename(select_filename(tr("Select file to save to")));
+      if (filename.isEmpty())
+        return;
       save_as(filename);
     }
     void Save::select_save_copy()
     {
       QString filename(select_filename(tr("Select a file to save a copy to")));
+      if (filename.isEmpty())
+        return;
       save_copy_as(filename);
     }
 

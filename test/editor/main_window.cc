@@ -32,6 +32,7 @@
 #include <QAction>
 #include <QLineEdit>
 #include <QCompleter>
+#include <QFileDialog>
 #include <string>
 
 #include <editor/gui_controller.hh>
@@ -1057,6 +1058,7 @@ TEST_CASE("mw search", "[editor][search][mainwindow]")
     });
 
   QTest::keyClick(v, Qt::Key_F, Qt::ControlModifier, 10);
+  QTest::qWait(300);
 
   auto rw = w.findChild<editor::Result_Window*>();
   REQUIRE(rw);
@@ -1068,3 +1070,42 @@ TEST_CASE("mw search", "[editor][search][mainwindow]")
 
   rw->close();
 }
+
+TEST_CASE("mw save as filters", "[editor][search][mainwindow]")
+{
+  editor::Main_Window mw;
+  editor::Gui_Controller c(&mw);
+  editor::connect_view_controller(mw, c);
+
+  std::string in(test::path::in()
+      + "/../../libxfsx/test/in/tap_3_12_valid.ber");
+  c.open(in.c_str());
+
+  mw.show();
+  QTest::qWait(300);
+
+  auto v = QApplication::focusWindow();
+
+  QStringList nf;
+  QString f;
+  QTimer::singleShot(300, [&mw, &nf, &f]() {
+    auto v = QApplication::focusWindow();
+    CHECK(v);
+    QWidget *w = nullptr;
+
+    auto fd = mw.findChild<QFileDialog*>();
+    CHECK(fd);
+    if (fd) {
+      nf = fd->nameFilters();
+      f = fd->selectedNameFilter();
+    }
+
+    QTest::keyClick(w, Qt::Key_Escape, Qt::NoModifier, 10);
+    });
+  QTest::keyClick(v, Qt::Key_S, Qt::ControlModifier | Qt::ShiftModifier, 10);
+  QTest::qWait(300);
+  CHECK(f.toStdString() == "BER files (*.ber)");
+  CHECK(nf.size() > 5);
+  CHECK(nf.contains("TAP files (CD* TD*)"));
+}
+

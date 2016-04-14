@@ -37,30 +37,11 @@
 
 #include <editor/command/preview.hh>
 
-#include <map>
 
 using namespace std;
 
 namespace editor {
   namespace gui_command {
-
-    static QString xml_filter(QObject::tr("XML files (*.xml)"));
-
-    static const map<QString, File_Type> filter_to_type_map_ = {
-      { xml_filter                        ,   {File_Type::XML} },
-      { QObject::tr("TAP files (CD* TD*)"), {File_Type::BER, File_Type::TAP} },
-      { QObject::tr("RAP files (RC*)"),     {File_Type::BER, File_Type::RAP} },
-      { QObject::tr("NRTRDE files (NR*)"),  {File_Type::BER, File_Type::NRT} },
-      { QObject::tr("BER files (*.ber)"),   {File_Type::BER} },
-      { QObject::tr("Any files (*)"),       {} }
-    };
-    static QStringList map_to_list(const map<QString, File_Type> &m)
-    {
-      QStringList r;
-      for (auto &i : m)
-        r << i.first;
-      return r;
-    }
 
     Select_Open::Select_Open(QWidget *parent)
       :
@@ -81,13 +62,13 @@ namespace editor {
       Preview_File_Dialog d(preview,
           parent_widget_, tr("Select file to open"));
       d.setFileMode(QFileDialog::ExistingFile);
-      d.setNameFilters(map_to_list(filter_to_type_map_));
-      d.selectNameFilter(xml_filter);
+      d.setNameFilters(all_name_filters());
+      d.selectNameFilter(default_open_name_filter());
 
       connect(&d, &QFileDialog::fileSelected,
           [this, &d](const QString &filename) {
             Open::open_ft(filename,
-                filter_to_type_map_.at(d.selectedNameFilter()));
+               File_Type::construct_from_name_filter(d.selectedNameFilter()));
           });
 
       d.exec();

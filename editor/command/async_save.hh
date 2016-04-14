@@ -21,6 +21,8 @@
 #ifndef EDITOR_COMMAND_ASYNC_SAVE_HH
 #define EDITOR_COMMAND_ASYNC_SAVE_HH
 
+#include <editor/file_type.hh>
+
 #include <QObject>
 class QThread;
 
@@ -59,6 +61,9 @@ namespace editor {
         void set_tree_model(tree_model::Base *model);
         void set_filename(const QString &filename);
         void set_file_type(const File_Type &ft);
+
+      protected:
+        File_Type file_type_;
 
       private:
         QThread *thread_ {nullptr};

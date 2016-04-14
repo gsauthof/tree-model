@@ -21,6 +21,14 @@
 
 #include "file_type.hh"
 
+#include <QString>
+#include <QObject>
+#include <QCoreApplication>
+
+#include <map>
+
+using namespace std;
+
 namespace editor {
 
   File_Type::File_Type() =default;
@@ -51,6 +59,68 @@ namespace editor {
   {
     qRegisterMetaType<File_Type>();
     qRegisterMetaType<File_Type>("File_Type");
+  }
+
+  // We have to make sure that the translate (or tr) methods are
+  // called after the translators are initialized. Thus, we can't
+  // rely on static initialization.
+  static QString xml_filter()
+  {
+    return QCoreApplication::translate("name_filter", "XML files (*.xml)");
+  }
+  static QString any_filter()
+  {
+    return QCoreApplication::translate("name_filter", "Any files (*)");
+  }
+
+  // We have to make sure that the translate (or tr) methods are
+  // called after the translators are initialized. Thus, we can't
+  // rely on static initialization.
+  static map<QString, File_Type> filter_to_type_map()
+  {
+    return  {
+      { xml_filter(),
+        {File_Type::XML} },
+      { QCoreApplication::translate("name_filter", "TAP files (CD* TD*)"),
+        {File_Type::BER, File_Type::TAP} },
+      { QCoreApplication::translate("name_filter", "RAP files (RC*)"),
+        {File_Type::BER, File_Type::RAP} },
+      { QCoreApplication::translate("name_filter", "NRTRDE files (NR*)") ,
+        {File_Type::BER, File_Type::NRT} },
+      { QCoreApplication::translate("name_filter", "BER files (*.ber)"),
+        {File_Type::BER} },
+      { any_filter(),
+        {} }
+    };
+  }
+
+  QStringList all_name_filters()
+  {
+    QStringList r;
+    auto m = filter_to_type_map();
+    for (auto &i : m)
+      r << i.first;
+    return r;
+  }
+  QString default_open_name_filter()
+  {
+    return xml_filter();
+  }
+
+  QString File_Type::default_name_filter() const
+  {
+    auto m = filter_to_type_map();
+    for (auto &i : m)
+      if (i.second.major() == major_
+            && (minor_ == ANY_MINOR || i.second.minor() == minor_))
+        return i.first;
+    return any_filter();
+  }
+
+  File_Type File_Type::construct_from_name_filter(const QString &name)
+  {
+    auto m = filter_to_type_map();
+    return m.at(name);
   }
 
 }

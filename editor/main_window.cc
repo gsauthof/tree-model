@@ -158,7 +158,10 @@ namespace editor {
     // https://bugreports.qt.io/browse/QTBUG-1278
     ui->open_action         ->setShortcut(QKeySequence::Open);
     ui->save_action         ->setShortcut(QKeySequence::Save);
-    ui->save_as_action      ->setShortcut(QKeySequence::SaveAs);
+    // it is empty on windows/kde - but since this shortcut is
+    // so useful it make sense to enable it everwhere ...
+    if (!QKeySequence(QKeySequence::SaveAs).isEmpty())
+      ui->save_as_action      ->setShortcut(QKeySequence::SaveAs);
     //ui->save_a_copy_action->setShortcut(...);
     ui->quit_action         ->setShortcut(QKeySequence::Quit);
     ui->undo_action         ->setShortcut(QKeySequence::Undo);

@@ -40,7 +40,7 @@ namespace editor {
 
   class File_Type {
     public:
-      enum Major { ANY, XML, BER };
+      enum Major { ANY_MAJOR, XML, BER };
       enum Minor { ANY_MINOR, TAP, RAP, NRT };
 
       File_Type();
@@ -54,17 +54,22 @@ namespace editor {
       const std::deque<std::string> &constraint_filenames() const;
       void set_constraint_filenames(std::deque<std::string> &&constraint_filenames);
 
+      QString default_name_filter() const;
+      static File_Type construct_from_name_filter(const QString &name);
+
       // call this if signals having File_Type arguments
       // should be able to be queued
       static void register_meta_type();
 
     private:
-      Major major_ {ANY};
+      Major major_ {ANY_MAJOR};
       Minor minor_ {ANY_MINOR};
       std::deque<std::string> asn_filenames_;
       std::deque<std::string> constraint_filenames_;
 
   };
+  QStringList all_name_filters();
+  QString default_open_name_filter();
 
 } // editor
 
