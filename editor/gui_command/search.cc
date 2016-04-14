@@ -79,7 +79,6 @@ namespace editor {
         } else {
           auto w = new Result_Window(parent_widget_);
           w->setWindowTitle(tr("Search Results"));
-          // XXX do the same for display subtree command ...
           // we set this attribute because we want to free the
           // memory of closed windows as soon as possible;
           // otherwise they aren't freed until the parent is

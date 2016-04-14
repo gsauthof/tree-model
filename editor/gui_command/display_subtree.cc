@@ -63,6 +63,7 @@ namespace editor {
         return;
 
       auto w = new Subtree_Window(parent_widget_);
+      w->setAttribute(Qt::WA_DeleteOnClose);
 
       auto i0 = i.sibling(i.row(), 0);
       auto title = QString("%1 %2").arg(model_->data(i0)

@@ -22,6 +22,8 @@
 #include "subtree_window.hh"
 #include "ui_subtree_window.h"
 
+#include <QDebug>
+
 namespace editor {
 
   Subtree_Window::Subtree_Window(QWidget *parent) :
