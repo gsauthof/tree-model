@@ -7,7 +7,13 @@ set -u
 : ${CMAKE_BUILD_TYPE:=Sanitize}
 # -j1 : be nice about CI environments with low memory ...
 : ${jobs:=3}
-: ${targets:=ut ut_select_open ut_gui main}
+
+if [[ $CMAKE_BUILD_TYPE =~ "Coverage" ]]; then
+  : ${targets:=ut ut_select_open ut_gui}
+else
+  : ${targets:=ut ut_select_open ut_gui main}
+fi
+
 : ${run_tag:=""}
 
 src_dir="$1"

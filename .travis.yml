@@ -24,9 +24,14 @@ before_script:
 script:
   - ./ci/travis/script.sh
 
+after_success:
+  - ./ci/travis/after_success.sh
+
 after_script:
   - ./ci/travis/after_script.sh
 
+#after_failure:
+#
 before_deploy:
   - ./ci/travis/before_deploy.sh
 

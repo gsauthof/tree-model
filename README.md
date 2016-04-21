@@ -1,3 +1,5 @@
+[![C++](https://img.shields.io/badge/C++-14-blue.svg)](https://en.wikipedia.org/wiki/C++14) [![License](https://img.shields.io/badge/license-LGPL--3-blue.svg)][lgpl] [![Build Status](https://travis-ci.org/gsauthof/tree-model.svg?branch=master)](https://travis-ci.org/gsauthof/tree-model) [![Code Coverage](https://codecov.io/github/gsauthof/tree-model/coverage.svg?branch=master)](https://codecov.io/github/gsauthof/tree-model)
+
 Example of a hierarchical tree model in [Qt][qt].
 
 The example uses Qt 5 and [libxml2][libxml2] (via
@@ -15,7 +17,6 @@ how the different APIs are intended to be used.
 
 2016, Georg Sauthoff <mail@georg.so>
 
-[![Build Status](https://travis-ci.org/gsauthof/tree-model.svg?branch=master)](https://travis-ci.org/gsauthof/tree-model)
 
 ## Challenges
 
