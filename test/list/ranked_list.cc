@@ -376,11 +376,15 @@ static void check_expected_cost(const list::ranked::List<int> &l)
   double step_sum = 0;
   for (int i = 0; i < n; ++i)
     l.node_prime(i, counter);
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+  CHECK(double(counter.n)/n < 2 * log2(n) + 1);
+#else
   CHECK(double(counter.n)/n < 2 * log2(n));
   //CHECK(fabs(double(counter.n)/n - 30) < 3.15);
+#endif
   //
 #if (defined(__MINGW32__) || defined(__MINGW64__))
-  CHECK(fabs(double(counter.n)/n - 30) < 4);
+  CHECK(fabs(double(counter.n)/n - 30) < 4.8);
 #else
   CHECK(fabs(double(counter.n)/n - 30) < 3.31);
 #endif
