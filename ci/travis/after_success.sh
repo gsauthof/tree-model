@@ -23,8 +23,7 @@ function run_linux()
     TRAVIS_REPO_SLUG=$TRAVIS_REPO_SLUG \
     /srv/src/tree-model/ci/docker/upload_coverage.sh \
     /srv/src/tree-model \
-    /srv/build/tree-model \
-    "$build_tag"
+    /srv/build/tree-model
 }
 
 run_$TRAVIS_OS_NAME
