@@ -16,7 +16,7 @@ function run_osx()
 
 function run_linux()
 {
-  docker exec cxx-devel \
+  docker exec cxx-runtime \
     env CI=$CI TRAVIS=$TRAVIS TRAVIS_BRANCH=$TRAVIS_BRANCH \
     TRAVIS_COMMIT=$TRAVIS_COMMIT TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER \
     TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST TRAVIS_JOB_ID=$TRAVIS_JOB_ID \
