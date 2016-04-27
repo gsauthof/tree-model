@@ -59,6 +59,10 @@ TEST_CASE("basic slider bar", "[editor][qt][gui][slider]")
   // gnome shell
   //CHECK(spy_jump.front().front().toInt() > 820);
   // xfwm4
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+  CHECK(spy_jump.front().front().toInt() > 690);
+#else
   CHECK(spy_jump.front().front().toInt() > 765);
+#endif
   CHECK(spy_jump.front().front().toInt() < 830);
 }

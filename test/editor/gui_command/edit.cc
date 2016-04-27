@@ -57,7 +57,11 @@ TEST_CASE("edit dialog", "[editor][qt][gui][edit]")
       QTest::keyClick(w.focusWidget(), Qt::Key_Tab, Qt::NoModifier, 100);
       QTest::keyClicks(w.focusWidget(), "23", Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Tab, Qt::NoModifier, 100);
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+      // windows has different tab focus order ...
+#else
       QTest::keyClick(w.focusWidget(), Qt::Key_Tab, Qt::NoModifier, 100);
+#endif
       QTest::keyClick(w.focusWidget(), Qt::Key_Return, Qt::NoModifier, 100);
       });
 
@@ -94,7 +98,11 @@ TEST_CASE("edit dialog with children", "[editor][qt][gui][edit]")
       //QTest::keyClick(w.focusWidget(), Qt::Key_Home, Qt::ShiftModifier, 100);
       QTest::keyClicks(w.focusWidget(), "void", Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Tab, Qt::NoModifier, 100);
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+      // windows has different tab focus order ...
+#else
       QTest::keyClick(w.focusWidget(), Qt::Key_Tab, Qt::NoModifier, 100);
+#endif
       QTest::keyClick(w.focusWidget(), Qt::Key_Return, Qt::NoModifier, 100);
       });
 

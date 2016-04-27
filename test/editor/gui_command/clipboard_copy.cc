@@ -63,7 +63,11 @@ TEST_CASE("basic copy clipboard", "[editor][qt][gui][clipboard]")
         </TransferCutOffTimeStamp>)";
 
   CHECK(cb->text().toStdString() == ref);
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+  // windows doesn't have primary selection ...
+#else
   CHECK(cb->text(QClipboard::Selection).toStdString() == ref);
+#endif
   CHECK(cb->mimeData()->data("text/xml").data() == string(ref));
 
   cb->clear();

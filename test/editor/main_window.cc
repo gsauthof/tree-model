@@ -215,8 +215,7 @@ TEST_CASE("paste shortcut", "[editor][qt][gui][mainwindow]")
       // collapse some
       QTest::keyClick(w.focusWidget(), Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
 
-      // 2nd right necessary for xfwm4
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Up,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
@@ -299,8 +298,7 @@ TEST_CASE("mw display subtree", "[editor][qt][gui][mainwindow]")
       // collapse some
       QTest::keyClick(w.focusWidget(), Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
 
-      // 2nd right necessary for xfwm4
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Up, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
@@ -402,8 +400,7 @@ TEST_CASE("mw tree view context menu", "[editor][qt][gui][mainwindow]")
       // collapse some
       QTest::keyClick(v, Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
 
-      // 2nd right necessary for xfwm4
-      QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(v, Qt::Key_Up, Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
       QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);

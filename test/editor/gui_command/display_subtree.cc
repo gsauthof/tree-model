@@ -164,11 +164,17 @@ TEST_CASE("subtree has undo redo", "[editor][gui][subtree]")
   auto tv = tw->findChild<editor::Tree_View*>();
   REQUIRE(tv);
 
+  // undo
   QTest::keyClick(tv, Qt::Key_Z,  Qt::ControlModifier, 10);
   QTest::qWait(300);
   CHECK(spy_undo.size() == 1);
 
+  // redo
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+  QTest::keyClick(tv, Qt::Key_Y,  Qt::ControlModifier, 10);
+#else
   QTest::keyClick(tv, Qt::Key_Z,  Qt::ShiftModifier | Qt::ControlModifier, 10);
+#endif
   QTest::qWait(300);
 
   CHECK(spy_redo.size() == 1);
