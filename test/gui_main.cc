@@ -38,7 +38,7 @@ static pair<int, unique_ptr<char*[]> > create_qtest_argv(int ac, char **av)
   if (ac)
     argv[argc++] = av[0];
   for (int i = 1; i < ac; ++i) {
-    if (!strcmp(av[i], "-platform")) {
+    if (!strcmp(av[i], "-platform") || !strcmp(av[i], "-style")) {
       argv[argc++] = av[i];
       ++i;
       if (i < ac)
@@ -56,7 +56,7 @@ static pair<int, unique_ptr<char*[]> > create_catch_argv(int ac, char **av)
   if (ac)
     argv[argc++] = av[0];
   for (int i = 1; i < ac; ++i) {
-    if (!strcmp(av[i], "-platform")) {
+    if (!strcmp(av[i], "-platform") || !strcmp(av[i], "-style")) {
       ++i;
       continue;
     }
