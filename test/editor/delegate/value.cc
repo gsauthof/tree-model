@@ -53,9 +53,9 @@ TEST_CASE("complete value", "[editor][gui][complete][delegate]")
   vd.read_constraints({test::path::in()
       + "/../../libgrammar/grammar/xml/tap_3_12_constraints.zsv"});
 
-  auto edit = vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1));
-  REQUIRE(edit);
-  auto line_edit = dynamic_cast<QLineEdit*>(edit);
+  unique_ptr<QWidget> edit(vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1)));
+  REQUIRE(edit.get());
+  auto line_edit = dynamic_cast<QLineEdit*>(edit.get());
   REQUIRE(line_edit);
   auto c = line_edit->completer();
   REQUIRE(c);
@@ -85,9 +85,9 @@ TEST_CASE("complete tadig code", "[editor][gui][complete][delegate]")
       + "/../../libgrammar/grammar/xml/tadig_codes.zsv"});
   vd.apply_file_type(ft);
 
-  auto edit = vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1));
-  REQUIRE(edit);
-  auto line_edit = dynamic_cast<QLineEdit*>(edit);
+  unique_ptr<QWidget> edit(vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1)));
+  REQUIRE(edit.get());
+  auto line_edit = dynamic_cast<QLineEdit*>(edit.get());
   REQUIRE(line_edit);
   auto c = line_edit->completer();
   REQUIRE(c);
@@ -115,9 +115,9 @@ TEST_CASE("validate value", "[editor][gui][complete][delegate]")
   vd.read_constraints({test::path::in()
       + "/../../libgrammar/grammar/xml/tap_3_12_constraints.zsv"});
 
-  auto edit = vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1));
-  REQUIRE(edit);
-  auto line_edit = dynamic_cast<QLineEdit*>(edit);
+  unique_ptr<QWidget> edit(vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1)));
+  REQUIRE(edit.get());
+  auto line_edit = dynamic_cast<QLineEdit*>(edit.get());
   REQUIRE(line_edit);
   auto v = line_edit->validator();
   REQUIRE(v);
@@ -147,9 +147,9 @@ TEST_CASE("validate value domain", "[editor][gui][complete][delegate]")
   vd.read_constraints({test::path::in()
       + "/../../libgrammar/grammar/xml/tap_3_12_constraints.zsv"});
 
-  auto edit = vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1));
-  REQUIRE(edit);
-  auto line_edit = dynamic_cast<QLineEdit*>(edit);
+  unique_ptr<QWidget> edit(vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1)));
+  REQUIRE(edit.get());
+  auto line_edit = dynamic_cast<QLineEdit*>(edit.get());
   REQUIRE(line_edit);
   auto v = line_edit->validator();
   REQUIRE(v);
@@ -184,9 +184,9 @@ TEST_CASE("validate value enum", "[editor][gui][complete][delegate]")
   vd.read_constraints({test::path::in()
       + "/../../libgrammar/grammar/xml/tap_3_12_constraints.zsv"});
 
-  auto edit = vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1));
-  REQUIRE(edit);
-  auto line_edit = dynamic_cast<QLineEdit*>(edit);
+  unique_ptr<QWidget> edit(vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1)));
+  REQUIRE(edit.get());
+  auto line_edit = dynamic_cast<QLineEdit*>(edit.get());
   REQUIRE(line_edit);
   auto v = line_edit->validator();
   REQUIRE(v);

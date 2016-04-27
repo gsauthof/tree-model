@@ -54,10 +54,10 @@ TEST_CASE("complete tag", "[editor][gui][complete][delegate]")
   rg.set_file_type(ft);
 
   auto i = m.index(0, 0);
-  auto edit = td.createEditor(nullptr, QStyleOptionViewItem(),
-      i);
-  REQUIRE(edit);
-  auto line_edit = dynamic_cast<QLineEdit*>(edit);
+  unique_ptr<QWidget> edit(td.createEditor(nullptr, QStyleOptionViewItem(),
+      i));
+  REQUIRE(edit.get());
+  auto line_edit = dynamic_cast<QLineEdit*>(edit.get());
   REQUIRE(line_edit);
   auto c = line_edit->completer();
   REQUIRE(c);
