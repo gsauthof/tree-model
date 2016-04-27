@@ -265,7 +265,7 @@ static void check_level_distribution(const list::ranked::List<int> &l)
   // not enough for mingw+wine ...
   //CHECK(fabs(level_sum/n - 1.99) < 0.05);
 #if (defined(__MINGW32__) || defined(__MINGW64__))
-  CHECK(fabs(level_sum/n - 1.99) < 0.08);
+  CHECK(fabs(level_sum/n - 1.99) < 0.089);
 #else
   CHECK(fabs(level_sum/n - 1.99) < 0.055);
 #endif
