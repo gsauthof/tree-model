@@ -67,9 +67,8 @@ TEST_CASE("copy action", "[editor][qt][gui][mainwindow][clipboard]")
       REQUIRE(a != nullptr);
       old_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(0, 0));
 
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Up, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down, Qt::NoModifier, 10);
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down, Qt::NoModifier, 10);
