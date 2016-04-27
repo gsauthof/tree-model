@@ -115,9 +115,9 @@ TEST_CASE("cut action", "[editor][qt][gui][mainwindow][clipboard]")
       REQUIRE(a != nullptr);
       old_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(0, 0));
 
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Up, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down, Qt::NoModifier, 10);
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+
       QTest::keyClick(w.focusWidget(), Qt::Key_Down, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down, Qt::NoModifier, 10);
@@ -165,8 +165,7 @@ TEST_CASE("delete shortcut", "[editor][qt][gui][mainwindow]")
       // collapse some
       QTest::keyClick(w.focusWidget(), Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
 
-      // 2nd right necessary for xfwm4
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Up,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Right,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,   Qt::NoModifier, 10);
@@ -260,9 +259,8 @@ TEST_CASE("paste child shortcut", "[editor][qt][gui][mainwindow]")
       REQUIRE(a != nullptr);
       old_rowcount = a->rowCount(a->index(0, 0, QModelIndex()).child(0, 0));
 
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Up, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_V,     Qt::ControlModifier, 10);
       });
@@ -349,8 +347,7 @@ TEST_CASE("mw display subtree model change", "[editor][qt][gui][mainwindow]")
       // collapse some
       QTest::keyClick(w.focusWidget(), Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
 
-      // 2nd right necessary for xfwm4
-      QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
+      QTest::keyClick(w.focusWidget(), Qt::Key_Up, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Right, Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
       QTest::keyClick(w.focusWidget(), Qt::Key_Down,  Qt::NoModifier, 10);
@@ -588,12 +585,13 @@ TEST_CASE("mw tree view remove via menu", "[editor][qt][gui][mainwindow]")
   // collapse some
   QTest::keyClick(v, Qt::Key_E,  Qt::ShiftModifier | Qt::ControlModifier, 10);
 
+  QTest::keyClick(v, Qt::Key_Up, Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_E,     Qt::AltModifier, 10);
   QTest::qWait(100);
-  QTest::keyClick(v, Qt::Key_M,     Qt::AltModifier, 10);
+  QTest::keyClick(v, Qt::Key_M,     Qt::NoModifier, 10);
   QTest::qWait(100);
 
   int new_rowcount = a->rowCount(a->index(0, 0));
@@ -664,15 +662,14 @@ TEST_CASE("mw tree view edit child undo clean", "[editor][qt][gui][mainwindow][a
   QTest::qWait(100);
   auto v = QApplication::focusWindow();
   REQUIRE(v);
-  QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
+  QTest::keyClick(v, Qt::Key_Up, Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
-  QTest::keyClick(v, Qt::Key_Right, Qt::NoModifier, 10);
   QTest::keyClick(v, Qt::Key_Down,  Qt::NoModifier, 10);
 
   QTimer::singleShot(300, [&v]{
       auto v = QApplication::focusWindow();
       REQUIRE(v);
-      QTest::keyClick(v, Qt::Key_I, Qt::AltModifier, 10);
+      QTest::keyClick(v, Qt::Key_I, Qt::NoModifier, 10);
       });
 
   QTimer::singleShot(600, [&w]{
