@@ -219,9 +219,10 @@ TEST_CASE("validate half specified domain", "[editor][gui][complete][delegate]")
   vd.read_constraints({test::path::in()
       + "/../../libgrammar/grammar/xml/tap_3_12_constraints.zsv"});
 
-  auto edit = vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1));
-  REQUIRE(edit);
-  auto line_edit = dynamic_cast<QLineEdit*>(edit);
+  unique_ptr<QWidget> edit(
+      vd.createEditor(nullptr, QStyleOptionViewItem(), a->index(0, 1)));
+  REQUIRE(edit.get());
+  auto line_edit = dynamic_cast<QLineEdit*>(edit.get());
   REQUIRE(line_edit);
   auto v = line_edit->validator();
   REQUIRE(v);

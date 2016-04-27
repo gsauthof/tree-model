@@ -32,6 +32,7 @@ namespace editor {
 
     Int64_Validator::Int64_Validator(int64_t min, int64_t max, QObject *parent)
       :
+        QValidator(parent),
         range_(min, max)
     {
     }
