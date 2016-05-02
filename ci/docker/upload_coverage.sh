@@ -13,8 +13,8 @@ cd "$build_dir"
 # cf. https://github.com/codecov/codecov-bash/pull/29
 bash <(curl -s https://codecov.io/bash \
   | sed '/-not -name .*coverage.txt/a -not -name '"'"'*.cmake'"'"' \\' \
-  | sed 's@files=.*find.*git_root.*coverage.*$@'\
-'files=$(find "$proj_root" -type f \\( -name '"'"'*coverage.*'"'"' \\@' ) \
+  | sed 's/search_in="$search_in $git_root"/'\
+'search_in="$search_in $proj_root"/' ) \
   \
   -R "$src_dir" -p "$build_dir" \
   \
