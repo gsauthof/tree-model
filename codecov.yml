@@ -1,0 +1,15 @@
+comment:
+  layout: header, changes, diff
+coverage:
+  fixes:
+  - tree-model/srv/src/tree-model::tree-model
+  ignore:
+  - .*/cppformat/.*
+  - .*/QtAwesome/.*
+  - .*/Catch/.*
+  - .*/libgrammar/.*
+  - .*/libixxx/.*
+  - .*/libixxxutil/.*
+  - .*/libxxxml/.*
+  - .*/libxfsx/.*
+  status: {}
