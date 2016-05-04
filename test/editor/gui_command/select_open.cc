@@ -49,6 +49,7 @@ namespace test {
       {
         boost::filesystem::current_path(test::path::in());
         QMainWindow w;
+        QTest::qWait(300);
         ::editor::gui_command::Select_Open so(&w);
         QSignalSpy spy_finished(&so, SIGNAL(finished()));
         QSignalSpy spy_opened(&so, SIGNAL(file_opened(QString)));
