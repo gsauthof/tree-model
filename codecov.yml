@@ -1,6 +1,6 @@
 coverage:
   fixes:
-  - "/srv/src/tree-model/tree-model::tree-model"
+  - "/srv/src/tree-model::tree-model"
   ignore:
   - .*/cppformat/.*
   - .*/QtAwesome/.*
