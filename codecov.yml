@@ -1,9 +1,4 @@
 coverage:
-  fixes:
-  - "/srv/src/tree-model/tree-model::tree-model"
-  - "/srv/src/tree-model/list::list"
-  - "/srv/src/tree-model/test::test"
-  - "/srv/src/tree-model/editor::editor"
   ignore:
   - .*/cppformat/.*
   - .*/QtAwesome/.*
