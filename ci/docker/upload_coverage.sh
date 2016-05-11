@@ -7,6 +7,15 @@ build_dir="$2"
 
 cd "$build_dir"
 
+# out-of-src builds doesn't seem to be supported with
+# codecov.io as of 2016-05, thus trying in-src builds
+# for now
+bash <(curl -s https://codecov.io/bash)
+
+
+exit 0
+
+
 # workaround coverage.cmake being identified as coverage report
 # workaround script only searching in the source directory for gcov reports
 #

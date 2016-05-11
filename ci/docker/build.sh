@@ -35,4 +35,11 @@ function build_mingw()
   mingw64-make -j"$jobs" $targets
 }
 
+function build_coverage()
+{
+  rsync -a "$src_dir"/ .
+  cmake -G Ninja -D CMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE" .
+  ninja-build -j"$jobs" $targets
+}
+
 build"$run_tag"
