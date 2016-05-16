@@ -7,6 +7,7 @@ if [[ ! "$CMAKE_BUILD_TYPE" =~ "Coverage" ]]; then
   exit 0
 fi
 
+: ${run_tag:=""}
 
 function run_osx()
 {
@@ -21,6 +22,7 @@ function run_linux()
     TRAVIS_COMMIT=$TRAVIS_COMMIT TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER \
     TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST TRAVIS_JOB_ID=$TRAVIS_JOB_ID \
     TRAVIS_REPO_SLUG=$TRAVIS_REPO_SLUG \
+    run_tag=$run_tag \
     /srv/src/tree-model/ci/docker/upload_coverage.sh \
     /srv/src/tree-model \
     /srv/build/tree-model
