@@ -36,12 +36,8 @@ function upload()
 
 function upload_lcov()
 {
-  # workaround coverage.cmake being identified as coverage report
-  #
-  # cf. https://github.com/codecov/codecov-bash/pull/29
-  bash <(curl -s https://codecov.io/bash \
-    | sed '/-not -name .*coverage.txt/a -not -name '"'"'*.cmake'"'"' \\' \
-    ) -X gcov
+  # codecov.io report detection just yields too many false positives
+  bash <(curl -s https://codecov.io/bash) -X gcov -f build-cov/lcov.info
 }
 
 
