@@ -132,7 +132,11 @@ TEST_CASE("ranked push max_level", "[list][ranked]" )
   // on mingw there is more variation, usually it is 14
   //CHECK(l.level() >= 12);
   CHECK(l.level() >= 11);
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+  CHECK(l.level() <= 16);
+#else
   CHECK(l.level() <= 15);
+#endif
 }
 
 TEST_CASE("ranked push max_level limit", "[list][ranked]" )
