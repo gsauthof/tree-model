@@ -4,7 +4,7 @@ set -eux
 
 export docker_img_a=gsauthof/fedora-cxx-devel:23
 export docker_img_b=gsauthof/fedora-cxx-runtime:23
-export run_tag="_coverage"
+export run_tag="_lcov"
 export CMAKE_BUILD_TYPE=Coverage
 
 target="$1"

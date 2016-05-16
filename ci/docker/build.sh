@@ -42,4 +42,13 @@ function build_coverage()
   ninja-build -j"$jobs" $targets
 }
 
+function build_lcov()
+{
+  rsync -a "$src_dir"/ .
+  mkdir build-cov
+  cd build-cov
+  cmake -G Ninja -D CMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE" ..
+  ninja-build -j"$jobs" $targets
+}
+
 build"$run_tag"

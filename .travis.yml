@@ -5,7 +5,7 @@ services:
 
 env:
   - docker_img_a=gsauthof/fedora-cxx-devel:23 docker_img_b=gsauthof/fedora-cxx-runtime:23 CMAKE_BUILD_TYPE=SanitizeO
-  - docker_img_a=gsauthof/fedora-cxx-devel:23 docker_img_b=gsauthof/fedora-cxx-runtime:23 run_tag="_coverage" CMAKE_BUILD_TYPE=Coverage
+  - docker_img_a=gsauthof/fedora-cxx-devel:23 docker_img_b=gsauthof/fedora-cxx-runtime:23 run_tag="_lcov" CMAKE_BUILD_TYPE=Coverage
   - docker_img_a=gsauthof/fedora-mingw64-devel:23 docker_img_b=gsauthof/fedora-mingw64-runtime:23 run_tag="_mingw" CMAKE_BUILD_TYPE=Release
 
 # default is ruby, we set python in case we need to do some
