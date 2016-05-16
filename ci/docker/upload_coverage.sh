@@ -27,7 +27,7 @@ function upload()
   bash <(curl -s https://codecov.io/bash \
     | sed '/-not -name .*coverage.txt/a -not -name '"'"'*.cmake'"'"' \\' \
     | sed 's/search_in="$search_in $git_root"/'\
-  'search_in="$search_in $proj_root"/' ) \
+'search_in="$search_in $proj_root"/' ) \
     \
     -R "$src_dir" -p "$build_dir" \
     \
