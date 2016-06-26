@@ -22,8 +22,8 @@
 #define TREE_MODEL_PROTECTED_ITEM_MODEL_HH
 
 #include <Qt>
+#include <QModelIndex>
 
-class QModelIndex;
 class QVariant;
 class QMimeData;
 
