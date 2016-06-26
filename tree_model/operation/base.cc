@@ -21,7 +21,7 @@
 #include "base.hh"
 
 #include <string>
-#include <boost/lexical_cast.hpp>
+#include <stdexcept>
 
 using namespace std;
 
@@ -34,21 +34,21 @@ namespace tree_model {
     {
       if (state_ != 1)
         throw logic_error("Can't forward operation from state "
-            + boost::lexical_cast<string>(state_));
+            + std::to_string(state_));
       state_ = 2;
     }
     void Base::begin_rewind()
     {
       if (state_ != 2)
         throw logic_error("Can't rewind operation from state "
-            + boost::lexical_cast<string>(state_));
+            + std::to_string(state_));
       state_ = 1;
     }
     void Base::begin_finalize()
     {
       if (state_ != 0)
         throw logic_error("Can't finalize operation from state "
-            + boost::lexical_cast<string>(state_));
+            + std::to_string(state_));
       state_ = 2;
     }
     Base::State Base::state() const
