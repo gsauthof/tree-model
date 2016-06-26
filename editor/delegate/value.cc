@@ -75,7 +75,7 @@ namespace editor {
       {
         auto completer = new QCompleter(parent_);
         QStringList l;
-        for (auto v : b.values())
+        for (auto &v : b.values())
           l << QString(v.c_str());
         l.sort();
         auto model = new QStringListModel(l, parent_);
@@ -119,7 +119,7 @@ namespace editor {
       QValidator *operator()(const grammar::Constraint::Enum &b) const
       {
         QStringList l;
-        for (auto v : b.values())
+        for (auto &v : b.values())
           l << QString(v.c_str());
         l.sort();
         auto model = new QStringListModel(l, parent_);
