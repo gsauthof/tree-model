@@ -3,13 +3,14 @@
 Example of a hierarchical tree model in [Qt][qt].
 
 The example uses Qt 5 and [libxml2][libxml2] (via
-[libxxxml][libxxxml]) to work on XML trees. It implements an
-abstract tree model and provides an adaptor to
-QAbstractItemModel. In addition to that, a generic Undo/Redo
-class interfaces with QAbstractItemModel.
+[libxxxml][libxxxml]) to work on XML trees and [libxfsx][xfsx]
+to work on binary files encoded in the BER ASN.1 flavour. It
+implements an abstract tree model and provides an adaptor to
+`QAbstractItemModel`. In addition to that, a generic Undo/Redo
+class interfaces with `QAbstractItemModel`.
 
-An example GUI XML editor is included to demonstrate the model in
-action.
+An example GUI editor is included to demonstrate the model in
+action with XML and ASN.1 BER files.
 
 Each class has several unittest test cases. Besides catching
 errors and regressions, they can also be consulted as examples
@@ -77,7 +78,7 @@ access are efficient.
 
 ### Rank Operations
 
-As part of the tree_model::Item_Adaptor a data structure is
+As part of the `tree_model::Item_Adaptor` a data structure is
 needed that allows for efficient rank operations (e.g. accessing
 the k-th element or determing the rank of an element). Just using
 a combination of lookup tables and a list is not sufficient,
@@ -483,3 +484,4 @@ Tree-Model classes:
 [libxxxml]: https://github.com/gsauthof/libxxxml
 [mvc]: https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
 [mv]: http://doc.qt.io/qt-5/model-view-programming.html#the-model-view-architecture
+[xfsx]: https://github.com/gsauthof/libxfsx
